@@ -48,12 +48,12 @@ if __name__ == "__main__":
     writeToReport("Attempting API call with", url)
     r = test.get(url)
 
-    loadingMessages = ["Pulling data from the Ally API...", "Loading...", "Going to space...", "Locating data...",
+    loadingMessages = ["Pulling data from Ally API...", "Loading...", "Going to space...", "Locating data...",
                        "Organizing spreadsheets...", "Connecting with Canvas...",
                        "Taking a coffee break (being a computer is hard work!)...", "Loading...", "Loading...",
                        "Loading...", "Loading...", "Loading...", "Loading...",
                        "Rearranging solar panels...", "Hacking government computers...", "Preparing data...",
-                       "Preparing data...", "API response in progress...", "API response pending...",
+                       "Preparing data...", "API response pending...", "API response pending...",
                        "Preparing file...", "Solving the WORDLE...", "Loading...",
                        "Convincing reCAPTCHA I'm not a robot...", "Judging your OS...", "Preparing data..."]
 

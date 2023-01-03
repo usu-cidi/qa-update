@@ -14,7 +14,7 @@ _Note: This program has only been tested on Macs up to this point. If you want t
 ## Start here!
 In these instructions, I will walk you through the process of running this program.
 We will be running the program using the Command Line. When I give you a command to run, it will look like this:
-```
+```commandline
 COMMAND
 ```
 Press enter on your keyboard to run the commands once they have been entered.
@@ -40,13 +40,19 @@ On GitHub, click the green Code button. In the dropdown, click Download ZIP.
 Unwrap the ZIP file.
 
 Navigate to the downloaded project with the following command.
-```
+```commandline
 cd Downloads/cidi-monday-QA-automation-main
 ```
 
 Now we need to set up your environment with your specific settings.
 
 In finder, move your course report file (Meghan's data) into the file containing this project (the one you unzipped).
+
+If you're updating the board (as opposed to filling in an empty one):
+* Go to your board on monday.com
+* Click the three dots on the top right
+* Select `More actions` and then `Export board to Excel`
+* Move the resulting file into the file containing this project (the one you unzipped).
 
 Run the following command:
 ```commandline
@@ -60,13 +66,15 @@ CONSUMER_KEY=[Your Ally consumer key]
 CONSUMER_SECRET=[Your Ally consumer secret]
 TERM_CODE=[Semester/term code]
 COURSE_REPORT_FILENAME=[The name of the course report file]
+EXISTING_BOARD_FILENAME=[The name of the existing monday board file - if updating an existing board]
 ```
 
-* [Your Ally institutional ID] should be replaced with your unique Ally institutional ID
-* [Your Ally consumer key] should be replaced with your Ally consumer key
-* [Your Ally consumer secret] should be replaced with your Ally consumer secret
-* [Semester/term code] should be replaced with the code for the term/semester you would like to pull data on (usually a three-digit number)
-* [The name of the course report file] should be replaced with the name of the course report file (Meghan's data), INCLUDING EXTENSION
+* `[Your Ally institutional ID]` should be replaced with your unique Ally institutional ID
+* `[Your Ally consumer key]` should be replaced with your Ally consumer key
+* `[Your Ally consumer secret]` should be replaced with your Ally consumer secret
+* `[Semester/term code]` should be replaced with the code for the term/semester you would like to pull data on (usually a three-digit number)
+* `[The name of the course report file]` should be replaced with the name of the course report file (Meghan's data), INCLUDING EXTENSION
+* If updating an existing board, `[The name of the existing board file]` should be replaced with the name of the existing monday board file (that you downloaded from monday.com), INCLUDING EXTENSION
 
 Once you have correctly filled in the text, press `CTRL + X` on your keyboard, followed by the `y` key, and then the `enter` key.
 
@@ -106,13 +114,16 @@ To fill in a blank monday board (at the beginning of a new semester), run:
 bash generateFullFile.sh
 ```
 
-or
+OR
 
-**COMING SOON:** Update a monday board that already contains content (done throughout the semester)
+To update a monday board that already contains content (done throughout the semester), run:
+```commandline
+bash generateUpdateFile.sh
+```
 
 
 _Note: you may receive the following warning:_
-```angular2html
+```commandline
 /Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/pandas/core/internals/blocks.py:2323: RuntimeWarning: invalid value encountered in cast
   values = values.astype(str)
 ```
@@ -128,13 +139,13 @@ Remove the courses.csv file from the project file.
 Optional, but recommended so you don't get mixed up: remove the previous Ally zip file from your downloads.
 
 Make sure you're in the correct folder in the terminal. Run the following command:
-```angular2html
+```commandline
 pwd
 ```
 The resulting path should end with the name of the project file. (ex. `/Users/username/Desktop/CIDI/cidi-monday-QA-automation`)
 
 Run the following command to update the term id or other information if necessary:
-```angular2html
+```commandline
 nano .env
 ```
 Your command line has now been turned into a simple text editor. A reminder:

@@ -209,17 +209,17 @@ _Notes:_
   * Not a network problem
 * Tested the whole process - phase 2
 * Cleaned up and moved to public repository
-
-    
+* Continuing with phase 3
+* Merge just about finished I think
+    * Testing with monday import but it's taking a really long time ?? :(
+* Added to report
+* Researched options to download the current board with the monday API
+* Finished set up for everything in phase 3 besides getting the current board from the monday API 
 
 
 ### TODO:
-Phase 2
-* Revert readme back to phase 2 only for publishing
 Phase 3
 * Figure out monday API - download current board
-* Finish merge
-* Add to report
 Phase 4
 * ON HOLD
 Misc

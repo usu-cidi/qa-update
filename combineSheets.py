@@ -29,7 +29,6 @@ if __name__ == "__main__":
     dotenv.load_dotenv(dotenv.find_dotenv())
     COURSE_REPORT_FILENAME = os.environ.get('COURSE_REPORT_FILENAME')
     ALLY_FILENAME = "courses.csv"
-
     beginTime = time()
 
     meghanDataObj = pd.read_excel(COURSE_REPORT_FILENAME)
@@ -64,3 +63,5 @@ if __name__ == "__main__":
 
     print(f"\nDone in {time() - beginTime:.3f} seconds!", file=sys.stderr)
     writeToReport(f"Done in {time() - beginTime:.3f} seconds!", "")
+
+    #os.system('open FilledInFile.csv')

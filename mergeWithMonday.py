@@ -70,7 +70,7 @@ def splitLine(line):
 if __name__ == "__main__":
     writeToReport("mergeWithMonday.py", "")
 
-    MONDAY_TEMPLATE_FILENAME = "clean-data/mondayTemplate.xlsx"
+    MONDAY_TEMPLATE_FILENAME = "mondayTemplate.xlsx"
     INDEX_100_PLUS = 2
     INDEX_50_TO_99 = 5
     INDEX_20_TO_49 = 8
