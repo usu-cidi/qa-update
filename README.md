@@ -7,7 +7,7 @@ Center for Instructional Design and Innovation - Utah State University
 This repository contains a script that will:
 * Pull an institution's accessibility report from Blackboard's Ally API
 * Combine the accessibility report with other data generated from an institution's Canvas
-* Merge that report with a template for merge into a QA board on monday.com
+* Use that data to automatically update a QA board on monday.com
 
 _Note: This program has only been tested on Macs up to this point. If you want to use this on another OS, you are welcome to try it and if there are issues please follow the Bug Report instructions at the bottom of this page to indicate your interest in better support for other Operating Systems._
 
@@ -48,12 +48,6 @@ Now we need to set up your environment with your specific settings.
 
 In finder, move your course report file (Meghan's data) into the file containing this project (the one you unzipped).
 
-If you're updating the board (as opposed to filling in an empty one):
-* Go to your board on monday.com
-* Click the three dots on the top right
-* Select `More actions` and then `Export board to Excel`
-* Move the resulting file into the file containing this project (the one you unzipped).
-
 Run the following command:
 ```commandline
 nano .env
@@ -66,15 +60,17 @@ CONSUMER_KEY=[Your Ally consumer key]
 CONSUMER_SECRET=[Your Ally consumer secret]
 TERM_CODE=[Semester/term code]
 COURSE_REPORT_FILENAME=[The name of the course report file]
-EXISTING_BOARD_FILENAME=[The name of the existing monday board file - if updating an existing board]
+MONDAY_API_KEY=[Your API key for monday.com]
+BOARD_ID=[Your monday.com board id]
 ```
 
-* `[Your Ally institutional ID]` should be replaced with your unique Ally institutional ID
-* `[Your Ally consumer key]` should be replaced with your Ally consumer key
-* `[Your Ally consumer secret]` should be replaced with your Ally consumer secret
-* `[Semester/term code]` should be replaced with the code for the term/semester you would like to pull data on (usually a three-digit number)
-* `[The name of the course report file]` should be replaced with the name of the course report file (Meghan's data), INCLUDING EXTENSION
-* If updating an existing board, `[The name of the existing board file]` should be replaced with the name of the existing monday board file (that you downloaded from monday.com), INCLUDING EXTENSION
+* [Your Ally institutional ID] should be replaced with your unique Ally institutional ID
+* [Your Ally consumer key] should be replaced with your Ally consumer key
+* [Your Ally consumer secret] should be replaced with your Ally consumer secret
+* [Semester/term code] should be replaced with the code for the term/semester you would like to pull data on (usually a three-digit number)
+* [The name of the course report file] should be replaced with the name of the course report file (Meghan's data), INCLUDING EXTENSION
+* [Your API key for monday.com] should be replaced with your API key for monday.com (See https://developer.monday.com/api-reference/docs/authentication)
+* [The id for the monday board you're updating] should be replaced with the board id for the monday.com board you're updating (See https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s)
 
 Once you have correctly filled in the text, press `CTRL + X` on your keyboard, followed by the `y` key, and then the `enter` key.
 
@@ -107,8 +103,12 @@ python3 getAllyData.py
 Notes:
 * The API may take a few minutes to put together the zip file and download it to your machine
 
+Unzip the Ally report file. Move `courses.csv` into the project folder.
+
 
 Run the following command to merge the reports with each other and the monday template:
+
+
 To fill in a blank monday board (at the beginning of a new semester), run:
 ```commandline
 bash generateFullFile.sh
@@ -118,7 +118,7 @@ OR
 
 To update a monday board that already contains content (done throughout the semester), run:
 ```commandline
-bash generateUpdateFile.sh
+bash updateBoard.sh
 ```
 
 
@@ -129,9 +129,10 @@ _Note: you may receive the following warning:_
 ```
 _It is being looked into and will be resolved soon but should not affect the performance of the script._
 
-The file to import to monday will have been created within the project file. It will be called `import-to-monday.csv`.
-
+If you are filling in a new board, a file to import to monday will have been created within the project file. It will be called `import-to-monday.csv`.
 Import the csv to monday.com with the `Update with Excel/CSV for monday.com` tool. (See https://adftech.net/monday/update-with-excel-csv)
+
+If you are updating a board, the changes will have been made automatically on monday.com.
 
 ### To rerun the program
 
@@ -148,21 +149,6 @@ Run the following command to update the term id or other information if necessar
 ```commandline
 nano .env
 ```
-Your command line has now been turned into a simple text editor. A reminder:
-```commandline
-CLIENT_ID=[Your Ally institutional ID]
-CONSUMER_KEY=[Your Ally consumer key]
-CONSUMER_SECRET=[Your Ally consumer secret]
-TERM_CODE=[Semester/term code]
-COURSE_REPORT_FILENAME=[The name of the course report file]
-```
-
-* [Your Ally institutional ID] should be replaced with your unique Ally institutional ID
-* [Your Ally consumer key] should be replaced with your Ally consumer key
-* [Your Ally consumer secret] should be replaced with your Ally consumer secret
-* [Semester/term code] should be replaced with the code for the term/semester you would like to pull data on (usually a three-digit number)
-* [The name of the course report file] should be replaced with the name of the course report file (Meghan's data), INCLUDING EXTENSION
-
 Once you have correctly filled in the text, press `CTRL + X` on your keyboard, followed by the `y` key, and then the `enter` key.
 
 Now restart these instructions beginning at [**Running the program**](#run)

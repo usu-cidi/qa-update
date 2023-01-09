@@ -24,6 +24,7 @@ def writeToReport(label, object):
     f.close()
 
 if __name__ == "__main__":
+    print("Combining the course report with the Ally report...")
     writeToReport("combineSheets.py", "")
 
     dotenv.load_dotenv(dotenv.find_dotenv())
@@ -63,5 +64,3 @@ if __name__ == "__main__":
 
     print(f"\nDone in {time() - beginTime:.3f} seconds!", file=sys.stderr)
     writeToReport(f"Done in {time() - beginTime:.3f} seconds!", "")
-
-    #os.system('open FilledInFile.csv')

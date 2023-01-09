@@ -42,7 +42,6 @@ _Notes:_
 * Phase 1 completed 12.15.22
 #### Phase 2
 * Changing this to keep using the import excel/csv tool, this phase will now be creating a spreadsheet that is formatted correctly for import to monday
-* Phase 2 completed 1.3.23
 #### Phase 3
 * 
 #### Phase 4
@@ -214,12 +213,71 @@ _Notes:_
     * Testing with monday import but it's taking a really long time ?? :(
 * Added to report
 * Researched options to download the current board with the monday API
-* Finished set up for everything in phase 3 besides getting the current board from the monday API 
+* Finished set up for everything in phase 3 besides getting the current board from the monday API
+    * Pushed to public repo
+    
+### 1.4.23
+* Worked with a script I found that will download a monday board as a csv, not sure if it's gonna pan out
+    * I maybe should just write my own
+* Sooo I've realized that I've been doing about this the wrong way..
+    * I've been trying to follow the manual update process which has been really holding the project back :/
+    * I should change it so that I'm just doing the update using the API
 
+### 1.5.22
+* Kept working on using the monday API
+```commandline
+def slowCreateNewItem(itemName):
+    newItemQuery = f'mutation{{ create_item(board_id: {BOARD_ID}, item_name: "{itemName}") {{ id name }} }}'
+    data = {'query': newItemQuery}
+
+    r = requests.post(url=apiUrl, json=data, headers=headers)
+
+    jsonObj = json.loads(r.content)
+    jsonPretty = json.dumps(jsonObj, indent=2)
+
+    print(jsonPretty)
+
+    return jsonObj["data"]["create_item"]["id"]
+
+def slowUpdateRow(itemID, rowInfo):
+    index = 0
+    for col in COL_IDS:
+        index += 1
+        updateItemQuery = f'mutation{{ change_simple_column_value (board_id: {BOARD_ID}, item_id: {itemID}, ' \
+                          f'column_id: {col}, value: "{rowInfo[index]}") {{ name id }}}}'
+        data = {'query': updateItemQuery}
+
+        r = requests.post(url=apiUrl, json=data, headers=headers)
+```
+* It's working great, I've got it mostly figured out now except for the groups which I'm looking at now
+* Okay I think it's done, haven't really tested it but we're in a super great place
+
+### 1.6.23
+* Testing the new script
+* Ran into JSON error - probably should add some try-except blocks for some of the API calls
+* Fixed a problem with moving rows to the correct group where the original number of students is not recorded until after the data is updated
+* Added to report in updateMondayAPI.py
+* Added exception handling
+* Updated docs
+* Tested with a full FilledInFile - success!! Took a while though... 
+* Figured out Study Abroad delivery methods
+
+### 1.9.23
+* Tested the whole update process
+* Pushed changes to public repo
+    * Changes:
+        * `generateUpdateFile.sh`
+        * `progress.md`
+        * `README.md`
+        * Delete `mergeExistingBoard.py` and replace with `updateMondayAPI.py`
 
 ### TODO:
 Phase 3
-* Figure out monday API - download current board
+* Change populating an empty board to use the new method
+  * Update docs again
+* Demonstrate usage and help with set up
+* Improve runtime if I can:
+    * Possibly try to limit the number of repeat courses that show up in the `FilledInFile`?
 Phase 4
 * ON HOLD
 Misc
@@ -270,6 +328,14 @@ Misc
 * Search dataframe column: https://thispointer.com/how-to-check-if-a-pandas-column-contains-a-value/
 * Pandas read_excel: https://pandas.pydata.org/docs/reference/api/pandas.read_excel.html
 * Dataframe header rows: https://www.geeksforgeeks.org/how-to-add-header-row-to-a-pandas-dataframe/
+* Simple column values - monday API: https://community.monday.com/t/introducing-simple-column-values-for-api/12831
+* Changing column values - monday API: https://developer.monday.com/api-reference/docs/change-column-values
+* Monday API python: https://support.monday.com/hc/en-us/articles/360013483119-API-Quickstart-Tutorial-Python
+* Items - monday API: https://developer.monday.com/api-reference/docs/items-queries
+* Column values - monday API: https://developer.monday.com/api-reference/docs/column-values
+
+
+
 
 
 
