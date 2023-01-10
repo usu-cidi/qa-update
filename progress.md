@@ -277,12 +277,13 @@ def slowUpdateRow(itemID, rowInfo):
   * Updated docs again
   * Pushed to `main` branch
 * Tried to see if I can improve runtime
+    * Worked on trying to limit the number of repeat courses that show up in the `FilledInFile`
+* Demonstrated usage to Neal and Jenn, helped Jenn with set up
+    * Edited docs to prompt users to download Python
 
 ### TODO:
 Phase 3
-* Demonstrate usage and help with set up
-* Improve runtime if I can:
-    * Possibly try to limit the number of repeat courses that show up in the `FilledInFile`?
+* Improve runtime if I can
 Phase 4
 * ON HOLD
 Misc

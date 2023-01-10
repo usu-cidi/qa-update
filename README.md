@@ -74,8 +74,9 @@ BOARD_ID=[Your monday.com board id]
 
 Once you have correctly filled in the text, press `CTRL + X` on your keyboard, followed by the `y` key, and then the `enter` key.
 
+Download `Python`. See https://www.python.org/downloads/.
 
-Now, run the following command:
+Now, run the following command in the terminal:
 ```commandline
 bash installDepend.sh
 ```
