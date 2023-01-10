@@ -111,7 +111,7 @@ Run the following command to merge the reports with each other and the monday te
 
 To fill in a blank monday board (at the beginning of a new semester), run:
 ```commandline
-bash generateFullFile.sh
+bash fillNewBoard.sh
 ```
 
 OR
