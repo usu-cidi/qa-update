@@ -270,11 +270,15 @@ def slowUpdateRow(itemID, rowInfo):
         * `progress.md`
         * `README.md`
         * Delete `mergeExistingBoard.py` and replace with `updateMondayAPI.py`
+* Added `fillNewBoard.py` on branch `fix-intial-upload`
+
+### 1.10.23
+* Changed populating an empty board to use the new method
+  * Updated docs again
+  * Pushed to `main` branch
 
 ### TODO:
 Phase 3
-* Change populating an empty board to use the new method
-  * Update docs again
 * Demonstrate usage and help with set up
 * Improve runtime if I can:
     * Possibly try to limit the number of repeat courses that show up in the `FilledInFile`?
@@ -333,6 +337,7 @@ Misc
 * Monday API python: https://support.monday.com/hc/en-us/articles/360013483119-API-Quickstart-Tutorial-Python
 * Items - monday API: https://developer.monday.com/api-reference/docs/items-queries
 * Column values - monday API: https://developer.monday.com/api-reference/docs/column-values
+* Git branching: https://gitlab.cs.usu.edu/erik.falor/fa22-cs1440-lecturenotes/-/blob/master/Module4/Advanced_Git.md
 
 
 

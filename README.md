@@ -129,10 +129,7 @@ _Note: you may receive the following warning:_
 ```
 _It is being looked into and will be resolved soon but should not affect the performance of the script._
 
-If you are filling in a new board, a file to import to monday will have been created within the project file. It will be called `import-to-monday.csv`.
-Import the csv to monday.com with the `Update with Excel/CSV for monday.com` tool. (See https://adftech.net/monday/update-with-excel-csv)
-
-If you are updating a board, the changes will have been made automatically on monday.com.
+When the script finishes running, the board will have been updated automatically on monday.com.
 
 ### To rerun the program
 
