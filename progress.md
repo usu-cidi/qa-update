@@ -280,6 +280,12 @@ def slowUpdateRow(itemID, rowInfo):
     * Worked on trying to limit the number of repeat courses that show up in the `FilledInFile`
 * Demonstrated usage to Neal and Jenn, helped Jenn with set up
     * Edited docs to prompt users to download Python
+    
+### 2.6.23
+* Talked with Christopher about automating the rest of the process (particularly getting Meghan's file)
+    * We could standardize the file structure to allow a script to work
+* Played around with writing some Bash scripts
+    * Found this: https://ryanstutorials.net/bash-scripting-tutorial/
 
 ### TODO:
 Phase 3
@@ -340,6 +346,7 @@ Misc
 * Items - monday API: https://developer.monday.com/api-reference/docs/items-queries
 * Column values - monday API: https://developer.monday.com/api-reference/docs/column-values
 * Git branching: https://gitlab.cs.usu.edu/erik.falor/fa22-cs1440-lecturenotes/-/blob/master/Module4/Advanced_Git.md
+* Accessing Box files through the terminal: https://support.box.com/hc/en-us/community/posts/4414665593619-Access-Box-via-terminal
 
 
 
