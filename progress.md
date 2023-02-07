@@ -286,8 +286,125 @@ def slowUpdateRow(itemID, rowInfo):
     * We could standardize the file structure to allow a script to work
 * Played around with writing some Bash scripts
     * Found this: https://ryanstutorials.net/bash-scripting-tutorial/
+    
+### 2.7.23
+* Notes from Bash tutorial:
+    * $ is placed before any variable to be read
+    * $1, $2, $3, etc are the arguments (up to $9)
+    * $0 is the name of the bash script
+    * $# is the number of arguments
+    * $@ is all the arguments
+    * $? is the exit code for the most recently run process
+    * $$ is the process ID of the current script
+    * $USER is the username of the user running the script
+    * $SECONDS is the number of seconds since the script started
+    * $RANDOM returns a random number
+    * $LINENO returns the line number in the script
+    * Run env to see other variables you can use
+    * Declare variable: variable=value
+        * No space on either side of =!!
+    * Put quotes around things with spaces
+    * Command substitution: myvar=$( ls /dirName | wc -l ) 
+        * Then use as variable
+        * If output is several lines, /ns are removed
+    * To pass a variable to another process, export it:
+        * export var1
+        * ./script2.sh
+        * (Now script2 will run and have access to var1)
+        * One way process - any changes made in new process will not affect first process
+    * Ask user for input: read var1
+        * Arguments: -p allows you to specify a prompt, -s makes input silent
+        * Splits on whitespace
+    * Pass variables in from other processes:
+        * ```
+             #!/bin/bash
+             # A basic summary of my sales report
+             echo Here is a summary of the sales data:
+             echo ====================================
+             echo
+             cat /dev/stdin | cut -d' ' -f 2,3 | sort
+        * Run with: $ cat salesdata.txt | ./scriptName
+    * Ways to get input: command line arguments, read input during script duration, accept data redircted to script from STDIN
+        * Favor command line arguments when possible
+    * let is a builtin function of Bash that allows simple arithmetic
+        * let "a = $1 + 30"
+        * echo $a
+    * expr is similar except prints the result automatically and doesn't need quotes
+        * expr 5 + 4
+        * Save result: a=$( expr 10 - 3 )
+    * For multiplication: /*
+    * Or we can do arithmetic with $(( expression ))
+    * Length of variable: ${#var}
+    * ```
+       if [ <some test> ]
+       then
+         <commands>
+       elif [ <some test> ]
+       then
+         <different commands>
+       else
+         <other commands>
+       fi
+    * Example command: $1 -gt 100
+    * [] references the command test
+        * Operators included in test: run $ man test
+
+<img src="1.png"/>
+
+* if [ -r $1 ] && [ -s $1 ] <- and
+ * if [ $USER == 'bob' ] || [ $USER == 'andy' ] <- or
+* Cases are also a thing
+* While loops:
+
+        while [ <some test> ]
+        do
+            <commands>
+        done
+        ```
+* You can also replace while with until for like the opposite of a while loop
+* For loop:
+
+        for var in <list>
+        do
+            <commands>
+        done 
+* Can be done in ranges: {1..5} (NO SPACES!)
+    * {startValue..endValue..increment}
+* Can go through a file by putting the file name / path
+* Break and continue used normally
+* Select is a simple menu system:
+
+        select var in <list>
+        do
+            <commands>
+        done
+* Functions:
+  
+        function_name () {
+            <commands>
+        }
+* () never has anything in it - decor
+* No return values - just return status
+    * 0 means everything's good
+* A work around is use command sub and have the function print the result (and only that)
+* By default vars are global
+    * Create local var by add local in front of varName
+* You can override already existing commands
+* tPut: https://ryanstutorials.net/bash-scripting-tutorial/bash-user-interface.php
+
+* Created new branch `complete-automation` to work on creating a more complete automation
+* Began writing a script to automate the rest of the process
+* Started building standard file structure
+    
 
 ### TODO:
+On request from Christopher:
+* Update docs
+* Implement some sort of check to make sure you have the right file structure before running
+* Verify Box set up is the same
+* Remove specifying Meghan's file name from .env?
+* Test whole process
+
 Phase 3
 * Improve runtime if I can
 Phase 4
@@ -347,6 +464,10 @@ Misc
 * Column values - monday API: https://developer.monday.com/api-reference/docs/column-values
 * Git branching: https://gitlab.cs.usu.edu/erik.falor/fa22-cs1440-lecturenotes/-/blob/master/Module4/Advanced_Git.md
 * Accessing Box files through the terminal: https://support.box.com/hc/en-us/community/posts/4414665593619-Access-Box-via-terminal
+* Looping through file in Bash: https://www.baeldung.com/linux/bash-loop-file-content
+* Substrings Bash: https://stackabuse.com/substrings-in-bash/
+
+
 
 
 
