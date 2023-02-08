@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     loadingMessages = ["Pulling data from Ally API...", "Loading...", "Going to space...", "Locating data...",
                        "Organizing spreadsheets...", "Connecting with Canvas...",
-                       "Taking a coffee break (being a computer is hard work!)...", "Loading...", "Loading...",
+                       "Taking a coffee break (being a computer is hard work!)", "Loading...", "Loading...",
                        "Loading...", "Loading...", "Loading...", "Loading...",
                        "Rearranging solar panels...", "Hacking government computers...", "Preparing data...",
                        "Preparing data...", "API response pending...", "API response pending...",
@@ -81,7 +81,7 @@ if __name__ == "__main__":
             time.sleep(7)
         else:
             writeToReport("Process complete", r.content)
-            print("Process complete")
+            print("Download complete.")
             break
 
     print(f"\nDone in {time.time() - beginTime:.3f} seconds!")

@@ -1,11 +1,16 @@
 #!/bin/bash
 
-if [ $1 != "-new" ] && [ $1 != "-update" ]
+if [ $# -eq 0 ]
 then
-  echo "Invalid argument. Use -new to fill in a new board or -update to update an existing board."
+  echo "You must specify the state of the board you're updating. Use -new to fill in a new board or -update to update an existing board. (ex: $ bash newScript.sh -new)"
   exit 2
 fi
 
+if [ "$1" != "-new" ] && [ "$1" != "-update" ]
+then
+  echo "Invalid argument. Use -new to fill in a new board or -update to update an existing board. (ex: $ bash newScript.sh -new)"
+  exit 2
+fi
 
 cd
 cd Library/CloudStorage/Box-Box/Canvas\ Data\ Reports
@@ -28,34 +33,37 @@ while read line; do
     fi
 done < filenames.txt
 
+rm filenames.txt
+
 echo "Most recent course report: "$newestFile
 
 newestFilePath="Canvas Data Reports/"$newestFile
-echo "$newestFilePath"
+#echo "$newestFilePath"
 
-cp "$newestFilePath" ../../../Desktop/CIDI/qa-automation/"Meghan.xlsx"
+cp "$newestFilePath" ../../../Desktop/CIDI/qa-automation/"course-report-file.xlsx"
 
 echo "File moved into project folder."
+echo
 
 cd ../../../Desktop/CIDI/qa-automation
 
 #---------------------------------------------------------------------------------------------------------------------
 
-echo "Fetching Ally data."
+python3 getAllyData.py
 
-#python3 getAllyData.py
-
-#Now we have to wait until it's done...
+#Now we have to wait until it's done downloading...
 sleep 5
 
 ls ../../../Downloads
 
-echo "Unzipping "../../../Downloads/ally-*.zip
+#echo "Unzipping "../../../Downloads/ally-*.zip
 
 unzip -o ../../../Downloads/ally-*.zip
 ls ../../../Downloads
 
 rm ../../../Downloads/ally-*.zip
+
+echo
 
 #---------------------------------------------------------------------------------------------------------------------
 

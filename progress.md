@@ -395,15 +395,20 @@ def slowUpdateRow(itemID, rowInfo):
 * Created new branch `complete-automation` to work on creating a more complete automation
 * Began writing a script to automate the rest of the process
 * Started building standard file structure
+
+### 2.8.23
+* Tested the whole process for -new and -update
+* Remembered to remove the filenames.txt file
+* Tested the whole process and everything seemed to go smoothly
+* Decided not to remove specifying Meghan's file name in .env so there's still a manual option that doesn't use the required file structure
+* Wrote a script to confirm that Box is set up correctly and the required file set up is in place
+* Asked Christopher about if the Box file structure is always the same
     
 
 ### TODO:
 On request from Christopher:
 * Update docs
-* Implement some sort of check to make sure you have the right file structure before running
-* Verify Box set up is the same
-* Remove specifying Meghan's file name from .env?
-* Test whole process
+
 
 Phase 3
 * Improve runtime if I can
