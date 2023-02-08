@@ -402,12 +402,12 @@ def slowUpdateRow(itemID, rowInfo):
 * Tested the whole process and everything seemed to go smoothly
 * Decided not to remove specifying Meghan's file name in .env so there's still a manual option that doesn't use the required file structure
 * Wrote a script to confirm that Box is set up correctly and the required file set up is in place
-* Asked Christopher about if the Box file structure is always the same
+* Asked Christopher about if the Box file structure is always the same - seems like it is
+* Wrote documentation for using the new automation
     
 
 ### TODO:
-On request from Christopher:
-* Update docs
+* Create better organization
 
 
 Phase 3
