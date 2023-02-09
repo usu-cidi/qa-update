@@ -72,7 +72,7 @@ bash verifyFileStruct.sh
 ```
 
 You should receive the message `Required file structure verified successfully.` If you do, continue following these instructions. If you do not, 
-make the changes to comply with the file structure or see instructions to [**Run Manually**](runManuallyDocs.md).
+make the changes to comply with the file structure or see instructions to [**Run Manually**](doc/runManuallyDocs.md).
 
 Now we need to set up your environment with your specific settings.
 
