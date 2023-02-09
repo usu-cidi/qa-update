@@ -44,7 +44,7 @@ Unwrap the ZIP file.
 **Important:**
 There are two ways to run this script. The faster way involves a required file structure and for Box to be set up on your computer. To run the
 script in this way, continue following the instructions from here. 
-To run the script without the required file structure/Box access, see [**Run Manually**](runManuallyDocs.md).
+To run the script without the required file structure/Box access, see [**Run Manually**](doc/runManuallyDocs.md)).
 
 
 The required file structure looks like this:
