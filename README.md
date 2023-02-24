@@ -51,13 +51,15 @@ The required file structure looks like this:
 
 ```commandline
 root
-├── Desktop
-│   ├── CIDI
-│   │   ├── qa-automation
+└── Desktop
+    └── CIDI
+         └── qa-automation
 ```
 
 You must have a folder on your Desktop called `CIDI` which must contain the folder holding this project (that you downloaded as a .zip or 
 cloned from GitHub.) The folder needs to be renamed to be called `qa-automation`. Naming and locations must be exactly correct, or the script will not work.
+
+Additionally, all old `.zip` files in your Downloads folder beginning with `ally` must be removed before program execution.
 
 You must also have access to Box from your computer. If you have not set up Box Drive, see https://usu.service-now.com/aggies?id=kb_article_view&sysparm_article=KB0012596&sys_kb_id=383c6c1974d2a100cfa6824750f7d4bd#BoxDrive.
 

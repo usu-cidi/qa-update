@@ -30,6 +30,7 @@ def splitLine(line):
     newLine = newLine.replace("Plants, Soils and Climate", "Plants Soils and Climate")
     newLine = newLine.replace("Nutrition, Dietetics &Food Sci", "Nutrition Dietetics &Food Sci")
     newLine = newLine.replace("Humanities, Arts & Social Scie", "Humanities Arts & Social Scie")
+    newLine = newLine.replace("Technology, Design & Technical", "Technology Design & Technical")
 
     splitData = newLine.split(",")
 
@@ -41,6 +42,8 @@ def splitLine(line):
         splitData[NUM_STU_INDEX - 2] = "Nutrition, Dietetics &Food Sci"
     elif (splitData[NUM_STU_INDEX - 3] == '"Humanities Arts & Social Scie"'):
         splitData[NUM_STU_INDEX - 3] = "Humanities, Arts & Social Scie"
+    elif (splitData[NUM_STU_INDEX - 3] == '"Technology Design & Technical"'):
+        splitData[NUM_STU_INDEX - 3] = "Technology, Design & Technical"
 
     return splitData
 

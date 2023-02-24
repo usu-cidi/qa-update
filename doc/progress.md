@@ -404,19 +404,33 @@ def slowUpdateRow(itemID, rowInfo):
 * Wrote a script to confirm that Box is set up correctly and the required file set up is in place
 * Asked Christopher about if the Box file structure is always the same - seems like it is
 * Wrote documentation for using the new automation
+
+### 2.23.23
+* Added prettier file structure diagram to README
+* Showed Jenn the new, more complete automation
+  * It got stuck on moving the Ally file into the project directory
+    * It may be because she had a bunch of other ally*.zip files in her downloads?
+    * Could also be because her Box set up is different
+    * Tested it on my computer and it seems to work fine
+      * Idk why it lists everything in the Download folder tho, that's kinda weird
+    * We troubleshot a little more and it seems like the problem might have been the duplicate ally*.zip=
+  * There also seems to be a csv parsing error with a new department: Technology, Design & Technical
+* Fixed Technology, Design & Technical problem
+* Added note to remove all ally*.zip files from downloads to docs
     
 
 ### TODO:
-* Create better organization
-
+Immediate:
+* Update docs with Jenn's issues
 
 Phase 3
 * Improve runtime if I can
 Phase 4
 * ON HOLD
 Misc
-* `/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/pandas/core/internals/blocks.py:2323: RuntimeWarning: invalid value encountered in cast
-  values = values.astype(str)`?
+* Create better organization
+* Create a more user-friendly UI
+* Remove internal reliance on .csv files
 
 ## Dependencies:
 * pandas: `pip3 install pandas`
