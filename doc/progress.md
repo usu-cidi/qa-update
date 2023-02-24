@@ -414,15 +414,15 @@ def slowUpdateRow(itemID, rowInfo):
     * Tested it on my computer and it seems to work fine
       * Idk why it lists everything in the Download folder tho, that's kinda weird
     * We troubleshot a little more and it seems like the problem might have been the duplicate ally*.zip=
-  * There also seems to be a csv parsing error with a new department: Technology, Design & Technical
-* Fixed Technology, Design & Technical problem
+  * There also seems to be a csv parsing error with a new department: `Technology, Design & Technical`
+* Fixed `Technology, Design & Technical` problem
 * Added note to remove all ally*.zip files from downloads to docs
+
+### 2.24.23
+* Substituted `Study Abroad` with `Supervised` and `Disability Resource Center` with `CPD`
     
 
 ### TODO:
-Immediate:
-* Update docs with Jenn's issues
-
 Phase 3
 * Improve runtime if I can
 Phase 4

@@ -32,6 +32,9 @@ def splitLine(line):
     newLine = newLine.replace("Humanities, Arts & Social Scie", "Humanities Arts & Social Scie")
     newLine = newLine.replace("Technology, Design & Technical", "Technology Design & Technical")
 
+    newLine = newLine.replace("Study Abroad", "Supervised")
+    newLine = newLine.replace("Disability Resource Center", "CPD")
+
     splitData = newLine.split(",")
 
     if (splitData[NUM_STU_INDEX - 2] == '"Animal Dairy & Vet Sciences"'):

@@ -14,7 +14,6 @@
 
 import requests
 import json
-import sys
 import dotenv
 import os
 from time import time
@@ -31,6 +30,9 @@ def splitLine(line):
     newLine = newLine.replace("Nutrition, Dietetics &Food Sci", "Nutrition Dietetics &Food Sci")
     newLine = newLine.replace("Humanities, Arts & Social Scie", "Humanities Arts & Social Scie")
     newLine = newLine.replace("Technology, Design & Technical", "Technology Design & Technical")
+
+    newLine = newLine.replace("Study Abroad", "Supervised")
+    newLine = newLine.replace("Disability Resource Center", "CPD")
 
     splitData = newLine.split(",")
 
