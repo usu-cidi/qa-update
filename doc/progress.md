@@ -420,6 +420,10 @@ def slowUpdateRow(itemID, rowInfo):
 
 ### 2.24.23
 * Substituted `Study Abroad` with `Supervised` and `Disability Resource Center` with `CPD`
+
+### 3.3.23
+* Organized references
+* Started looking at maybe converting this project to a webhook/AWS lambda
     
 
 ### TODO:
@@ -430,6 +434,7 @@ Phase 4
 Misc
 * Create better organization
 * Create a more user-friendly UI
+  * Webhook?
 * Remove internal reliance on .csv files
 
 ## Dependencies:
@@ -439,6 +444,8 @@ Misc
 * dotenv: `pip3 install python-dotenv --user`
 
 ## Sources & References:
+
+### Monday
 * monday heading sources key: https://docs.google.com/spreadsheets/d/1omE1g2X3PZ_4EnKb5MrIxgp5HzXU-8NgndnksSC_x5A/edit#gid=1453652472
 * monday API playground: https://cidi-gang.monday.com/apps/playground
 * monday app docs: https://developer.monday.com/apps/docs/intro
@@ -447,44 +454,66 @@ Misc
 * monday board ids: https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s
 * monday apps: https://developer.monday.com/apps/docs/quickstart-integration
 * CIDI QA board update documentation: https://usu-accessibility.kbee.app/page/10CD2AmsWRlH7cmSNiqGi3xDgX_cWBinKfLFlJ18f_2A/Canvas-Course-Summary-Update
-* Ally accessibility API docs: https://usergroup.ally.ac/file/file/download?guid=64b06a7b-2eb4-4ee0-899c-6ad07768b2cc
-* Reading excel files: https://linuxhint.com/read-excel-file-python/#:~:text=The%20read_excel()%20function%20of,in%20the%20variable%20named%20data.
 * monday header template: https://docs.google.com/spreadsheets/d/1gI74H1U4iMm95gjg6i8RZO4OXesYZBh2EsNH0yLsph4/edit#gid=0
-* Editing .csv file: https://www.geeksforgeeks.org/update-column-value-of-csv-in-python/
-* Read .csv file: https://www.geeksforgeeks.org/python-read-csv-columns-into-list/
-* Access project already using Ally API: https://github.com/usu-access/file_to_page/blob/master/action.php
-* OAth python library: https://pypi.org/project/oauthlib/
-* OAuthLib docs: https://oauthlib.readthedocs.io/en/latest/index.html
-* Requests-OAuthlib: https://github.com/requests/requests-oauthlib
-  * https://requests-oauthlib.readthedocs.io/en/latest/oauth1_workflow.html
-* Requests docs: https://requests.readthedocs.io/en/latest/
 * monday app quickstart guide: https://developer.monday.com/apps/docs/quickstart-view
 * monday apps marketplace listing for Update with Excel / CSV ADF Tech tool: https://monday.com/marketplace/90
   * Docs: https://adftech.net/monday/update-with-excel-csv
-* Help with requests_oauthlib: https://stackoverflow.com/questions/11085341/simple-python-oauth-1-0-example-with-consumer-key-and-secret
-* Byte strings: https://www.geeksforgeeks.org/effect-of-b-character-in-front-of-a-string-literal-in-python/#:~:text=In%20python%2C%20the%20'b',I%20am%20a%20byte%20String'
-* OAuth requests explanation: https://testdriven.io/blog/oauth-python/
-* Pandas dtyping: https://www.roelpeters.be/solved-dtypewarning-columns-have-mixed-types-specify-dtype-option-on-import-or-set-low-memory-in-pandas/
-* Pandas loc: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.loc.html
-* More Pandas loc: https://sparkbyexamples.com/pandas/pandas-select-multiple-columns-in-dataframe/
-* Insert row into pandas dataframe: https://www.geeksforgeeks.org/insert-row-at-given-position-in-pandas-dataframe/
-* Citing code: https://uark.libguides.com/CSCE/CitingCode
-* USU VPN: https://usu.service-now.com/aggies?id=kb_article_view&sys_kb_id=6f0283fe30f0d100817928f01ee68460
-* Links in markdown: https://stackoverflow.com/questions/2822089/how-to-link-to-part-of-the-same-document-in-markdown
-* Python exit codes: https://linuxhint.com/python-exit-codes/#:~:text=Python%20has%20only%20two%20standard,process%20exited%20with%20a%20failure.
-* About open source licenses: https://gist.github.com/nicolasdao/a7adda51f2f185e8d2700e1573d8a633
-* Search dataframe column: https://thispointer.com/how-to-check-if-a-pandas-column-contains-a-value/
-* Pandas read_excel: https://pandas.pydata.org/docs/reference/api/pandas.read_excel.html
-* Dataframe header rows: https://www.geeksforgeeks.org/how-to-add-header-row-to-a-pandas-dataframe/
 * Simple column values - monday API: https://community.monday.com/t/introducing-simple-column-values-for-api/12831
 * Changing column values - monday API: https://developer.monday.com/api-reference/docs/change-column-values
 * Monday API python: https://support.monday.com/hc/en-us/articles/360013483119-API-Quickstart-Tutorial-Python
 * Items - monday API: https://developer.monday.com/api-reference/docs/items-queries
 * Column values - monday API: https://developer.monday.com/api-reference/docs/column-values
-* Git branching: https://gitlab.cs.usu.edu/erik.falor/fa22-cs1440-lecturenotes/-/blob/master/Module4/Advanced_Git.md
-* Accessing Box files through the terminal: https://support.box.com/hc/en-us/community/posts/4414665593619-Access-Box-via-terminal
+
+### Ally
+* Ally accessibility API docs: https://usergroup.ally.ac/file/file/download?guid=64b06a7b-2eb4-4ee0-899c-6ad07768b2cc
+* Access project already using Ally API: https://github.com/usu-access/file_to_page/blob/master/action.php
+
+### Python
+* Reading excel files: https://linuxhint.com/read-excel-file-python/#:~:text=The%20read_excel()%20function%20of,in%20the%20variable%20named%20data
+* Editing .csv file: https://www.geeksforgeeks.org/update-column-value-of-csv-in-python/
+* Read .csv file: https://www.geeksforgeeks.org/python-read-csv-columns-into-list/
+* Help with requests_oauthlib: https://stackoverflow.com/questions/11085341/simple-python-oauth-1-0-example-with-consumer-key-and-secret
+* Requests-OAuthlib: 
+  * https://github.com/requests/requests-oauthlib
+  * https://requests-oauthlib.readthedocs.io/en/latest/oauth1_workflow.html
+* Byte strings: https://www.geeksforgeeks.org/effect-of-b-character-in-front-of-a-string-literal-in-python/#:~:text=In%20python%2C%20the%20'b',I%20am%20a%20byte%20String'
+* OAuth requests explanation: https://testdriven.io/blog/oauth-python/
+* Python exit codes: https://linuxhint.com/python-exit-codes/#:~:text=Python%20has%20only%20two%20standard,process%20exited%20with%20a%20failure
+
+#### OAuth
+* OAuth python library: https://pypi.org/project/oauthlib/
+* OAuthLib docs: https://oauthlib.readthedocs.io/en/latest/index.html
+
+#### Requests
+* Requests docs: https://requests.readthedocs.io/en/latest/
+
+#### Pandas
+* Pandas dtyping: https://www.roelpeters.be/solved-dtypewarning-columns-have-mixed-types-specify-dtype-option-on-import-or-set-low-memory-in-pandas/
+* Pandas loc: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.loc.html
+* More Pandas loc: https://sparkbyexamples.com/pandas/pandas-select-multiple-columns-in-dataframe/
+* Insert row into pandas dataframe: https://www.geeksforgeeks.org/insert-row-at-given-position-in-pandas-dataframe/
+* Search dataframe column: https://thispointer.com/how-to-check-if-a-pandas-column-contains-a-value/
+* Pandas read_excel: https://pandas.pydata.org/docs/reference/api/pandas.read_excel.html
+* Dataframe header rows: https://www.geeksforgeeks.org/how-to-add-header-row-to-a-pandas-dataframe/
+
+### Bash
 * Looping through file in Bash: https://www.baeldung.com/linux/bash-loop-file-content
 * Substrings Bash: https://stackabuse.com/substrings-in-bash/
+* Scripting tutorial: https://ryanstutorials.net/bash-scripting-tutorial/
+
+### Box
+* Accessing Box files through the terminal: https://support.box.com/hc/en-us/community/posts/4414665593619-Access-Box-via-terminal
+* Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/
+
+### AWS Lambda
+* Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/
+
+### Misc
+* Citing code: https://uark.libguides.com/CSCE/CitingCode
+* USU VPN: https://usu.service-now.com/aggies?id=kb_article_view&sys_kb_id=6f0283fe30f0d100817928f01ee68460
+* Links in markdown: https://stackoverflow.com/questions/2822089/how-to-link-to-part-of-the-same-document-in-markdown
+* About open source licenses: https://gist.github.com/nicolasdao/a7adda51f2f185e8d2700e1573d8a633
+* Git branching: https://gitlab.cs.usu.edu/erik.falor/fa22-cs1440-lecturenotes/-/blob/master/Module4/Advanced_Git.md
 
 
 
