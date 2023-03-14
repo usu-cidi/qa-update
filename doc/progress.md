@@ -424,18 +424,28 @@ def slowUpdateRow(itemID, rowInfo):
 ### 3.3.23
 * Organized references
 * Started looking at maybe converting this project to a webhook/AWS lambda
+
+### 3.14.23
+* Issues with moving to webhook/serverless
+  * Reliance on csvs/file system
+  * Pulling from Meghan's data - Box file
+  * Ally file downloads as a zip
+* Created map of data flow for better visualization of what I need to do
+
+<img src="2.png"/>
+
+* 
     
 
 ### TODO:
-Phase 3
-* Improve runtime if I can
-Phase 4
-* ON HOLD
-Misc
 * Create better organization
 * Create a more user-friendly UI
   * Webhook?
 * Remove internal reliance on .csv files
+
+* Transition licence
+
+* Figure out different deployment environments in Lambda
 
 ## Dependencies:
 * pandas: `pip3 install pandas`
@@ -479,6 +489,7 @@ Misc
 * Byte strings: https://www.geeksforgeeks.org/effect-of-b-character-in-front-of-a-string-literal-in-python/#:~:text=In%20python%2C%20the%20'b',I%20am%20a%20byte%20String'
 * OAuth requests explanation: https://testdriven.io/blog/oauth-python/
 * Python exit codes: https://linuxhint.com/python-exit-codes/#:~:text=Python%20has%20only%20two%20standard,process%20exited%20with%20a%20failure
+* pyngrok: https://pypi.org/project/pyngrok/
 
 #### OAuth
 * OAuth python library: https://pypi.org/project/oauthlib/
@@ -507,6 +518,7 @@ Misc
 
 ### AWS Lambda
 * Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/
+* Separating deployment environments: https://www.google.com/search?q=separate+dev+and+prod+code+aws+lambda&rlz=1C5CHFA_enUS1023US1023&oq=separate+dev+and+prod+code+aws+lambda&aqs=chrome..69i57j33i160i395l3.13252j1j9&sourceid=chrome&ie=UTF-8
 
 ### Misc
 * Citing code: https://uark.libguides.com/CSCE/CitingCode
@@ -514,6 +526,7 @@ Misc
 * Links in markdown: https://stackoverflow.com/questions/2822089/how-to-link-to-part-of-the-same-document-in-markdown
 * About open source licenses: https://gist.github.com/nicolasdao/a7adda51f2f185e8d2700e1573d8a633
 * Git branching: https://gitlab.cs.usu.edu/erik.falor/fa22-cs1440-lecturenotes/-/blob/master/Module4/Advanced_Git.md
+* Git tagging: https://gitlab.cs.usu.edu/erik.falor/fa22-cs1440-lecturenotes/-/blob/master/Using_Git/Intermediate_Git.md#visit-older-points-of-history-in-the-git-timeline
 
 
 
