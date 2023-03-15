@@ -434,13 +434,15 @@ def slowUpdateRow(itemID, rowInfo):
 
 <img src="2.png"/>
 
-* 
+### 3.15.23
+* Connected to monday with webhook
+* Started looking at alternate ways to use the Ally API
     
 
 ### TODO:
 * Create better organization
 * Create a more user-friendly UI
-  * Webhook?
+  * Webhook
 * Remove internal reliance on .csv files
 
 * Transition licence
@@ -473,6 +475,7 @@ def slowUpdateRow(itemID, rowInfo):
 * Monday API python: https://support.monday.com/hc/en-us/articles/360013483119-API-Quickstart-Tutorial-Python
 * Items - monday API: https://developer.monday.com/api-reference/docs/items-queries
 * Column values - monday API: https://developer.monday.com/api-reference/docs/column-values
+* Respond to webhook challenge: https://community.monday.com/t/how-to-validate-a-monday-com-webhook-in-python/27273/2
 
 ### Ally
 * Ally accessibility API docs: https://usergroup.ally.ac/file/file/download?guid=64b06a7b-2eb4-4ee0-899c-6ad07768b2cc
@@ -489,7 +492,12 @@ def slowUpdateRow(itemID, rowInfo):
 * Byte strings: https://www.geeksforgeeks.org/effect-of-b-character-in-front-of-a-string-literal-in-python/#:~:text=In%20python%2C%20the%20'b',I%20am%20a%20byte%20String'
 * OAuth requests explanation: https://testdriven.io/blog/oauth-python/
 * Python exit codes: https://linuxhint.com/python-exit-codes/#:~:text=Python%20has%20only%20two%20standard,process%20exited%20with%20a%20failure
-* pyngrok: https://pypi.org/project/pyngrok/
+* pyngrok: 
+  * docs: https://pypi.org/project/pyngrok/
+  * examples: https://snyk.io/advisor/python/pyngrok/example
+#### Flask:
+* https://www.serverless.com/blog/flask-serverless-api-in-aws-lambda-the-easy-way
+* https://flask.palletsprojects.com/en/2.2.x/quickstart/#a-minimal-application
 
 #### OAuth
 * OAuth python library: https://pypi.org/project/oauthlib/
