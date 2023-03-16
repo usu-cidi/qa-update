@@ -443,7 +443,9 @@ def slowUpdateRow(itemID, rowInfo):
   * Asked Ludo if he has ideas
   * Maybe if there's really not a great way to do this but I can get it working with Box it could be something that we do separately periodically and update in Box?
 * Started looking at getting course report from Box
-    
+* Was successfully able to access an Excel file from Box and read into a dataframe!!
+* Tested with the actual course file and it works!!
+
 
 ### TODO:
 * Create better organization
@@ -501,6 +503,8 @@ def slowUpdateRow(itemID, rowInfo):
 * pyngrok: 
   * docs: https://pypi.org/project/pyngrok/
   * examples: https://snyk.io/advisor/python/pyngrok/example
+* Decode excel file bytes: https://stackoverflow.com/questions/52075814/how-to-decode-an-encoded-excel-file-using-python
+* Write bytes to file: https://www.geeksforgeeks.org/python-write-bytes-to-file/
 #### Flask:
 * https://www.serverless.com/blog/flask-serverless-api-in-aws-lambda-the-easy-way
 * https://flask.palletsprojects.com/en/2.2.x/quickstart/#a-minimal-application
@@ -533,6 +537,8 @@ def slowUpdateRow(itemID, rowInfo):
 * Get access tokens: https://www.youtube.com/watch?v=y-6iED1UDUg
 * Python SDK usage: https://github.com/box/box-python-sdk/blob/main/docs/usage/authentication.md
 * Get file content?: https://stackoverflow.com/questions/62380955/how-to-create-a-python-request-to-box-with-requests-library-or-box-api
+* Permission scopes: https://developer.box.com/guides/api-calls/permissions-and-errors/scopes/
+* 
 
 ### AWS Lambda
 * Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/
