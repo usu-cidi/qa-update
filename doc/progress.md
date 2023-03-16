@@ -445,6 +445,7 @@ def slowUpdateRow(itemID, rowInfo):
 * Started looking at getting course report from Box
 * Was successfully able to access an Excel file from Box and read into a dataframe!!
 * Tested with the actual course file and it works!!
+  * Should be super easy to use since I originally read the excel file into a dataframe so it should work the same
 
 
 ### TODO:

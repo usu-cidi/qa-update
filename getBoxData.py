@@ -4,20 +4,19 @@ from boxsdk import Client, OAuth2
 import pandas as pd
 import io
 
-if __name__ == '__main__':
-    dotenv.load_dotenv(dotenv.find_dotenv())
+dotenv.load_dotenv(dotenv.find_dotenv())
 
+def getDataFromBox(fileId):
     auth = OAuth2(
         client_id=os.environ.get('BOX_CLIENT_ID'),
         client_secret=os.environ.get('BOX_SECRET'),
-        access_token="",
+        access_token=youForgotThis,
     )
     client = Client(auth)
-    me = client.user().get()
-    print(f'My user ID is {me.id}')
+    # me = client.user().get()
+    # print(f'My user ID is {me.id}')
 
-    file_id = '1158649874756'
-    file_info = client.file(file_id)
+    file_info = client.file(fileId)
     # print(file_info.get().content())
 
     some_bytes = file_info.get().content()
@@ -31,11 +30,6 @@ if __name__ == '__main__':
     toread.seek(0)  # reset the pointer
 
     boxData = pd.read_excel(toread)  # now read to dataframe
-    print(boxData.to_string())
 
-
-
-
-
-
+    return boxData
 
