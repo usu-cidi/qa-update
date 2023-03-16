@@ -437,6 +437,12 @@ def slowUpdateRow(itemID, rowInfo):
 ### 3.15.23
 * Connected to monday with webhook
 * Started looking at alternate ways to use the Ally API
+
+### 3.16.23
+* Kept trying to think of ways to get the Ally data
+  * Asked Ludo if he has ideas
+  * Maybe if there's really not a great way to do this but I can get it working with Box it could be something that we do separately periodically and update in Box?
+* Started looking at getting course report from Box
     
 
 ### TODO:
@@ -523,6 +529,10 @@ def slowUpdateRow(itemID, rowInfo):
 ### Box
 * Accessing Box files through the terminal: https://support.box.com/hc/en-us/community/posts/4414665593619-Access-Box-via-terminal
 * Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/
+* API docs: https://developer.box.com/reference/
+* Get access tokens: https://www.youtube.com/watch?v=y-6iED1UDUg
+* Python SDK usage: https://github.com/box/box-python-sdk/blob/main/docs/usage/authentication.md
+* Get file content?: https://stackoverflow.com/questions/62380955/how-to-create-a-python-request-to-box-with-requests-library-or-box-api
 
 ### AWS Lambda
 * Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/
