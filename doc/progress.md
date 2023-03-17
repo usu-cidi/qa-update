@@ -446,9 +446,36 @@ def slowUpdateRow(itemID, rowInfo):
 * Was successfully able to access an Excel file from Box and read into a dataframe!!
 * Tested with the actual course file and it works!!
   * Should be super easy to use since I originally read the excel file into a dataframe so it should work the same
+* (Using test1 auth for box)
 
+### 3.17.23
+* Found some more Ally resources from Anthology
+* Successfully created JWT token and made successful curl request
+* JWT creation:
+  * Headers: ```{
+  "alg": "HS256",
+  "typ": "JWT"
+}```
+  * Payload: ```{
+ "iat": 1679061600,
+ "exp": 1710684000,
+ "roles": "urn:lti:role:ims/lis/Administrator",
+ "custom_canvas_course_id": "519",
+ "custom_canvas_user_id": "CLIENT_ID",
+ "launch_presentation_locale": "en",
+ "launch_presentation_return_url": "https://ally.instructure.com"
+}```
+* Was able to access the Ally API but now that I understand it a little more I don't think it has the endpoints I need :(
+  * So we'll probably have to go with the contingency plan - write a script that will send the Ally data to box
+* Set up sending the Ally file to Box as well as retrieving it
+* Refactored combineData.py and converted to take in two dataframes instead of two files
+* 
 
 ### TODO:
+* Change monday update to read from dataframe instead of file
+* Write new docs
+* Figure out to run
+
 * Create better organization
 * Create a more user-friendly UI
   * Webhook
@@ -489,6 +516,12 @@ def slowUpdateRow(itemID, rowInfo):
 ### Ally
 * Ally accessibility API docs: https://usergroup.ally.ac/file/file/download?guid=64b06a7b-2eb4-4ee0-899c-6ad07768b2cc
 * Access project already using Ally API: https://github.com/usu-access/file_to_page/blob/master/action.php
+* Docs: https://docs.anthology.com/rest-apis/ally/getting-started
+* Auth
+  * Epoch date converter: https://www.epochconverter.com/
+  * JWT generator: https://jwt.io/
+  * Docs: https://docs.anthology.com/rest-apis/ally/auth
+* AAAS: https://ally.ac/api/
 
 ### Python
 * Reading excel files: https://linuxhint.com/read-excel-file-python/#:~:text=The%20read_excel()%20function%20of,in%20the%20variable%20named%20data
@@ -539,7 +572,7 @@ def slowUpdateRow(itemID, rowInfo):
 * Python SDK usage: https://github.com/box/box-python-sdk/blob/main/docs/usage/authentication.md
 * Get file content?: https://stackoverflow.com/questions/62380955/how-to-create-a-python-request-to-box-with-requests-library-or-box-api
 * Permission scopes: https://developer.box.com/guides/api-calls/permissions-and-errors/scopes/
-* 
+* Upload file: https://developer.box.com/reference/post-files-content/
 
 ### AWS Lambda
 * Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/
@@ -552,7 +585,7 @@ def slowUpdateRow(itemID, rowInfo):
 * About open source licenses: https://gist.github.com/nicolasdao/a7adda51f2f185e8d2700e1573d8a633
 * Git branching: https://gitlab.cs.usu.edu/erik.falor/fa22-cs1440-lecturenotes/-/blob/master/Module4/Advanced_Git.md
 * Git tagging: https://gitlab.cs.usu.edu/erik.falor/fa22-cs1440-lecturenotes/-/blob/master/Using_Git/Intermediate_Git.md#visit-older-points-of-history-in-the-git-timeline
-
+* curl converter: https://curlconverter.com/python/
 
 
 

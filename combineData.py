@@ -18,39 +18,29 @@ from time import time
 import sys
 import dotenv
 
+dotenv.load_dotenv(dotenv.find_dotenv())
+
 def writeToReport(label, object):
     f = open("performanceReport3850265.txt", "a")
     f.write(f"{label}: {object}\n")
     f.close()
 
-if __name__ == "__main__":
-    print("Combining the course report with the Ally report...")
-    writeToReport("combineSheets.py", "")
+def combineReports(courseDataFrame, allyDataFrame):
 
-    dotenv.load_dotenv(dotenv.find_dotenv())
-    COURSE_REPORT_FILENAME = os.environ.get('COURSE_REPORT_FILENAME')
-    ALLY_FILENAME = "courses.csv"
-    beginTime = time()
-
-    meghanDataObj = pd.read_excel(COURSE_REPORT_FILENAME)
-    meghanData = pd.DataFrame(meghanDataObj)
-
-    allyDataObj = pd.read_csv(ALLY_FILENAME)
-    allyData = pd.DataFrame(allyDataObj)
     allyDict = {}
 
-    allyCourses = allyData["Course name"]
-    for i in range(0, len(allyCourses)): #through Ally data
-        courseInfo = [allyData["Overall score"][i], allyData["Files score"][i], allyData["WYSIWYG score"][i],
-                      allyData["Scanned:1"][i], allyData["ImageDescription:2"][i]]
+    allyCourses = allyDataFrame["Course name"]
+    for i in range(0, len(allyCourses)):  # through Ally data
+        courseInfo = [allyDataFrame["Overall score"][i], allyDataFrame["Files score"][i], allyDataFrame["WYSIWYG score"][i],
+                      allyDataFrame["Scanned:1"][i], allyDataFrame["ImageDescription:2"][i]]
         allyDict[allyCourses[i]] = courseInfo
 
-    courseNames = meghanData["Course"]
+    courseNames = courseDataFrame["Course"]
 
-    for i in range(0, len(courseNames)): #through Meghan's data
+    for i in range(0, len(courseNames)):  # through Meghan's data
         try:
             allyInfo = allyDict[courseNames[i]]
-            meghanData.loc[i, ["Overall Ally", "Files Ally", "WYSIWYG Ally", "PDF no OCR", "Images no Alt"]] = allyInfo
+            courseDataFrame.loc[i, ["Overall Ally", "Files Ally", "WYSIWYG Ally", "PDF no OCR", "Images no Alt"]] = allyInfo
             # print(f"Successfully matched {courseNames[i]}")
             writeToReport("Successfully matched", courseNames[i])
         except KeyError:
@@ -60,7 +50,25 @@ if __name__ == "__main__":
             print(f"Error in {courseNames[i]}: {e}")
             writeToReport(f"Error in {courseNames[i]}", e)
 
-    meghanData.to_csv("FilledInFile.csv", index=False) #line causing RuntimeWarning :/
+    return courseDataFrame
+
+
+if __name__ == "__main__":
+    print("Combining the course report with the Ally report...")
+    writeToReport("combineSheets.py", "")
+
+    COURSE_REPORT_FILENAME = "course-report.xlsx"
+    ALLY_FILENAME = "courses.csv"
+    beginTime = time()
+
+    meghanDataObj = pd.read_excel(COURSE_REPORT_FILENAME)
+    meghanData = pd.DataFrame(meghanDataObj)
+
+    allyDataObj = pd.read_csv(ALLY_FILENAME)
+    allyData = pd.DataFrame(allyDataObj)
+
+    completeReport = combineReports(meghanData, allyData)
+    print(completeReport.to_string())
 
     print(f"\nDone in {time() - beginTime:.3f} seconds!", file=sys.stderr)
     writeToReport(f"Done in {time() - beginTime:.3f} seconds!", "")

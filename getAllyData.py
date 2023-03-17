@@ -13,7 +13,7 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from requests_oauthlib import OAuth1Session
-# import dotenv
+import dotenv
 import os
 import sys
 import json
@@ -34,7 +34,7 @@ f.close()
 if __name__ == "__main__":
     writeToReport("getAllyData.py", "")
 
-    # dotenv.load_dotenv(dotenv.find_dotenv())
+    dotenv.load_dotenv(dotenv.find_dotenv())
 
     CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
     CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
