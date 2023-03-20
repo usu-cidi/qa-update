@@ -469,10 +469,53 @@ def slowUpdateRow(itemID, rowInfo):
   * So we'll probably have to go with the contingency plan - write a script that will send the Ally data to box
 * Set up sending the Ally file to Box as well as retrieving it
 * Refactored combineData.py and converted to take in two dataframes instead of two files
-* 
+
+
+### 3.20.23
+* Ludo sent me an example of his use of the Ally API converted to NodeJS- it works for one file at a time, and doesn't look like it's possible to get for the whole institution, there doesn't seem to be an endpoint for that
+  * Plan B it is then
+* Dataframe headers:
+```angular2html
+Course
+URL
+TidyUp URL
+Report URL
+Instructor Names
+Email (Inst)
+College
+Department
+Delivery Method
+Students
+Overall in Use Ratio
+Files
+Files in Use
+Files in Use Ratio
+WYSIWYG
+WYSIWYG in Use
+Videos
+Kaltura
+YouTube
+Flash
+Broken Links
+Nav Items
+Files Nav
+Overall Ally
+Files Ally
+WYSIWYG Ally
+PDF
+PDF in Use Ratio
+PDF no OCR
+Images
+Images no Alt
+Images in Use
+```
+* Worked on converting the monday update code to read from a dataframe instead of a file
+* Finished conversion to use dataframe
+
 
 ### TODO:
-* Change monday update to read from dataframe instead of file
+* Split filling new board and updating existing board
+* Connect everything together
 * Write new docs
 * Figure out to run
 
@@ -558,6 +601,7 @@ def slowUpdateRow(itemID, rowInfo):
 * Search dataframe column: https://thispointer.com/how-to-check-if-a-pandas-column-contains-a-value/
 * Pandas read_excel: https://pandas.pydata.org/docs/reference/api/pandas.read_excel.html
 * Dataframe header rows: https://www.geeksforgeeks.org/how-to-add-header-row-to-a-pandas-dataframe/
+* NaN: https://towardsdatascience.com/5-methods-to-check-for-nan-values-in-in-python-3f21ddd17eed
 
 ### Bash
 * Looping through file in Bash: https://www.baeldung.com/linux/bash-loop-file-content

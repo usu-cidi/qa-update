@@ -42,7 +42,7 @@ def combineReports(courseDataFrame, allyDataFrame):
             allyInfo = allyDict[courseNames[i]]
             courseDataFrame.loc[i, ["Overall Ally", "Files Ally", "WYSIWYG Ally", "PDF no OCR", "Images no Alt"]] = allyInfo
             # print(f"Successfully matched {courseNames[i]}")
-            writeToReport("Successfully matched", courseNames[i])
+            #writeToReport("Successfully matched", courseNames[i])
         except KeyError:
             print(f"{courseNames[i]} could not be matched in the ally file.")
             writeToReport("Not found in ally file", courseNames[i])

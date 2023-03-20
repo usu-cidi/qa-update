@@ -14,7 +14,6 @@
 
 import requests
 import json
-import sys
 import dotenv
 import os
 from time import time
@@ -92,7 +91,6 @@ def createNewItem(rowInfo):
         r = requests.post(url=apiUrl, json=data, headers=headers)  # make request
         writeToReport("Response", r.json())
 
-        #print(r.json())
         return r.json()["data"]["create_item"]["id"]
     except Exception as e:
         writeToReport("Exception in API call/JSON", e)

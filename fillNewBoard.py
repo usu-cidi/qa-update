@@ -140,3 +140,22 @@ if __name__ == "__main__":
     writeToReport("New rows created", numNew)
     print(f"\nDone in {time() - beginTime:.3f} seconds!")
     writeToReport(f"Done in {time() - beginTime:.3f} seconds!", "")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
