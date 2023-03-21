@@ -519,25 +519,28 @@ Images in Use
 * Created monday automations to take care of changing the group based on number of students
   * Removed functionality from code
   * Should speed things up quite a bit
-* 
+* Reorganized repo
+* Wrote up some basic usage instructions
+* Updated data flow visualization
+  * <img src="3.png"/>
+* Added update for the trigger row
+* Showed Jenn what I've been doing
+* Added error handling if webhook is triggered on row other than `Automations`
 
 
 ### TODO:
-* Write new docs
-* Figure out to run
 * Fix the hard coded index problem while getting column values
-* Ask about adding automations to the main board
 * Error handling while getting Box data
   * Figure out better auth method
-
-* Create better organization
-* Create a more user-friendly UI
-  * Webhook
-* Remove internal reliance on .csv files
-
-* Transition licence
+* Send Ally to Box
 
 * Figure out different deployment environments in Lambda
+
+* Transition licence?
+* Ask about adding automations to the main board
+* * Trigger column/row
+  * Set permissions?
+  * Collapse in other views?
 
 ## Dependencies:
 * pandas: `pip3 install pandas`

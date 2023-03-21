@@ -24,6 +24,10 @@ COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", 
 # "status_15": trigger column - MAY BE DIFFERENT IN PRODUCTION
 # "date": last updated column - MAY BE DIFFERENT IN PRODUCTION
 
+SMALL_COL_IDS = ["status_15", "date"]
+# "status_15": trigger column - MAY BE DIFFERENT IN PRODUCTION
+# "date": last updated column - MAY BE DIFFERENT IN PRODUCTION
+
 GROUP_IDS = {100: "new_group659", 50: "new_group84060", 20: "new_group63769", 10: "new_group69712", 1: "new_group",
              0: "new_group7956"}
 
@@ -74,7 +78,7 @@ def createNewItem(rowInfo, boardId):
     query = f'mutation ($myItemName: String!, $columnVals: JSON!) {{ create_item (board_id:{boardId}, group_id:{groupID}, item_name:$myItemName, column_values:$columnVals) {{ id }} }}'
     writeToReport("Attempting query", query)
 
-    rowInfo.append("Row updated")
+    rowInfo.append("Updated")
     rowInfo.append(date.today())
 
     colVals = dict(zip(COL_IDS, rowInfo[1:]))
@@ -97,12 +101,33 @@ def createNewItem(rowInfo, boardId):
         print(f":( {e}")
         return None
 
+def updateTriggerRow(triggerRowId, boardId, type="Updated"):
+    query = f'mutation ($columnVals: JSON!) {{ change_multiple_column_values (board_id:{boardId}, item_id: {triggerRowId}, column_values:$columnVals) {{ name id }} }}'
+    writeToReport("Attempting query", query)
+
+
+    rowInfo = [type, date.today()]
+
+    colVals = dict(zip(SMALL_COL_IDS, rowInfo))
+    vars = {
+        'columnVals': json.dumps(colVals, default=str)
+    }
+
+    data = {'query': query, 'variables': vars}
+
+    try:
+        r = requests.post(url=API_URL, json=data, headers=HEADERS)  # make request
+        writeToReport("Response", r.json())
+        return r.json()["data"]["change_multiple_column_values"]["id"]
+    except Exception as e:
+        writeToReport("Exception in API call/JSON", e)
+        return None
 
 def updateRow(itemID, rowInfo, boardId):
     query = f'mutation ($columnVals: JSON!) {{ change_multiple_column_values (board_id:{boardId}, item_id: {itemID}, column_values:$columnVals) {{ name id }} }}'
     writeToReport("Attempting query", query)
 
-    rowInfo.append("Row updated")
+    rowInfo.append("Updated")
     rowInfo.append(date.today())
 
     colVals = dict(zip(COL_IDS, rowInfo[1:]))

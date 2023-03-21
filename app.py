@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 import dotenv
 from talkToBox import getDataFromBox
 from combineData import combineReports
-from newUpdateMonday import fillNewBoard, updateExistingBoard, getColumnValues
+from updateMonday import fillNewBoard, updateExistingBoard, getColumnValues, updateTriggerRow
 
 app = Flask(__name__)
 
@@ -46,6 +46,11 @@ def helloWorld():
         allyBoxId = ids[0]  # '1167467551435'
         crBoxId = ids[1]  # '1158649874756'
 
+        if not allyBoxId.isnumeric() or not crBoxId.isnumeric():
+            print("Triggered on incorrect row")
+            updateTriggerRow(triggerRowId, boardId, "")
+            return "Thank you!", 200
+
         allyData = getDataFromBox(allyBoxId, "csv")
         courseReportData = getDataFromBox(crBoxId, 'excel')
 
@@ -54,9 +59,11 @@ def helloWorld():
         if triggerType == "Fill whole board":
             fillNewBoard(completeReport, boardId)
             print("Fill in complete")
+            updateTriggerRow(triggerRowId, boardId)
             return "Thank you!", 200
 
         updateExistingBoard(completeReport, boardId)
+        updateTriggerRow(triggerRowId, boardId)
         print("Update complete")
 
     return "Thank you!", 200
