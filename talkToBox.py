@@ -10,7 +10,7 @@ def getDataFromBox(fileId, fileType):
     auth = OAuth2(
         client_id=os.environ.get('BOX_CLIENT_ID'),
         client_secret=os.environ.get('BOX_SECRET'),
-        access_token=os.environ.get('BOX_ACCESS'),
+        access_token=''  # os.environ.get('BOX_ACCESS'),
     )
     client = Client(auth)
     # me = client.user().get()

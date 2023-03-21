@@ -515,12 +515,20 @@ Images in Use
 
 ### 3.21.23
 * Split filling new board and updating existing board into separate functions
+* Connected everything to `app.py`
+* Created monday automations to take care of changing the group based on number of students
+  * Removed functionality from code
+  * Should speed things up quite a bit
+* 
 
 
 ### TODO:
-* Connect everything together
 * Write new docs
 * Figure out to run
+* Fix the hard coded index problem while getting column values
+* Ask about adding automations to the main board
+* Error handling while getting Box data
+  * Figure out better auth method
 
 * Create better organization
 * Create a more user-friendly UI
