@@ -513,8 +513,11 @@ Images in Use
 * Finished conversion to use dataframe
 
 
+### 3.21.23
+* Split filling new board and updating existing board into separate functions
+
+
 ### TODO:
-* Split filling new board and updating existing board
 * Connect everything together
 * Write new docs
 * Figure out to run
