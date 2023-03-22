@@ -49,3 +49,5 @@ def sendFileToBox(folderId, fileName):
 
     return newFile.id
 
+if __name__ == '__main__':
+    getWithNewAuth()

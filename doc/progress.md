@@ -527,6 +527,15 @@ Images in Use
 * Showed Jenn what I've been doing
 * Added error handling if webhook is triggered on row other than `Automations`
 
+### 3.22.23
+* Looked at the other ways I could possibly authenticate Box
+  * Everything else only uses a Service Account or needs admin access - so that's less than ideal
+  * It's looking like we might have to keep doing it this way, possibly by reading in the access code from Monday
+  * Which is annoying but idk what else we can do
+* I'm wondering if it would maybe be better to do this as a simple, external web app? Instead of trying to make the webhook work?
+  * Cause then we could use the regular OAuth2 flow for Box
+* Maybe convert to Django app?
+
 
 ### TODO:
 * Fix the hard coded index problem while getting column values
