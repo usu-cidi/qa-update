@@ -1,11 +1,12 @@
 from pyngrok import ngrok
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, flash, redirect, url_for
 import dotenv
 from talkToBox import getDataFromBox
 from combineData import combineReports
 from updateMonday import fillNewBoard, updateExistingBoard, getColumnValues, updateTriggerRow
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'bagelTime'
 
 
 def connect(port, protocol="http") -> str:
@@ -19,10 +20,25 @@ def connect(port, protocol="http") -> str:
 
 
 @app.route('/', methods=['GET', 'POST'])
-def helloWorld():
+def index():
     # GET
     if request.method == 'GET':
-        return "<p>This is USU's QA update application. I don't do much here, try me out on monday.com!</p>", 200
+        #return "<p>This is USU's QA update application. I don't do much here, try me out on monday.com!</p>", 200
+        return render_template('index.html')
+
+    if request.method == 'POST':
+        title = request.form['board-id']
+        content = request.form['content']
+
+        if not title:
+            flash('Title is required!')
+        else:
+            print(f"{title}: {content}")
+            return redirect(url_for('index'))
+
+    return render_template('index.html')
+
+def otherThings():
 
     # POST
     data = request.get_json()

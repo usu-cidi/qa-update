@@ -608,6 +608,7 @@ Images in Use
 #### Flask:
 * https://www.serverless.com/blog/flask-serverless-api-in-aws-lambda-the-easy-way
 * https://flask.palletsprojects.com/en/2.2.x/quickstart/#a-minimal-application
+* https://www.digitalocean.com/community/tutorials/how-to-make-a-web-application-using-flask-in-python-3
 
 #### OAuth
 * OAuth python library: https://pypi.org/project/oauthlib/
