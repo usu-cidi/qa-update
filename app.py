@@ -1,12 +1,15 @@
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for
 import dotenv
-from talkToBox import getDataFromBox, getAuthUrl
+from talkToBox import getDataFromBox, getAuthUrl, authenticate
 from combineData import combineReports
 from updateMonday import fillNewBoard, updateExistingBoard, getColumnValues, updateTriggerRow
+from boxsdk import Client, OAuth2
 
 from threading import Thread
 from time import sleep
 import json
+from urllib.parse import urlparse
+from urllib.parse import parse_qs
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'bagelTime'
@@ -19,23 +22,24 @@ def doUpdate(triggerType, boardId, allyBoxId, crBoxId):
 
     print("doing the update")
     status += 1
-    #allyData = getDataFromBox(allyBoxId, "csv")
+    # allyData = getDataFromBox(allyBoxId, "csv")
     print("gotten ally")
     status += 1
-    #courseReportData = getDataFromBox(crBoxId, 'excel')
+
+    # courseReportData = getDataFromBox(crBoxId, 'excel')
     print("gotten course report")
     status += 1
 
-    #completeReport = combineReports(courseReportData, allyData)
+    # completeReport = combineReports(courseReportData, allyData)
     print("combined reports")
     status += 1
 
-    #if triggerType == "Fill whole board":
-        #fillNewBoard(completeReport, boardId)
-        #print("Fill in complete")
-        #status += 1
+    # if triggerType == "Fill whole board":
+        # fillNewBoard(completeReport, boardId)
+        # print("Fill in complete")
+        # status += 1
 
-    #updateExistingBoard(completeReport, boardId)
+    # updateExistingBoard(completeReport, boardId)
     print("Update complete")
     status += 1
 
@@ -52,19 +56,49 @@ def index():
 
     return render_template('index.html')
 
+
+@app.route('/idk', methods=['GET', 'POST'])
+def idk():
+    # GET
+    if request.method == 'GET':
+
+        print(request.url)
+
+        #accessToken = authenticate(code)
+        print("Authenticated!")
+
+        return render_template('idk.html', box_smth=f'hmmmm')
+
+    if request.method == 'POST':
+        pass
+
+    return render_template('idk.html')
+
+
 @app.route('/login-box', methods=['GET', 'POST'])
 def loginBox():
+    global csrf_token, auth_url
     auth_url, csrf_token = getAuthUrl()
     return render_template('loginBox.html', auth_url=auth_url, csrf_token=csrf_token)
+
 
 @app.route('/oauth/callback')
 def oauth_callback():
     # print(f"current_user: {current_user}")
     print(request.args)
-    code=request.args.get('code')
-    state=request.args.get('state')
-    error=request.args.get('error')
-    error_description=request.args.get('error_description')
+    # global code
+    code = request.args.get('code')
+    state = request.args.get('state')
+    error = request.args.get('error')
+    error_description = request.args.get('error_description')
+
+    oauth = OAuth2(
+        client_id='YOUR_CLIENT_ID',
+        client_secret='YOUR_CLIENT_SECRET',
+    )
+
+    assert state == csrf_token
+    access_token, refresh_token = oauth.authenticate('YOUR_AUTH_CODE')
 
     # user = Users.query.filter_by(csrf_token=state).first()
     #if user == None:
@@ -79,7 +113,7 @@ def oauth_callback():
     if msg != None:
         return render_template('loginBox.html', msg=msg)
 
-    return redirect(url_for('index'))
+    return redirect(url_for('idk'))
 
 
 @app.route('/updating', methods=['GET', 'POST'])
@@ -102,10 +136,10 @@ def updating():
 
         t1 = Thread(target=doUpdate, args=(triggerType,), kwargs={'boardId': boardId, 'allyBoxId': allyBoxId, 'crBoxId': crBoxId})
         t1.start()
-        print(f"Made it to updating!! {triggerType}, {boardId}")
+        # print(f"Made it to updating!! {triggerType}, {boardId}")
         return redirect(url_for('updating'))
 
-    return render_template('updating.html')
+    return render_template('index.html')
 
 @app.route('/status', methods=['GET'])
 def getStatus():

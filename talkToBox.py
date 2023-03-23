@@ -6,6 +6,7 @@ import io
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
+
 def getAuthUrl():
     oauth = OAuth2(
         client_id=os.environ.get('BOX_CLIENT_ID'),
@@ -16,6 +17,8 @@ def getAuthUrl():
 
 
 def authenticate(code: str) -> str:
+    print(f"Code: {code}")
+
     oauth = OAuth2(
         client_id=os.environ.get('BOX_CLIENT_ID'),
         client_secret=os.environ.get('BOX_SECRET'),
@@ -23,13 +26,15 @@ def authenticate(code: str) -> str:
     )
     access_token, refresh_token = oauth.authenticate(code)
 
-    print(access_token)
+    print(f"Access token: {access_token}")
+    return access_token
 
-def getDataFromBox(fileId, fileType):
+
+def getDataFromBox(fileId, fileType, accessToken):
     auth = OAuth2(
         client_id=os.environ.get('BOX_CLIENT_ID'),
         client_secret=os.environ.get('BOX_SECRET'),
-        access_token=''  # os.environ.get('BOX_ACCESS'),
+        access_token=accessToken
     )
     client = Client(auth)
     # me = client.user().get()

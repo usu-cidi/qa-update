@@ -539,12 +539,15 @@ Images in Use
 ### 3.23.23
 * Working on running process in background
 * Created progress bar and user interface
-* 
+* Working on OAuth flow for Box
 
 
 ### TODO:
+* Create a very basic shell application to troubleshoot Box with
+
 * Fix the hard coded index problem while getting column values
-* Error handling while getting Box data
+* Box
+  * Error handling while getting Box data
   * Implement OAuth 2
 * Send Ally to Box
 * Cite progress bar
@@ -614,6 +617,7 @@ Images in Use
 * https://flask.palletsprojects.com/en/2.2.x/quickstart/#a-minimal-application
 * https://www.digitalocean.com/community/tutorials/how-to-make-a-web-application-using-flask-in-python-3
 * Progress bar: https://stackoverflow.com/questions/24251898/flask-app-update-progress-bar-while-function-runs
+* Passing arguments to thread: https://stackoverflow.com/questions/6904487/how-to-pass-arguments-to-a-thread
 
 #### OAuth
 * OAuth python library: https://pypi.org/project/oauthlib/
@@ -646,6 +650,7 @@ Images in Use
 * Get file content?: https://stackoverflow.com/questions/62380955/how-to-create-a-python-request-to-box-with-requests-library-or-box-api
 * Permission scopes: https://developer.box.com/guides/api-calls/permissions-and-errors/scopes/
 * Upload file: https://developer.box.com/reference/post-files-content/
+* OAuth 2.0 flow: https://medium.com/box-developer-blog/getting-started-with-box-python-sdk-and-oauth-2-0-77607441170d
 
 ### AWS Lambda
 * Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/
@@ -660,10 +665,6 @@ Images in Use
 * Git tagging: https://gitlab.cs.usu.edu/erik.falor/fa22-cs1440-lecturenotes/-/blob/master/Using_Git/Intermediate_Git.md#visit-older-points-of-history-in-the-git-timeline
 * curl converter: https://curlconverter.com/python/
 
-
-https://medium.com/box-developer-blog/getting-started-with-box-python-sdk-and-oauth-2-0-77607441170d
-https://stackoverflow.com/questions/6904487/how-to-pass-arguments-to-a-thread
-https://stackoverflow.com/questions/24251898/flask-app-update-progress-bar-while-function-runs
 
 
 
