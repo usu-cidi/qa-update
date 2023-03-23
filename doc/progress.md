@@ -538,23 +538,22 @@ Images in Use
 
 ### 3.23.23
 * Working on running process in background
+* Created progress bar and user interface
 * 
 
 
 ### TODO:
 * Fix the hard coded index problem while getting column values
 * Error handling while getting Box data
-  * Figure out better auth method
+  * Implement OAuth 2
 * Send Ally to Box
 * Cite progress bar
+* Fix progress bar
 
 * Figure out different deployment environments in Lambda
 
 * Transition licence?
 * Ask about adding automations to the main board
-* * Trigger column/row
-  * Set permissions?
-  * Collapse in other views?
 
 ## Dependencies:
 * pandas: `pip3 install pandas`
@@ -662,7 +661,9 @@ Images in Use
 * curl converter: https://curlconverter.com/python/
 
 
-
+https://medium.com/box-developer-blog/getting-started-with-box-python-sdk-and-oauth-2-0-77607441170d
+https://stackoverflow.com/questions/6904487/how-to-pass-arguments-to-a-thread
+https://stackoverflow.com/questions/24251898/flask-app-update-progress-bar-while-function-runs
 
 
 

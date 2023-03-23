@@ -6,6 +6,25 @@ import io
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
+def getAuthUrl():
+    oauth = OAuth2(
+        client_id=os.environ.get('BOX_CLIENT_ID'),
+        client_secret=os.environ.get('BOX_SECRET'),
+    )
+    auth_url, csrf_token = oauth.get_authorization_url('http://localhost:8000/oauth/callback')
+    return auth_url, csrf_token
+
+
+def authenticate(code: str) -> str:
+    oauth = OAuth2(
+        client_id=os.environ.get('BOX_CLIENT_ID'),
+        client_secret=os.environ.get('BOX_SECRET'),
+        #store_tokens=store_tokens
+    )
+    access_token, refresh_token = oauth.authenticate(code)
+
+    print(access_token)
+
 def getDataFromBox(fileId, fileType):
     auth = OAuth2(
         client_id=os.environ.get('BOX_CLIENT_ID'),

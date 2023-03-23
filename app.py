@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for
 import dotenv
-from talkToBox import getDataFromBox
+from talkToBox import getDataFromBox, getAuthUrl
 from combineData import combineReports
 from updateMonday import fillNewBoard, updateExistingBoard, getColumnValues, updateTriggerRow
 
@@ -12,17 +12,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'bagelTime'
 status = None
 
-def task(triggerType, boardId, allyBoxId, crBoxId):
-  # global status
-
-  status += 1
-  doUpdate(triggerType, boardId, allyBoxId, crBoxId)
-
-  #for i in range(1,11):
-    #status = i
-    #sleep(1)
-    #print(f"{triggerType}, {boardId}, {allyBoxId}, {crBoxId}")
-
 def doUpdate(triggerType, boardId, allyBoxId, crBoxId):
     global status
     status = 0
@@ -30,23 +19,23 @@ def doUpdate(triggerType, boardId, allyBoxId, crBoxId):
 
     print("doing the update")
     status += 1
-    allyData = getDataFromBox(allyBoxId, "csv")
+    #allyData = getDataFromBox(allyBoxId, "csv")
     print("gotten ally")
     status += 1
-    courseReportData = getDataFromBox(crBoxId, 'excel')
+    #courseReportData = getDataFromBox(crBoxId, 'excel')
     print("gotten course report")
     status += 1
 
-    completeReport = combineReports(courseReportData, allyData)
+    #completeReport = combineReports(courseReportData, allyData)
     print("combined reports")
     status += 1
 
-    if triggerType == "Fill whole board":
-        fillNewBoard(completeReport, boardId)
-        print("Fill in complete")
-        status += 1
+    #if triggerType == "Fill whole board":
+        #fillNewBoard(completeReport, boardId)
+        #print("Fill in complete")
+        #status += 1
 
-    updateExistingBoard(completeReport, boardId)
+    #updateExistingBoard(completeReport, boardId)
     print("Update complete")
     status += 1
 
@@ -62,6 +51,36 @@ def index():
         pass
 
     return render_template('index.html')
+
+@app.route('/login-box', methods=['GET', 'POST'])
+def loginBox():
+    auth_url, csrf_token = getAuthUrl()
+    return render_template('loginBox.html', auth_url=auth_url, csrf_token=csrf_token)
+
+@app.route('/oauth/callback')
+def oauth_callback():
+    # print(f"current_user: {current_user}")
+    print(request.args)
+    code=request.args.get('code')
+    state=request.args.get('state')
+    error=request.args.get('error')
+    error_description=request.args.get('error_description')
+
+    # user = Users.query.filter_by(csrf_token=state).first()
+    #if user == None:
+    #    msg = 'User not found'
+    #elif state != user.csrf_token:
+    #    msg = 'CSRF token is invalid'
+    if error == 'access_denied':
+        msg='You denied access to this application'
+    else:
+        msg = error_description
+
+    if msg != None:
+        return render_template('loginBox.html', msg=msg)
+
+    return redirect(url_for('index'))
+
 
 @app.route('/updating', methods=['GET', 'POST'])
 def updating():
