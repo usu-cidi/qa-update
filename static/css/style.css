@@ -54,3 +54,21 @@ a {
     background: #B73E3E;
     box-shadow: 1px 1px 2px #B73E3E;
 }
+
+  .progress {
+    /*display: flex;
+    position: absolute;*/
+    height: 50px;
+    width: 50%;
+    margin: auto;
+  }
+
+  .status {
+    color: black;
+    margin: auto;
+  }
+
+  .status h2 {
+    padding: 10px;
+    font-size: 25px;
+  }

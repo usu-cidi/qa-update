@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Hello [user]</title>
+        <title>QA Update Automation</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename= 'css/style.css') }}">
         <!--<link rel="stylesheet" type="text/css" href="../static/css/style.css">-->
@@ -31,17 +31,31 @@
     <div class="feature-box blue">
         <br>
         <h2>Update the QA Board</h2>
-        <p>Content content content</p>
+        <p>Usage instructions...</p>
 
-        <form method="post">
+        <form method="POST" action="/updating">
             <div class="form-group">
-                <label for="board-id">Board ID</label>
-                <input type="text" name="board-id" class="form-control" value="{{ request.form['title'] }}"></input>
+                <label for="trigger-type">Update Type</label>
+                <select name="trigger-type" class="form-select">
+                    <option value=""></option>
+                    <option value="new">Fill in new board</option>
+                    <option value="update">Update existing board</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <label for="content">Content</label>
-                <input name="content" class="form-control" value="{{ request.form['content'] }}"></input>
+                <label for="board-id">Board ID</label>
+                <input type="text" name="board-id" class="form-control" value="{{ request.form['board-id'] }}"></input>
+            </div>
+
+            <div class="form-group">
+                <label for="ally-box-id">Ally File Box ID</label>
+                <input type="text" name="ally-box-id" class="form-control" value="{{ request.form['ally-box-id'] }}"></input>
+            </div>
+
+            <div class="form-group">
+                <label for="cr-box-id">Course Report File Box ID</label>
+                <input type="text" name="cr-box-id" class="form-control" value="{{ request.form['cr-box-id'] }}"></input>
             </div>
 
             {% with messages = get_flashed_messages() %}

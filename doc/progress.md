@@ -536,12 +536,17 @@ Images in Use
   * Cause then we could use the regular OAuth2 flow for Box
 * Maybe convert to Django app?
 
+### 3.23.23
+* Working on running process in background
+* 
+
 
 ### TODO:
 * Fix the hard coded index problem while getting column values
 * Error handling while getting Box data
   * Figure out better auth method
 * Send Ally to Box
+* Cite progress bar
 
 * Figure out different deployment environments in Lambda
 
@@ -609,6 +614,7 @@ Images in Use
 * https://www.serverless.com/blog/flask-serverless-api-in-aws-lambda-the-easy-way
 * https://flask.palletsprojects.com/en/2.2.x/quickstart/#a-minimal-application
 * https://www.digitalocean.com/community/tutorials/how-to-make-a-web-application-using-flask-in-python-3
+* Progress bar: https://stackoverflow.com/questions/24251898/flask-app-update-progress-bar-while-function-runs
 
 #### OAuth
 * OAuth python library: https://pypi.org/project/oauthlib/
