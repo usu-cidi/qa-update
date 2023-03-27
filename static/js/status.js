@@ -13,7 +13,7 @@ async function getStatus() {
 
   document.getElementById("innerStatus").innerHTML = get.status * 10 + "&percnt;";
 
-  if (get.status == 7){
+  if (get.status === 10){
     document.getElementById("innerStatus").innerHTML += " Complete";
     clearTimeout(timeout);
     return false;

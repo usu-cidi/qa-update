@@ -548,24 +548,23 @@ Images in Use
 ### 3.27.23
 * Was able to successfully authorize Box in simple application
 * Successful retrieval of data through complete mock data flow
-* 
+* It works!!!
+* Added csrf verification
 
 
 ### TODO:
-* Create a very basic shell application to troubleshoot Box with
+* Error handling in the update
+* Improve progress bar
+    * Cite progress bar
 
 * Fix the hard coded index problem while getting column values
-* Box
-  * Error handling while getting Box data
-  * Implement OAuth 2
+
 * Send Ally to Box
-* Cite progress bar
-* Fix progress bar
 
 * Figure out different deployment environments in Lambda
 
 * Transition licence?
-* Ask about adding automations to the main board
+* Ask about adding group change automations to the main board
 
 ## Dependencies:
 * pandas: `pip3 install pandas`

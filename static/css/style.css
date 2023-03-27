@@ -20,7 +20,7 @@ img {
 .hidden {
     font-size: 8pt;
     float: right;
-    color: grey
+    color: grey;
 }
 
 .heading-box {
@@ -35,7 +35,6 @@ img {
     letter-spacing: 1px;
     margin: 10px;
     padding: 3px 10px;
-    /*text-align: center;*/
 }
 
 .blue {
@@ -50,14 +49,11 @@ a {
 
 .error-message {
     color: white;
-    /*border-color: #FF9F9F;*/
     background: #B73E3E;
     box-shadow: 1px 1px 2px #B73E3E;
 }
 
   .progress {
-    /*display: flex;
-    position: absolute;*/
     height: 50px;
     width: 50%;
     margin: auto;
