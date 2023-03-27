@@ -541,6 +541,15 @@ Images in Use
 * Created progress bar and user interface
 * Working on OAuth flow for Box
 
+### 3.24.23
+* Kept trying to figure out Box auth
+* Created isolated application for that
+
+### 3.27.23
+* Was able to successfully authorize Box in simple application
+* Successful retrieval of data through complete mock data flow
+* 
+
 
 ### TODO:
 * Create a very basic shell application to troubleshoot Box with
