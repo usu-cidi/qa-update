@@ -6,35 +6,51 @@ from updateMonday import fillNewBoard, updateExistingBoard
 from boxsdk import Client, OAuth2
 import os
 from threading import Thread
-from time import sleep
+import threading
 import json
 
 
 app = Flask(__name__)
 status = None
 
+
+class StoppableThread(threading.Thread):
+    """Thread class with a stop() method. The thread itself has to check
+    regularly for the stopped() condition."""
+
+    def __init__(self, *args, **kwargs):
+        super(StoppableThread, self).__init__(*args, **kwargs)
+        self._stop_event = threading.Event()
+
+    def stop(self):
+        self._stop_event.set()
+
+    def stopped(self):
+        return self._stop_event.is_set()
+
+
 def doUpdate(triggerType, boardId, allyBoxId, crBoxId):
     global status
     status = 0
 
-    print("doing the update")
+    print(f"doing the update {status}")
     status += 2
 
     allyData = getDataFromBox(allyBoxId, "csv", accessTok)
-    print("gotten ally")
+    print(f"gotten ally {status}")
     status += 2
 
     courseReportData = getDataFromBox(crBoxId, 'excel', accessTok)
-    print("gotten course report")
+    print(f"gotten course report {status}")
     status += 2
 
     completeReport = combineReports(courseReportData, allyData)
-    print("combined reports")
+    print(f"combined reports {status}")
     status += 2
 
     if triggerType == "Fill whole board":
         fillNewBoard(completeReport, boardId)
-        print("Fill in complete")
+        print(f"Fill in complete {status}")
         status += 2
 
     updateExistingBoard(completeReport, boardId)
@@ -44,7 +60,6 @@ def doUpdate(triggerType, boardId, allyBoxId, crBoxId):
 
 @app.route('/', methods=['GET', 'POST'])
 def loginBox():
-
     oauth = OAuth2(
         client_id=os.environ.get('BOX_CLIENT_ID'),
         client_secret=os.environ.get('BOX_SECRET'),
@@ -66,6 +81,8 @@ def store_tokens(access_token: str, refresh_token: str) -> bool:
     accessTok = access_token
     global refreshTok
     refreshTok = refresh_token
+
+    print(f"Here is the access token!! {accessTok}")
 
     return True
 
@@ -97,6 +114,7 @@ def oauth_callback():
 
     return redirect(url_for('landing'))
 
+
 @app.route('/landing', methods=['GET', 'POST'])
 def landing():
     # GET
@@ -104,7 +122,6 @@ def landing():
         return render_template('index.html')
 
     if request.method == 'POST':
-
         return redirect(url_for('landing'))
 
     return render_template('index.html')
@@ -112,26 +129,35 @@ def landing():
 
 @app.route('/updating', methods=['GET', 'POST'])
 def updating():
+    global t1
+
     # GET
     if request.method == 'GET':
         return render_template('updating.html')
 
     if request.method == 'POST':
-        triggerType = request.form['trigger-type']
-        boardId = request.form['board-id']
-        allyBoxId = request.form['ally-box-id']
-        crBoxId = request.form['cr-box-id']
+        try:
+            stopProcess = request.form['stop-process']
+            print("Attempting to stop process")
+            #t1.stop()
+            #t1.join()
+        except Exception as e:
+            triggerType = request.form['trigger-type']
+            boardId = request.form['board-id']
+            allyBoxId = request.form['ally-box-id']
+            crBoxId = request.form['cr-box-id']
 
-        if triggerType == "" or not boardId or not allyBoxId or not crBoxId:
-            flash('All fields are required!')
-            return render_template('index.html')
-        else:
-            print(f"{triggerType}, {boardId}, {allyBoxId}, {crBoxId}")
+            if triggerType == "" or not boardId or not allyBoxId or not crBoxId:
+                flash('All fields are required!')
+                return render_template('index.html')
+            else:
+                print(f"{triggerType}, {boardId}, {allyBoxId}, {crBoxId}")
 
-        t1 = Thread(target=doUpdate, args=(triggerType,), kwargs={'boardId': boardId, 'allyBoxId': allyBoxId, 'crBoxId': crBoxId})
-        t1.start()
-
-        return redirect(url_for('updating'))
+            t1 = Thread(target=doUpdate, args=(triggerType,),
+                                 kwargs={'boardId': boardId, 'allyBoxId': allyBoxId, 'crBoxId': crBoxId})
+            t1.start()
+        finally:
+            return redirect(url_for('updating'))
 
     return render_template('index.html')
 

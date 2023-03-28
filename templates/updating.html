@@ -33,7 +33,16 @@
 
     <br>
 
-    <p class="btn btn-dark button" onclick=endStatus()>Quit x</p>
+    <p class="btn btn-dark button" id="quit" onclick="endUpdate()">Stop checking for updates</p>
+
+    <!--<form method="POST" action="/updating">
+            <input type="hidden" name="stop-process" value="stop-process"></input>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-dark button">Quit x</button>
+            </div>
+
+        </form>-->
 
     <a class="btn btn-dark button" href="/">Back <</a>
     <p>(Update process will continue if incomplete!)</p>
