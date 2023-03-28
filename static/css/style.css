@@ -59,12 +59,22 @@ a {
     margin: auto;
   }
 
-  .status {
-    color: black;
-    margin: auto;
-  }
+#innerStatus {
+    text-align: center;
+    padding-top: 8px;
+    font-size: 20pt;
+}
 
-  .status h2 {
-    padding: 10px;
-    font-size: 25px;
-  }
+.inner-box {
+    height: 50px;
+    width: 9.5%;
+    margin: auto;
+
+}
+
+.visible {
+    background-color: #146C94;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+}

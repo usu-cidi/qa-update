@@ -5,6 +5,7 @@
         <title>QA Update Automation</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename= 'css/style.css') }}">
+        <!--<link rel="stylesheet" type="text/css" href="../static/css/style.css">-->
     </head>
     <body>
 
@@ -20,20 +21,28 @@
 
     <div class="feature-box blue">
         <br>
-        <h2>Update in progress</h2>
+        <h2>Update in Progress</h2>
 
         <div class="progress">
-            <div class="status">
-                <h2 id="innerStatus">Loading...</h2>
-            </div>
+            <div id="prog0" class="inner-box"></div>
+            <div id="prog1" class="inner-box"></div>
+            <div id="prog2" class="inner-box"></div>
+            <div id="prog3" class="inner-box"></div>
+            <div id="prog4" class="inner-box"></div>
+            <div id="prog5" class="inner-box"></div>
+            <div id="prog6" class="inner-box"></div>
+            <div id="prog7" class="inner-box"></div>
+            <div id="prog8" class="inner-box"></div>
+            <div id="prog9" class="inner-box"></div>
         </div>
+        <p id="innerStatus">Loading...</p>
 
         <br>
     </div>
 
     <br>
 
-    <p class="btn btn-dark button" id="quit" onclick="endUpdate()">Stop checking for updates</p>
+    <!--<p class="btn btn-dark button" id="quit" onclick="endUpdate()">Stop checking for updates</p>-->
 
     <!--<form method="POST" action="/updating">
             <input type="hidden" name="stop-process" value="stop-process"></input>
@@ -44,7 +53,7 @@
 
         </form>-->
 
-    <a class="btn btn-dark button" href="/">Back <</a>
+    <a class="btn btn-dark button" href="/landing">Back <</a>
     <p>(Update process will continue if incomplete!)</p>
 
     </body>

@@ -553,17 +553,19 @@ Images in Use
 
 ### 3.28.23
 * Tried to figure out a way to kill the process
+* Mostly finished with creating the GUI
 
 
 ### TODO:
+Now:
 * Error handling in the update
-* Improve progress bar
-    * Cite progress bar
-
-* Fix the hard coded index problem while getting column values
-
 * Send Ally to Box
 
+Next:
+* Add to AWS
+
+Sometime:
+* Fix the hard coded index problem while getting column values
 * Figure out different deployment environments in Lambda
 
 * Transition licence?

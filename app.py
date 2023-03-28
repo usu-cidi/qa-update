@@ -34,28 +34,27 @@ def doUpdate(triggerType, boardId, allyBoxId, crBoxId):
     status = 0
 
     print(f"doing the update {status}")
-    status += 2
 
     allyData = getDataFromBox(allyBoxId, "csv", accessTok)
     print(f"gotten ally {status}")
-    status += 2
+    status += 1
 
     courseReportData = getDataFromBox(crBoxId, 'excel', accessTok)
     print(f"gotten course report {status}")
-    status += 2
+    status += 1
 
     completeReport = combineReports(courseReportData, allyData)
     print(f"combined reports {status}")
-    status += 2
+    status += 1
 
     if triggerType == "Fill whole board":
         fillNewBoard(completeReport, boardId)
         print(f"Fill in complete {status}")
-        status += 2
+        status += 7
 
     updateExistingBoard(completeReport, boardId)
     print(f"Update complete: {status}")
-    status += 2
+    status += 7
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -112,7 +111,7 @@ def oauth_callback():
     if msg != None:
         return render_template('loginBox.html', msg=msg)
 
-    return redirect(url_for('landing'))
+    return redirect(url_for('landing', link=""))
 
 
 @app.route('/landing', methods=['GET', 'POST'])
@@ -122,9 +121,23 @@ def landing():
         return render_template('index.html')
 
     if request.method == 'POST':
-        return redirect(url_for('landing'))
+        return redirect(url_for('landing', link=""))
 
-    return render_template('index.html')
+    return render_template('index.html', link="")
+
+@app.route('/getAllyLink', methods=['GET', 'POST'])
+def landing():
+    # GET
+    if request.method == 'GET':
+        pass
+
+    if request.method == 'POST':
+
+        link = "heyyyy"
+
+        return redirect(url_for('landing', link=link))
+
+    return render_template('index.html', link="")
 
 
 @app.route('/updating', methods=['GET', 'POST'])

@@ -230,6 +230,7 @@ def fillNewBoard(courseDF, boardId):
 
 def updateExistingBoard(courseDF, boardId):
     # Just for update ---
+
     getIdsQuery = f'{{ boards(ids:{boardId}) {{ name items {{ name id }} }} }}'
     data = {'query': getIdsQuery}
 
