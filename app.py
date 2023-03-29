@@ -9,36 +9,21 @@ import os
 from threading import Thread
 import threading
 import json
+import pandas as pd
 
 
 app = Flask(__name__)
 status = None
-link = ""
+link = "inactive"
 
 
-class StoppableThread(threading.Thread):
-    """Thread class with a stop() method. The thread itself has to check
-    regularly for the stopped() condition."""
-
-    def __init__(self, *args, **kwargs):
-        super(StoppableThread, self).__init__(*args, **kwargs)
-        self._stop_event = threading.Event()
-
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
-
-
-def doUpdate(triggerType, boardId, allyBoxId, crBoxId):
+def doUpdate(triggerType, boardId, crBoxId):
     global status
     status = 0
 
     print(f"doing the update {status}")
 
-    allyData = getDataFromBox(allyBoxId, "csv", accessTok)
-    print(f"gotten ally {status}")
+    allyData = allyDataframe
     status += 1
 
     courseReportData = getDataFromBox(crBoxId, 'excel', accessTok)
@@ -127,21 +112,37 @@ def landing():
 
     return render_template('index.html')
 
+
 def getAllyURL():
     global link
     link = f"http{getURL()[5:-1]}"
-    print(link)
-    #render_template('index.html', link=f"http{link[5:-1]}")
+
 
 @app.route('/getAllyLink', methods=['POST'])
 def getAllyLink():
 
     if request.method == 'POST':
+        global link
+        link = ""
 
         t2 = Thread(target=getAllyURL)
         t2.start()
 
         return render_template('index.html', status=f"Loading....")
+
+    return render_template('index.html')
+
+
+@app.route('/processAllyFile', methods=['POST'])
+def processAllyFile():
+
+    if request.method == 'POST':
+
+        uploadedFile = request.files["allyFile"]
+        global allyDataframe
+        allyDataframe = pd.read_csv(uploadedFile)
+
+        return render_template('index.html')
 
     return render_template('index.html')
 
@@ -163,17 +164,16 @@ def updating():
         except Exception as e:
             triggerType = request.form['trigger-type']
             boardId = request.form['board-id']
-            allyBoxId = request.form['ally-box-id']
             crBoxId = request.form['cr-box-id']
 
-            if triggerType == "" or not boardId or not allyBoxId or not crBoxId:
+            if triggerType == "" or not boardId or not crBoxId:
                 flash('All fields are required!')
                 return render_template('index.html')
             else:
-                print(f"{triggerType}, {boardId}, {allyBoxId}, {crBoxId}")
+                print(f"{triggerType}, {boardId}, {crBoxId}")
 
             t1 = Thread(target=doUpdate, args=(triggerType,),
-                                 kwargs={'boardId': boardId, 'allyBoxId': allyBoxId, 'crBoxId': crBoxId})
+                                 kwargs={'boardId': boardId, 'crBoxId': crBoxId})
             t1.start()
         finally:
             return redirect(url_for('updating'))

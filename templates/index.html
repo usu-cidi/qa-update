@@ -19,66 +19,67 @@
 
     <br>
 
+    <h2>Update the QA Board</h2>
+
     <div id="ally-box" class="feature-box blue">
         <br>
-        <h2>Send an Updated Ally file to Box</h2>
-        <br>
-
-        <h3>Get Ally Download Link</h3>
+        <h3>1. Get the Ally Download Link</h3>
 
         <form method="POST" action="/getAllyLink">
             <button type="submit" class="btn btn-light button">Get Link</button>
         </form>
+        <br>
         <p>Note: it may take a few minutes for the link to be generated.</p>
 
         <!--<p>{{ link }}</p>-->
         {% if status %}
-            <p>{{ status }}</p>
+            <p id="status-marker">{{ status }}</p>
         {% endif %}
 
     </div>
     <div class="feature-box blue">
+        <br>
 
-        <h3>Upload the Resultant File</h3>
+        <h3>2. Upload the Ally File</h3>
 
         <p>Unzip the Ally folder and upload the file called courses.csv here for processing.</p>
-        <form method="POST" action="/uploadAllyFile">
-            <p>Upload thing</p>
-            <button type="submit" class="btn btn-light button">Send to Box</button>
+        <form method="POST" action="/processAllyFile" enctype="multipart/form-data">
+            <input type="file" id="allyFile" name="allyFile"/>
+            <br><br>
+
+            <button type="submit" class="btn btn-light button">Upload</button>
         </form>
 
         <br>
 
     </div>
 
-    <br>
-
     <div class="feature-box blue">
         <br>
-        <h2>Update the QA Board</h2>
-        <p>Usage instructions...</p>
+        <h3>3. Run the Update</h3>
+        <br>
 
         <form method="POST" action="/updating">
             <div class="form-group">
+                <p>Select 'Update existing board' if you are updating a board that already exists (mid-semester).
+            Select 'Fill in new board' if you are filling in a completely blank board at the beginning of a semester. </p>
                 <label for="trigger-type">Update Type</label>
                 <select name="trigger-type" class="form-select">
                     <option value=""></option>
-                    <option value="new">Fill in new board</option>
                     <option value="update">Update existing board</option>
+                    <option value="new">Fill in new board</option>
                 </select>
-            </div>
 
-            <div class="form-group">
+                <br>
+                <p>Select 'Update existing board' if you are updating a board that already exists (mid-semester).
+            Select 'Fill in new board' if you are filling in a completely blank board at the beginning of a semester. </p>
                 <label for="board-id">Board ID</label>
                 <input type="text" name="board-id" class="form-control" value="{{ request.form['board-id'] }}"></input>
-            </div>
 
-            <div class="form-group">
-                <label for="ally-box-id">Ally File Box ID</label>
-                <input type="text" name="ally-box-id" class="form-control" value="{{ request.form['ally-box-id'] }}"></input>
-            </div>
 
-            <div class="form-group">
+                <br>
+                <p>Select 'Update existing board' if you are updating a board that already exists (mid-semester).
+            Select 'Fill in new board' if you are filling in a completely blank board at the beginning of a semester. </p>
                 <label for="cr-box-id">Course Report File Box ID</label>
                 <input type="text" name="cr-box-id" class="form-control" value="{{ request.form['cr-box-id'] }}"></input>
             </div>
@@ -93,7 +94,7 @@
 
             <br>
 
-            <p>WARNING! Update process cannot be stopped once began!!</p>
+            <p class="error-message">WARNING: Update process cannot be stopped once began!!</p>
 
             <div class="form-group">
                 <button type="submit" class="btn btn-light button">Submit</button>

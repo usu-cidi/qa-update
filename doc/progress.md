@@ -556,12 +556,14 @@ Images in Use
 * Mostly finished with creating the GUI
 
 ### 3.29.23
-* 
+* Added support for downloading the ally link
+* Added support to upload the courses.csv file
+* Cleaned up UI some
 
 ### TODO:
 Now:
 * Error handling in the update
-* Send Ally to Box
+* UI error handling
 
 Next:
 * Create new branch allowing script to be ran the old way
