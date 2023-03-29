@@ -555,6 +555,8 @@ Images in Use
 * Tried to figure out a way to kill the process
 * Mostly finished with creating the GUI
 
+### 3.29.23
+* 
 
 ### TODO:
 Now:
@@ -562,6 +564,7 @@ Now:
 * Send Ally to Box
 
 Next:
+* Create new branch allowing script to be ran the old way
 * Add to AWS
 
 Sometime:

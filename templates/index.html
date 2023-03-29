@@ -19,7 +19,7 @@
 
     <br>
 
-    <div class="feature-box blue">
+    <div id="ally-box" class="feature-box blue">
         <br>
         <h2>Send an Updated Ally file to Box</h2>
         <br>
@@ -28,12 +28,26 @@
 
         <form method="POST" action="/getAllyLink">
             <button type="submit" class="btn btn-light button">Get Link</button>
-            <p>{{ link }}</p>
+        </form>
+        <p>Note: it may take a few minutes for the link to be generated.</p>
+
+        <!--<p>{{ link }}</p>-->
+        {% if status %}
+            <p>{{ status }}</p>
+        {% endif %}
+
+    </div>
+    <div class="feature-box blue">
+
+        <h3>Upload the Resultant File</h3>
+
+        <p>Unzip the Ally folder and upload the file called courses.csv here for processing.</p>
+        <form method="POST" action="/uploadAllyFile">
+            <p>Upload thing</p>
+            <button type="submit" class="btn btn-light button">Send to Box</button>
         </form>
 
         <br>
-
-        <h3>Upload the Resultant File</h3>
 
     </div>
 
@@ -89,6 +103,8 @@
         </form>
 
     </div>
+
+    <script src="{{ url_for('static', filename= 'js/linkStatus.js') }}" type="text/javascript"></script>
 
     </body>
 </html>

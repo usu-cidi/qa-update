@@ -3,6 +3,7 @@ import dotenv
 from talkToBox import getDataFromBox
 from combineData import combineReports
 from updateMonday import fillNewBoard, updateExistingBoard
+from getAllyData import getURL
 from boxsdk import Client, OAuth2
 import os
 from threading import Thread
@@ -12,6 +13,7 @@ import json
 
 app = Flask(__name__)
 status = None
+link = ""
 
 
 class StoppableThread(threading.Thread):
@@ -111,7 +113,7 @@ def oauth_callback():
     if msg != None:
         return render_template('loginBox.html', msg=msg)
 
-    return redirect(url_for('landing', link=""))
+    return redirect(url_for('landing'))
 
 
 @app.route('/landing', methods=['GET', 'POST'])
@@ -121,23 +123,27 @@ def landing():
         return render_template('index.html')
 
     if request.method == 'POST':
-        return redirect(url_for('landing', link=""))
+        return redirect(url_for('landing'))
 
-    return render_template('index.html', link="")
+    return render_template('index.html')
 
-@app.route('/getAllyLink', methods=['GET', 'POST'])
-def landing():
-    # GET
-    if request.method == 'GET':
-        pass
+def getAllyURL():
+    global link
+    link = f"http{getURL()[5:-1]}"
+    print(link)
+    #render_template('index.html', link=f"http{link[5:-1]}")
+
+@app.route('/getAllyLink', methods=['POST'])
+def getAllyLink():
 
     if request.method == 'POST':
 
-        link = "heyyyy"
+        t2 = Thread(target=getAllyURL)
+        t2.start()
 
-        return redirect(url_for('landing', link=link))
+        return render_template('index.html', status=f"Loading....")
 
-    return render_template('index.html', link="")
+    return render_template('index.html')
 
 
 @app.route('/updating', methods=['GET', 'POST'])
@@ -180,8 +186,12 @@ def getStatus():
     statusList = {'status': status}
     return json.dumps(statusList)
 
+@app.route('/linkStatus', methods=['GET'])
+def getLinkStatus():
+    statusList = {'status': link}
+    return json.dumps(statusList)
+
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True, host="localhost")
-
     dotenv.load_dotenv(dotenv.find_dotenv())

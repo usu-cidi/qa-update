@@ -31,6 +31,53 @@ f = open("performanceReport3850265.txt", "w")
 f.write("")
 f.close()
 
+def getURL():
+    dotenv.load_dotenv(dotenv.find_dotenv())
+
+    CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
+    CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
+    CLIENT_ID = os.environ.get('CLIENT_ID')
+    TERM_CODE = os.environ.get('TERM_CODE')
+
+    t = time.localtime()
+    currentTime = time.strftime("%Y-%m-%d-%H-%M", t)
+    beginTime = time.time()
+
+    test = OAuth1Session(CONSUMER_KEY, client_secret=CONSUMER_SECRET)
+    url = f'https://prod.ally.ac/api/v1/{CLIENT_ID}/reports/terms/{TERM_CODE}/csv?role=administrator&userId=1'#  &token={currentTime}'
+    r = test.get(url)
+
+    if (r.content == b'The supplied authentication is invalid'):
+        print(r.content)
+        print(r)
+        return
+
+    parsedOutput = json.loads(r.content)
+
+    print("Pulling data from Ally API")
+    print("Loading...\n")
+
+    time.sleep(5)
+
+    while not "url" in parsedOutput:
+        writeToReport("Attempting API call with", url)
+        r = test.get(url)
+        parsedOutput = json.loads(r.content)
+        if "status" in parsedOutput:
+            writeToReport("API response pending...", parsedOutput['status'])
+            writeToReport("ID", parsedOutput['processId'])
+            writeToReport("parsedOutput", parsedOutput)
+            print(f"Request ID: {parsedOutput['processId']}")
+            print(f"Status: {parsedOutput['status']}\n")
+            time.sleep(7)
+        else:
+            break
+
+    print(f"\nDone in {time.time() - beginTime:.3f} seconds!")
+
+    zipURL = str(r.content[8:-2])
+    return zipURL[1:]
+
 if __name__ == "__main__":
     writeToReport("getAllyData.py", "")
 
