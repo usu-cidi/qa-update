@@ -26,9 +26,12 @@ async function getStatus() {
       let theDiv = document.getElementById("ally-box");
       theDiv.appendChild(theLink);
 
+
       clearTimeout(timeout);
       return false;
   }
 
   timeout = setTimeout(getStatus, 1000);
 }
+
+getStatus()

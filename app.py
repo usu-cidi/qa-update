@@ -126,6 +126,7 @@ def getAllyLink():
         link = ""
 
         t2 = Thread(target=getAllyURL)
+        print("Starting the thread")
         t2.start()
 
         return render_template('index.html', status=f"Loading....")

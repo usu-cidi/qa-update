@@ -560,14 +560,20 @@ Images in Use
 * Added support to upload the courses.csv file
 * Cleaned up UI some
 
+### 3.30.23
+* Finished cleaning up UI
+* 
+
 ### TODO:
 Now:
 * Error handling in the update
 * UI error handling
+* Unchecked runtime.lastError
 
 Next:
 * Create new branch allowing script to be ran the old way
 * Add to AWS
+* Ask about adding new columns to main board
 
 Sometime:
 * Fix the hard coded index problem while getting column values
@@ -636,6 +642,7 @@ Sometime:
 * https://www.digitalocean.com/community/tutorials/how-to-make-a-web-application-using-flask-in-python-3
 * Progress bar: https://stackoverflow.com/questions/24251898/flask-app-update-progress-bar-while-function-runs
 * Passing arguments to thread: https://stackoverflow.com/questions/6904487/how-to-pass-arguments-to-a-thread
+* Getting uploaded files: https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
 
 #### OAuth
 * OAuth python library: https://pypi.org/project/oauthlib/

@@ -61,9 +61,10 @@
 
         <form method="POST" action="/updating">
             <div class="form-group">
+                <!--<label for="trigger-type">Update Type</label>-->
+                <h4>Update Type</h4>
                 <p>Select 'Update existing board' if you are updating a board that already exists (mid-semester).
             Select 'Fill in new board' if you are filling in a completely blank board at the beginning of a semester. </p>
-                <label for="trigger-type">Update Type</label>
                 <select name="trigger-type" class="form-select">
                     <option value=""></option>
                     <option value="update">Update existing board</option>
@@ -71,16 +72,22 @@
                 </select>
 
                 <br>
-                <p>Select 'Update existing board' if you are updating a board that already exists (mid-semester).
-            Select 'Fill in new board' if you are filling in a completely blank board at the beginning of a semester. </p>
-                <label for="board-id">Board ID</label>
+                <h4>Monday Board ID</h4>
+                <p>Enter the <a href="https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s">
+                    board id</a> for the monday.com board you're updating (found in the url).</p>
+                <img class="url-ex" src="{{url_for('static', filename='img/mon-ex.png')}}" />
+                <!--<label for="board-id">Board ID</label>-->
+                <br>
                 <input type="text" name="board-id" class="form-control" value="{{ request.form['board-id'] }}"></input>
 
 
                 <br>
-                <p>Select 'Update existing board' if you are updating a board that already exists (mid-semester).
-            Select 'Fill in new board' if you are filling in a completely blank board at the beginning of a semester. </p>
-                <label for="cr-box-id">Course Report File Box ID</label>
+                <h4>Course Report File Box ID</h4>
+                <p>Enter the <a href="https://developer.box.com/reference/get-files-id/#:~:text=The%20ID%20for%20any%20file,123%20the%20file_id%20is%20123%20.">
+                    Box file ID</a> for the most recent Course Summary file from the Canvas Data Reports (found in the url).</p>
+                <img class="url-ex" src="{{url_for('static', filename='img/box-ex.png')}}" />
+                <!--<label for="cr-box-id">Course Report File Box ID</label>-->
+                <br>
                 <input type="text" name="cr-box-id" class="form-control" value="{{ request.form['cr-box-id'] }}"></input>
             </div>
 

@@ -51,6 +51,8 @@ a {
     color: white;
     background: #B73E3E;
     box-shadow: 1px 1px 2px #B73E3E;
+    padding: 5px;
+    border-radius: 10px;
 }
 
   .progress {
@@ -77,4 +79,10 @@ a {
     border-style: solid;
     border-width: 2px;
     border-color: black;
+}
+
+.url-ex {
+    padding: 1mm;
+    margin: auto;
+    width: 80%;
 }
