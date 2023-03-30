@@ -50,7 +50,7 @@ def getURL():
     if (r.content == b'The supplied authentication is invalid'):
         print(r.content)
         print(r)
-        return
+        return -1
 
     parsedOutput = json.loads(r.content)
 
@@ -59,24 +59,30 @@ def getURL():
 
     time.sleep(5)
 
-    while not "url" in parsedOutput:
-        writeToReport("Attempting API call with", url)
-        r = test.get(url)
-        parsedOutput = json.loads(r.content)
-        if "status" in parsedOutput:
-            writeToReport("API response pending...", parsedOutput['status'])
-            writeToReport("ID", parsedOutput['processId'])
-            writeToReport("parsedOutput", parsedOutput)
-            print(f"Request ID: {parsedOutput['processId']}")
-            print(f"Status: {parsedOutput['status']}\n")
-            time.sleep(7)
-        else:
-            break
+    try:
+        while not "url" in parsedOutput:
+            writeToReport("Attempting API call with", url)
+            r = test.get(url)
+            parsedOutput = json.loads(r.content)
+            if "status" in parsedOutput:
+                writeToReport("API response pending...", parsedOutput['status'])
+                writeToReport("ID", parsedOutput['processId'])
+                writeToReport("parsedOutput", parsedOutput)
+                print(f"Request ID: {parsedOutput['processId']}")
+                print(f"Status: {parsedOutput['status']}\n")
+                time.sleep(7)
+            else:
+                break
 
-    print(f"\nDone in {time.time() - beginTime:.3f} seconds!")
+        print(f"\nDone in {time.time() - beginTime:.3f} seconds!")
 
-    zipURL = str(r.content[8:-2])
-    return zipURL[1:]
+        zipURL = str(r.content[8:-2])
+        return zipURL[1:]
+    except Exception as e:
+        print(e)
+        return -1
+
+
 
 if __name__ == "__main__":
     writeToReport("getAllyData.py", "")

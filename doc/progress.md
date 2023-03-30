@@ -562,13 +562,18 @@ Images in Use
 
 ### 3.30.23
 * Finished cleaning up UI
-* 
+* Error handling in Box Authorization
+* Error handling getting Ally download link
+* Error handling uploading Ally file
+* Error handling missing arguments
+* Error handling missing uploaded file
 
 ### TODO:
 Now:
 * Error handling in the update
 * UI error handling
 * Unchecked runtime.lastError
+* Add bug report info
 
 Next:
 * Create new branch allowing script to be ran the old way
@@ -578,6 +583,7 @@ Next:
 Sometime:
 * Fix the hard coded index problem while getting column values
 * Figure out different deployment environments in Lambda
+* Stop update button
 
 * Transition licence?
 * Ask about adding group change automations to the main board

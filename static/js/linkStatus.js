@@ -16,6 +16,21 @@ async function getStatus() {
       return false;
   }
 
+  if (get.status === -1) {
+      let theLink = document.createElement("p");
+      console.log("Error identified");
+      theLink.textContent = "Error retrieving Ally file. Please contact your site admin.";
+      theLink.classList = "feature-box error-message"
+
+      document.getElementById("status-marker").remove();
+
+      let theDiv = document.getElementById("ally-box");
+      theDiv.appendChild(theLink);
+
+      clearTimeout(timeout);
+      return false;
+  }
+
   if (get.status !== "") {
       let theLink = document.createElement("a");
       theLink.text = "Click here to download the Ally course information file!";

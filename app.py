@@ -15,6 +15,8 @@ import pandas as pd
 app = Flask(__name__)
 status = None
 link = "inactive"
+app.config['SECRET_KEY'] = 'your secret key'
+allyDataframe = None
 
 
 def doUpdate(triggerType, boardId, crBoxId):
@@ -46,6 +48,8 @@ def doUpdate(triggerType, boardId, crBoxId):
 
 @app.route('/', methods=['GET', 'POST'])
 def loginBox():
+    msg = request.args.get('msg')
+
     oauth = OAuth2(
         client_id=os.environ.get('BOX_CLIENT_ID'),
         client_secret=os.environ.get('BOX_SECRET'),
@@ -55,7 +59,7 @@ def loginBox():
     auth_url, csrf_token = oauth.get_authorization_url('http://localhost:8000/oauth/callback')
     global csrf
     csrf = csrf_token
-    return render_template('loginBox.html', auth_url=auth_url, csrf_token=csrf_token)
+    return render_template('loginBox.html', auth_url=auth_url, csrf_token=csrf_token, msg=msg)
 
 
 def store_tokens(access_token: str, refresh_token: str) -> bool:
@@ -80,23 +84,26 @@ def oauth_callback():
     error = request.args.get('error')
     error_description = request.args.get('error_description')
 
+    assert state == csrf
+
+    if error == 'access_denied':
+        print("denial caught!")
+        msg = 'You denied access to your Box account, you must authorize QA Update to access your account to use this application.'
+    else:
+        msg = error_description
+
+    if msg is not None:
+        print("rendering login page again")
+        #return render_template('loginBox.html', msg=msg)
+        return redirect(url_for('loginBox', msg=msg))
+
     oauth = OAuth2(
         client_id=os.environ.get('BOX_CLIENT_ID'),
         client_secret=os.environ.get('BOX_SECRET'),
         store_tokens=store_tokens
     )
 
-    assert state == csrf
-
     access_token, refresh_token = oauth.authenticate(code)
-
-    if error == 'access_denied':
-        msg = 'You denied access to this application'
-    else:
-        msg = error_description
-
-    if msg != None:
-        return render_template('loginBox.html', msg=msg)
 
     return redirect(url_for('landing'))
 
@@ -114,8 +121,12 @@ def landing():
 
 
 def getAllyURL():
+    result = getURL()
     global link
-    link = f"http{getURL()[5:-1]}"
+    if result == -1:
+        link = -1
+    else:
+        link = f"http{result[5:-1]}"
 
 
 @app.route('/getAllyLink', methods=['POST'])
@@ -139,11 +150,16 @@ def processAllyFile():
 
     if request.method == 'POST':
 
-        uploadedFile = request.files["allyFile"]
-        global allyDataframe
-        allyDataframe = pd.read_csv(uploadedFile)
+        try:
+            uploadedFile = request.files["allyFile"]
+            global allyDataframe
+            allyDataframe = pd.read_csv(uploadedFile)
 
-        return render_template('index.html')
+            return render_template('index.html', upload_status="Upload successful!")
+        except Exception as e:
+            uploadErr = "File is invalid or failed to upload. Please try again."
+            print(e)
+            return render_template('index.html', upload_err=uploadErr)
 
     return render_template('index.html')
 
@@ -157,27 +173,30 @@ def updating():
         return render_template('updating.html')
 
     if request.method == 'POST':
-        try:
-            stopProcess = request.form['stop-process']
-            print("Attempting to stop process")
-            #t1.stop()
-            #t1.join()
-        except Exception as e:
-            triggerType = request.form['trigger-type']
-            boardId = request.form['board-id']
-            crBoxId = request.form['cr-box-id']
+        triggerType = request.form['trigger-type']
+        boardId = request.form['board-id']
+        crBoxId = request.form['cr-box-id']
 
-            if triggerType == "" or not boardId or not crBoxId:
-                flash('All fields are required!')
-                return render_template('index.html')
-            else:
-                print(f"{triggerType}, {boardId}, {crBoxId}")
+        if not allyDataframe:
+            print("No ally file")
+            flash("You must upload a valid Ally file to continue.")
 
-            t1 = Thread(target=doUpdate, args=(triggerType,),
-                                 kwargs={'boardId': boardId, 'crBoxId': crBoxId})
-            t1.start()
-        finally:
-            return redirect(url_for('updating'))
+        print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
+
+        if triggerType == "" or not boardId or not crBoxId:
+            flash('All fields are required!')
+            return render_template('index.html')
+        else:
+            print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
+
+
+
+        t1 = Thread(target=doUpdate, args=(triggerType,),
+                    kwargs={'boardId': boardId, 'crBoxId': crBoxId})
+        t1.start()
+
+        return redirect(url_for('updating'))
+
 
     return render_template('index.html')
 

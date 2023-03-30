@@ -55,6 +55,12 @@ a {
     border-radius: 10px;
 }
 
+.drk-blue {
+    background-color: #00337C;
+    color: white;
+    border-color: darkblue;
+}
+
   .progress {
     height: 50px;
     width: 50%;

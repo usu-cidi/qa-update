@@ -50,6 +50,14 @@
             <button type="submit" class="btn btn-light button">Upload</button>
         </form>
 
+        {% if upload_err %}
+            <p class="feature-box error-message">{{ upload_err }}</p>
+        {% endif %}
+
+        {% if upload_status %}
+            <p class="feature-box drk-blue">{{ upload_status }}</p>
+        {% endif %}
+
         <br>
 
     </div>
@@ -57,7 +65,14 @@
     <div class="feature-box blue">
         <br>
         <h3>3. Run the Update</h3>
-        <br>
+
+        {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <p class="feature-box error-message">Error: {{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
         <form method="POST" action="/updating">
             <div class="form-group">
@@ -91,17 +106,9 @@
                 <input type="text" name="cr-box-id" class="form-control" value="{{ request.form['cr-box-id'] }}"></input>
             </div>
 
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <p class="feature-box error-message">Error: {{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-
             <br>
 
-            <p class="error-message">WARNING: Update process cannot be stopped once began!!</p>
+            <p class="feature-box error-message">WARNING: Update process cannot be stopped once began!!</p>
 
             <div class="form-group">
                 <button type="submit" class="btn btn-light button">Submit</button>
