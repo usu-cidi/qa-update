@@ -568,11 +568,17 @@ Images in Use
 * Error handling missing arguments
 * Error handling missing uploaded file
 
+### 3.31.23
+* Input validation
+* Exception handling in update process
+* Exception handling when given incorrect courses.csv file
+* Exception handling for CSRF verification failure
+* Looked into Unchecked runtime.lastError
+  * Seems like it's more of a Chrome issue with my browser extensions and is fine
+* Worked on getting the bug report page up and running
+
 ### TODO:
 Now:
-* Error handling in the update
-* UI error handling
-* Unchecked runtime.lastError
 * Add bug report info
 
 Next:
@@ -649,6 +655,7 @@ Sometime:
 * Progress bar: https://stackoverflow.com/questions/24251898/flask-app-update-progress-bar-while-function-runs
 * Passing arguments to thread: https://stackoverflow.com/questions/6904487/how-to-pass-arguments-to-a-thread
 * Getting uploaded files: https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
+* Sending emails: https://realpython.com/python-send-email/
 
 #### OAuth
 * OAuth python library: https://pypi.org/project/oauthlib/

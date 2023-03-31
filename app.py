@@ -13,10 +13,11 @@ import pandas as pd
 
 
 app = Flask(__name__)
-status = None
+status = "inactive"
 link = "inactive"
 app.config['SECRET_KEY'] = 'your secret key'
 allyDataframe = None
+accessTok = None
 
 
 def doUpdate(triggerType, boardId, crBoxId):
@@ -28,22 +29,36 @@ def doUpdate(triggerType, boardId, crBoxId):
     allyData = allyDataframe
     status += 1
 
-    courseReportData = getDataFromBox(crBoxId, 'excel', accessTok)
-    print(f"gotten course report {status}")
-    status += 1
+    try:
+        courseReportData = getDataFromBox(crBoxId, 'excel', accessTok)
+        print(f"gotten course report {status}")
+        status += 1
+    except Exception as e:
+        print(e)
+        status = "error1"
+        return
 
-    completeReport = combineReports(courseReportData, allyData)
-    print(f"combined reports {status}")
-    status += 1
+    try:
+        completeReport = combineReports(courseReportData, allyData)
+        print(f"combined reports {status}")
+        status += 1
+    except Exception as e:
+        print(e)
+        status = "error2"
+        return
 
-    if triggerType == "Fill whole board":
-        fillNewBoard(completeReport, boardId)
-        print(f"Fill in complete {status}")
+    try:
+        if triggerType == "Fill whole board":
+            fillNewBoard(completeReport, boardId)
+            print(f"Fill in complete {status}")
+            status += 7
+
+        updateExistingBoard(completeReport, boardId)
+        print(f"Update complete: {status}")
         status += 7
-
-    updateExistingBoard(completeReport, boardId)
-    print(f"Update complete: {status}")
-    status += 7
+    except Exception as e:
+        print(e)
+        status = "error3"
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -84,7 +99,12 @@ def oauth_callback():
     error = request.args.get('error')
     error_description = request.args.get('error_description')
 
-    assert state == csrf
+    try:
+        assert state == csrf
+    except AssertionError as e:
+        print(e)
+        msg = "CSRF verification failed."
+        return redirect(url_for('loginBox', msg=msg))
 
     if error == 'access_denied':
         print("denial caught!")
@@ -118,6 +138,18 @@ def landing():
         return redirect(url_for('landing'))
 
     return render_template('index.html')
+
+
+@app.route('/bugReport', methods=['GET', 'POST'])
+def bugReport():
+    # GET
+    if request.method == 'GET':
+        return render_template('bugReport.html')
+
+    if request.method == 'POST':
+        pass
+
+    return render_template('bugReport.html')
 
 
 def getAllyURL():
@@ -177,19 +209,35 @@ def updating():
         boardId = request.form['board-id']
         crBoxId = request.form['cr-box-id']
 
-        if not allyDataframe:
+        if allyDataframe is None:
             print("No ally file")
             flash("You must upload a valid Ally file to continue.")
 
         print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
 
+        error = False
+
         if triggerType == "" or not boardId or not crBoxId:
             flash('All fields are required!')
-            return render_template('index.html')
+            error = True
         else:
-            print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
+            if triggerType != "update" and triggerType != "new":
+                flash('Invalid update type (stop messing with my dev tools!)')
+                error = True
+            if not boardId.isdigit() or int(boardId) <= 0:
+                flash('Invalid monday board ID')
+                error = True
+            if not crBoxId.isdigit() or int(crBoxId) <= 0:
+                flash('Invalid course report ID')
+                error = True
+        if error:
+            return render_template('index.html')
 
+        print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
 
+        if accessTok is None:
+            flash('Box authorization incomplete.')
+            return render_template('index.html')
 
         t1 = Thread(target=doUpdate, args=(triggerType,),
                     kwargs={'boardId': boardId, 'crBoxId': crBoxId})
