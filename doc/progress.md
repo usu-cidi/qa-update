@@ -581,12 +581,15 @@ Images in Use
 * Finished bug report form
 * Asked Neal about adding group change automations to the main board
 * Updated README.md
-* 
+* Created new branch allowing script to be ran the old way
+* Cleaned up git repo
+* Created new branch for AWS deployment
+* Started working on deployment - created initial deployment package
 
 ### TODO:
 Now:
-* Create new branch allowing script to be ran the old way
 * Add to AWS
+* More security for email form
 
 Next:
 * Ask about adding new columns to main board
