@@ -178,7 +178,6 @@ def bugReport():
 
         message += f"status: {status}\n"
         message += f"link: {link}\n"
-        message += f"status: {status}\n"
         message += f"allyDataframe: {allyDataframe}\n"
         message += f"accessTok: {accessTok}\n"
         message += f"refreshTok: {refreshTok}\n"

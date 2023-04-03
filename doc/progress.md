@@ -580,6 +580,7 @@ Images in Use
 ### 4.3.23
 * Finished bug report form
 * Asked Neal about adding group change automations to the main board
+* Updated README.md
 * 
 
 ### TODO:
