@@ -11,6 +11,8 @@ This repository contains code that will:
 
 This tool is currently being hosted at: ___
 
+To use this tool on the command line, switch to the branch `archive/cli`.
+
 ## Bug Reports
 If something behaves unexpectedly, or you run into a problem with the program, please let me know.
 
