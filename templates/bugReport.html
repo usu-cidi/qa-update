@@ -33,7 +33,7 @@
                 {% endif %}
             {% endwith %}
 
-        <form method="POST" action="/bugReport">
+        <form method="POST" action="/bug-report">
             <div class="form-group">
                 <label for="app-name">Application</label>
                 <select name="app-name" class="form-select">
@@ -62,15 +62,15 @@
                 <input type="text" name="browser" class="form-control" value="{{ request.form['browser'] }}"></input>
 
                 <br>
-                <label for="name">Any other relevant information</label>
-                <input type="text" name="name" class="form-control" value="{{ request.form['name'] }}"></input>
+                <label for="other-info">Any other relevant information</label>
+                <input type="text" name="other-info" class="form-control" value="{{ request.form['name'] }}"></input>
 
                 <br>
                 <label for="name">Your name (Optional if you would like me to get back to you with an update)</label>
                 <input type="text" name="name" class="form-control" value="{{ request.form['name'] }}"></input>
 
                 <br>
-                <label for="name">Your email (Optional if you would like me to get back to you with an update)</label>
+                <label for="email">Your email (Optional if you would like me to get back to you with an update)</label>
                 <input type="text" name="email" class="form-control" value="{{ request.form['email'] }}"></input>
 
                 <br>
@@ -83,21 +83,6 @@
         </form>
 
     </div>
-
-    <!-----------------------
-    Title: HTML – How to Show Text Above Image on Hover
-    Author: Singh, Yogesh
-    12.5.2022 (accessed 1.25.2023)
-    Available at: https://makitweb.com/html-how-to-show-text-above-image-on-hover/
-    Modified by Emma Lynn
-    -->
-
-    <div class="content_img">
-        <img class="url-ex" src="{{url_for('static', filename='img/bug.gif')}}" alt="Animation of a bug." />
-        <div>Yim, K. (2017). <em>This Walk Cycle Wednesday, it’s a pillbug!</em> https://ketrinadrawsalot.tumblr.com/post/145292711592/this-walk-cycle-wednesday-its-a-pillbug</div>
-    </div>
-
-    <!----------------------->
 
     </body>
 </html>

@@ -46,7 +46,7 @@ async function getStatus() {
       return false;
   }
 
-  timeout = setTimeout(getStatus, 1000);
+  timeout = setTimeout(getStatus, 7000);
 }
 
 getStatus()

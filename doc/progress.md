@@ -577,13 +577,17 @@ Images in Use
   * Seems like it's more of a Chrome issue with my browser extensions and is fine
 * Worked on getting the bug report page up and running
 
+### 4.3.23
+* Finished bug report form
+* Asked Neal about adding group change automations to the main board
+* 
+
 ### TODO:
 Now:
-* Add bug report info
-
-Next:
 * Create new branch allowing script to be ran the old way
 * Add to AWS
+
+Next:
 * Ask about adding new columns to main board
 
 Sometime:
@@ -592,7 +596,7 @@ Sometime:
 * Stop update button
 
 * Transition licence?
-* Ask about adding group change automations to the main board
+
 
 ## Dependencies:
 * pandas: `pip3 install pandas`
@@ -655,7 +659,7 @@ Sometime:
 * Progress bar: https://stackoverflow.com/questions/24251898/flask-app-update-progress-bar-while-function-runs
 * Passing arguments to thread: https://stackoverflow.com/questions/6904487/how-to-pass-arguments-to-a-thread
 * Getting uploaded files: https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
-* Sending emails: https://realpython.com/python-send-email/
+* Sending emails: https://leimao.github.io/blog/Python-Send-Gmail/
 
 #### OAuth
 * OAuth python library: https://pypi.org/project/oauthlib/

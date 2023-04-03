@@ -10,14 +10,19 @@ from threading import Thread
 import threading
 import json
 import pandas as pd
+import smtplib, ssl
+from email.message import EmailMessage
+from datetime import datetime
 
 
 app = Flask(__name__)
 status = "inactive"
 link = "inactive"
-app.config['SECRET_KEY'] = 'your secret key'
+app.config['SECRET_KEY'] = os.environ.get('CSRF')
 allyDataframe = None
 accessTok = None
+refreshTok = None
+csrf = None
 
 
 def doUpdate(triggerType, boardId, crBoxId):
@@ -108,7 +113,7 @@ def oauth_callback():
 
     if error == 'access_denied':
         print("denial caught!")
-        msg = 'You denied access to your Box account, you must authorize QA Update to access your account to use this application.'
+        msg = 'You denied access to your Box account. You must authorize QA Update to access your account to use this application.'
     else:
         msg = error_description
 
@@ -139,17 +144,69 @@ def landing():
 
     return render_template('index.html')
 
+@app.route('/submitted', methods=['GET'])
+def submitted():
+    return render_template('submitted.html')
 
-@app.route('/bugReport', methods=['GET', 'POST'])
+
+@app.route('/bug-report', methods=['GET', 'POST'])
 def bugReport():
     # GET
     if request.method == 'GET':
         return render_template('bugReport.html')
 
     if request.method == 'POST':
-        pass
+        reportInfo = {
+            "App Name": request.form["app-name"],
+            "Date and time": request.form["date-time"],
+            "Expected Behavior": request.form["expected-behavior"],
+            "Actual Behavior": request.form["actual-behavior"],
+            "Errors": request.form["errors"],
+            "Browser": request.form["browser"],
+            "Other Info": request.form["other-info"],
+            "Name": request.form["name"],
+            "Email": request.form["email"],
+        }
+
+        message = f"Bug reported for {request.form['app-name']} submitted on {datetime.now()}" \
+                  f"\n\n------Form Info------\n"
+
+        for info in reportInfo:
+            message += f"{info}: {reportInfo[info]}\n"
+
+        message += "\n------Runtime Info------\n"
+
+        message += f"status: {status}\n"
+        message += f"link: {link}\n"
+        message += f"status: {status}\n"
+        message += f"allyDataframe: {allyDataframe}\n"
+        message += f"accessTok: {accessTok}\n"
+        message += f"refreshTok: {refreshTok}\n"
+        message += f"csrf: {csrf}\n"
+
+        sendEmail(message, f"Bug Report - {request.form['app-name']}")
+        return redirect(url_for('submitted'))
 
     return render_template('bugReport.html')
+
+
+def sendEmail(message, subject):
+    port = 465  # For SSL
+    smtp_server = "smtp.gmail.com"
+    sender_email = os.environ.get('DEV_EMAIL')
+    receiver_email = os.environ.get('DEV_EMAIL')
+    password = os.environ.get('EMAIL_PASS')
+
+    msg = EmailMessage()
+    msg.set_content(message)
+    msg['Subject'] = subject
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(sender_email, password)
+        server.send_message(msg, from_addr=sender_email, to_addrs=receiver_email)
 
 
 def getAllyURL():
