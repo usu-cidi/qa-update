@@ -586,9 +586,15 @@ Images in Use
 * Created new branch for AWS deployment
 * Started working on deployment - created initial deployment package
 
+### 4.4.23
+* Working on deployment - setting up serverless
+* HTML content is being served, static is still giving a 404
+* Did a little bit of looking into possibly other ways to host? Maybe AWS lambda is not the bestest for this idk man
+
 ### TODO:
 Now:
 * Add to AWS
+* Set up AWS provider in serverless
 * More security for email form
 
 Next:
