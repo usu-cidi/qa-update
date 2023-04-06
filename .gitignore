@@ -7,6 +7,10 @@ __pycache__/
 *.so
 
 
+data/
+*.txt
+
+
 venv
 .DS_Store
 __pycache__

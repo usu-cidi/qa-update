@@ -591,17 +591,42 @@ Images in Use
 * HTML content is being served, static is still giving a 404
 * Did a little bit of looking into possibly other ways to host? Maybe AWS lambda is not the bestest for this idk man
 
+### 4.5.23
+* Looked into other hosting alternatives
+  * Firebase
+    * Ran by google
+    * When limits exceeded, site disabled
+    * Functions can only be written in JavaScript and TypeScript?
+      * Or is that just for serverless functions?
+  * Vercel
+    * Must be non-commercial - won't work then
+  * Netlify
+    * Only 100 form submissions a month - not ideal...
+  * Render
+  * AWS Elastic Beanstalk
+* Asked Neal and Christopher if they have thoughts about what would be the best way to do this
+  * Neal's going to message Tyler to see if he has thoughts
+  * Hosting option on elearn?
+* Fixed .gitignore to ignore sample/testing data
+
+### 4.6.23
+* Refactored `app.py` for better organization
+* Added honeypots to the forms
+* Added some basic local authorization requirements
+* 
+
+
 ### TODO:
 Now:
-* Add to AWS
-* Set up AWS provider in serverless
-* More security for email form
+* Deploy
+* Get production authorization tokens
 
 Next:
 * Ask about adding new columns to main board
 
 Sometime:
 * Fix the hard coded index problem while getting column values
+* Some more security/input validation
 * Figure out different deployment environments in Lambda
 * Stop update button
 

@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>QA Update Automation</title>
+        <title>Bug Reports</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename= 'css/style.css') }}">
         <!--<link rel="stylesheet" type="text/css" href="../static/css/style.css">-->
@@ -41,6 +41,8 @@
                     <option value="QA Update">QA Update</option>
                 </select>
 
+                <input name="check" class="visually-hidden" tabindex="-1" autocomplete="off">
+
                 <br>
                 <label for="date-time">Date and approximate time the error occurred</label>
                 <input type="text" name="date-time" class="form-control" value="{{ request.form['date-time'] }}"></input>
@@ -71,7 +73,7 @@
 
                 <br>
                 <label for="email">Your email (Optional if you would like me to get back to you with an update)</label>
-                <input type="text" name="email" class="form-control" value="{{ request.form['email'] }}"></input>
+                <input type="email" name="email" class="form-control" value="{{ request.form['email'] }}"></input>
 
                 <br>
                 <p>Thank you for your feedback.</p>

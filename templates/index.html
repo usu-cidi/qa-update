@@ -44,6 +44,7 @@
 
         <p>Unzip the Ally folder and upload the file called courses.csv here for processing.</p>
         <form method="POST" action="/processAllyFile" enctype="multipart/form-data">
+            <input name="check" class="visually-hidden" tabindex="-1" autocomplete="off">
             <input type="file" id="allyFile" name="allyFile"/>
             <br><br>
 
@@ -67,12 +68,12 @@
         <h3>3. Run the Update</h3>
 
         {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <p class="feature-box error-message">Error: {{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="feature-box error-message">Error: {{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
         <form method="POST" action="/updating">
             <div class="form-group">
@@ -85,6 +86,8 @@
                     <option value="update">Update existing board</option>
                     <option value="new">Fill in new board</option>
                 </select>
+
+                <input name="check" class="visually-hidden" tabindex="-1" autocomplete="off">
 
                 <br>
                 <h4>Monday Board ID</h4>
