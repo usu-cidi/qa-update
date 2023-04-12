@@ -59,7 +59,7 @@ def initialLogin():
 @app.route('/box-login', methods=['GET', 'POST'])
 def loginBox():
     if not authorized:
-        return render_template("submitted.html", msg="Error: please contact your site admin."), 403
+        return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     msg = request.args.get('msg')
 
@@ -93,7 +93,7 @@ def store_tokens(access_token: str, refresh_token: str) -> bool:
 @app.route('/oauth/callback')
 def oauth_callback():
     if not authorized:
-        return render_template("submitted.html", msg="Error: please contact your site admin."), 403
+        return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     code = request.args.get('code')
     state = request.args.get('state')
@@ -136,7 +136,7 @@ def oauth_callback():
 @app.route('/landing', methods=['GET', 'POST'])
 def landing():
     if not authorized:
-        return render_template("submitted.html", msg="Error: please contact your site admin."), 403
+        return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     # GET
     if request.method == 'GET':
@@ -151,9 +151,19 @@ def landing():
 @app.route('/getAllyLink', methods=['POST'])
 def getAllyLink():
     if not authorized:
-        return render_template("submitted.html", msg="Error: please contact your site admin."), 403
+        return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     if request.method == 'POST':
+        #TODO: finish fixing this
+        triggerType = request.form['trigger-type']
+        boardId = request.form['board-id']
+        crBoxId = request.form['cr-box-id']
+
+        if triggerType == "" or not boardId or not crBoxId:
+            flash('All fields are required!')
+            error = True
+
+
         global link
         link = ""
 
@@ -178,7 +188,7 @@ def getAllyURL():
 @app.route('/processAllyFile', methods=['POST'])
 def processAllyFile():
     if not authorized:
-        return render_template("submitted.html", msg="Error: please contact your site admin."), 403
+        return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     if request.method == 'POST':
         if request.form["check"]:
@@ -202,7 +212,7 @@ def processAllyFile():
 @app.route('/linkStatus', methods=['GET'])
 def getLinkStatus():
     if not authorized:
-        return render_template("submitted.html", msg="Error: please contact your site admin."), 403
+        return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     statusList = {'status': link}
     return json.dumps(statusList)
@@ -214,7 +224,7 @@ def getLinkStatus():
 @app.route('/updating', methods=['GET', 'POST'])
 def updating():
     if not authorized:
-        return render_template("submitted.html", msg="Error: please contact your site admin."), 403
+        return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     global t1
 
@@ -315,7 +325,7 @@ def doUpdate(triggerType, boardId, crBoxId):
 @app.route('/status', methods=['GET'])
 def getStatus():
     if not authorized:
-        return render_template("submitted.html", msg="Error: please contact your site admin."), 403
+        return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     statusList = {'status': status}
     return json.dumps(statusList)
@@ -327,7 +337,7 @@ def getStatus():
 @app.route('/bug-report', methods=['GET', 'POST'])
 def bugReport():
     if not authorized:
-        return render_template("submitted.html", msg="Error: please contact your site admin."), 403
+        return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     supportedTools = ["QA Update"]
 
@@ -396,7 +406,6 @@ def sendEmail(message, subject):
 
 
 #--------------------------
-
 
 
 if __name__ == '__main__':

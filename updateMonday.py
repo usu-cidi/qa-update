@@ -12,7 +12,9 @@ API_KEY = os.environ.get('MONDAY_API_KEY')
 API_URL = "https://api.monday.com/v2"
 HEADERS = {"Authorization": API_KEY}
 NUM_STU_INDEX = 9 + 3
+# 12: number of students index - MAY BE DIFFERENT IN PRODUCTION
 DEL_MET_INDEX = 4
+# 4: delivery method index - MAY BE DIFFERENT IN PRODUCTION
 
 COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", "status8", "__of_students",
            "__content_in_use",

@@ -613,24 +613,34 @@ Images in Use
 * Refactored `app.py` for better organization
 * Added honeypots to the forms
 * Added some basic local authorization requirements
-* 
+* Started looking into PythonAnywhere, playing with their deployment options
+  * It looks like they won't give me enough CPU time so that kind of throws them out
+* Testing full update
+  * Seems like it's working good!!
+
+### 4.12.23
+* Started adding in better/cleaner authentication
 
 
 ### TODO:
 Now:
+* Finish moving auth around - input validation and such
+
+* Better auth!!
+  * Fix login bug
 * Deploy
+  * Implement API key
+* Switch Ally time stamp thing back?
 * Get production authorization tokens
+* Term code!!
 
 Next:
 * Ask about adding new columns to main board
 
 Sometime:
 * Fix the hard coded index problem while getting column values
-* Some more security/input validation
-* Figure out different deployment environments in Lambda
 * Stop update button
-
-* Transition licence?
+* Always need more security
 
 
 ## Dependencies:
@@ -728,6 +738,10 @@ Sometime:
 * Permission scopes: https://developer.box.com/guides/api-calls/permissions-and-errors/scopes/
 * Upload file: https://developer.box.com/reference/post-files-content/
 * OAuth 2.0 flow: https://medium.com/box-developer-blog/getting-started-with-box-python-sdk-and-oauth-2-0-77607441170d
+
+### Python Anywhere
+* virtualenv: https://help.pythonanywhere.com/pages/Virtualenvs/
+* dotenv: https://help.pythonanywhere.com/pages/environment-variables-for-web-apps/
 
 ### AWS Lambda
 * Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/

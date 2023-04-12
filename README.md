@@ -10,6 +10,7 @@ This repository contains code that will:
 * Use that data to automatically update USU's QA board on monday.com
 
 This tool is currently being hosted at: ___
+* To use this version of the tool, you will need credentials. Please reach out to Emma Lynn (a02391851@usu.edu) if you do not have them.
 
 To use this tool on the command line, switch to the branch `archive/cli`.
 
