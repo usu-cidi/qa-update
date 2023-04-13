@@ -71,7 +71,7 @@ def getURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
 
 if __name__ == "__main__":
 
-    dotenv.load_dotenv(dotenv.find_dotenv())
+    #dotenv.load_dotenv(dotenv.find_dotenv())
 
     CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
     CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')

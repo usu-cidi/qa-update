@@ -623,19 +623,13 @@ Images in Use
 
 ### 4.13.23
 * Removed internal authorization supply
-* 
+* Started using session information - fixed login bug
+* Removed most of the reliance on globals and replaced with session info - which will be more secure anyway
+* Now actually ready to move into Elastic Beanstalk if that works
 
 ### TODO:
 Now:
-* Remove globals
-
-* Better auth!!
-  * Fix login bug
 * Deploy
-  * Implement API key
-* Switch Ally time stamp thing back?
-* Get production authorization tokens
-* Term code!!
 
 Next:
 * Ask about adding new columns to main board
@@ -644,6 +638,8 @@ Sometime:
 * Fix the hard coded index problem while getting column values
 * Stop update button
 * Always need more security
+* Decide about adding Ally time stamp back
+* Better progress bar
 
 
 ## Dependencies:
@@ -708,6 +704,7 @@ Sometime:
 * Passing arguments to thread: https://stackoverflow.com/questions/6904487/how-to-pass-arguments-to-a-thread
 * Getting uploaded files: https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
 * Sending emails: https://leimao.github.io/blog/Python-Send-Gmail/
+* Login: https://www.digitalocean.com/community/tutorials/how-to-add-authentication-to-your-app-with-flask-login
 
 #### OAuth
 * OAuth python library: https://pypi.org/project/oauthlib/

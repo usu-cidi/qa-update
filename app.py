@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, flash, redirect, url_for
+from flask import Flask, request, jsonify, render_template, flash, redirect, url_for, session
 import dotenv    # for dev
 from boxsdk import Client, OAuth2
 import os
@@ -16,23 +16,18 @@ from getAllyData import getURL
 
 
 app = Flask(__name__)
-status = "inactive"
-link = "inactive"
 app.config['SECRET_KEY'] = os.environ.get('CSRF')
-allyDataframe = None
-accessTok = None
-refreshTok = None
-csrf = None
-authorized = False
+
+link = "inactive"
+status = "inactive"
+allyDataFrame = None
 
 
 @app.route('/', methods=['GET', 'POST'])
 def initialLogin():
-    global authorized
 
     if request.method == "GET":
         msg = request.args.get('msg')
-        authorized = False
         return render_template('login.html', msg=msg)
 
     if request.method == "POST":
@@ -46,7 +41,8 @@ def initialLogin():
 
         if submittedCode in authorizedUsers:
             print(f"{authorizedUsers[submittedCode]} is trying to access the site with approved code {submittedCode}")
-            authorized = True
+            session['activeUser'] = authorizedUsers[submittedCode]
+            session['authorized'] = True
         else:
             return redirect(url_for('initialLogin', msg="Invalid credentials. Please contact your site admin."))
 
@@ -58,7 +54,7 @@ def initialLogin():
 
 @app.route('/box-login', methods=['GET', 'POST'])
 def loginBox():
-    if not authorized:
+    if not session.get('authorized'):
         return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     msg = request.args.get('msg')
@@ -70,8 +66,7 @@ def loginBox():
     )
 
     auth_url, csrf_token = oauth.get_authorization_url('http://localhost:8000/oauth/callback')
-    global csrf
-    csrf = csrf_token
+    session['csrf'] = csrf_token
     return render_template('loginBox.html', auth_url=auth_url, csrf_token=csrf_token, msg=msg)
 
 
@@ -80,19 +75,17 @@ def store_tokens(access_token: str, refresh_token: str) -> bool:
     Store the access and refresh tokens for the current user
     """
 
-    global accessTok
-    accessTok = access_token
-    global refreshTok
-    refreshTok = refresh_token
+    session["accessTok"] = access_token
+    session["refreshTok"] = refresh_token
 
-    print(f"Here is the access token!! {accessTok}")
+    print(f"Here is the access token!! {session['accessTok']}")
 
     return True
 
 
 @app.route('/oauth/callback')
 def oauth_callback():
-    if not authorized:
+    if not session.get('authorized'):
         return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     code = request.args.get('code')
@@ -101,7 +94,7 @@ def oauth_callback():
     error_description = request.args.get('error_description')
 
     try:
-        assert state == csrf
+        assert state == session['csrf']
     except AssertionError as e:
         print(e)
         msg = "CSRF verification failed."
@@ -135,7 +128,7 @@ def oauth_callback():
 
 @app.route('/landing', methods=['GET', 'POST'])
 def landing():
-    if not authorized:
+    if not session.get('authorized'):
         return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     # GET
@@ -150,7 +143,7 @@ def landing():
 
 @app.route('/getAllyLink', methods=['POST'])
 def getAllyLink():
-    if not authorized:
+    if not session.get('authorized'):
         return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     if request.method == 'POST':
@@ -190,7 +183,7 @@ def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
 
 @app.route('/processAllyFile', methods=['POST'])
 def processAllyFile():
-    if not authorized:
+    if not session.get('authorized'):
         return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     if request.method == 'POST':
@@ -200,8 +193,8 @@ def processAllyFile():
 
         try:
             uploadedFile = request.files["allyFile"]
-            global allyDataframe
-            allyDataframe = pd.read_csv(uploadedFile)
+            global allyDataFrame
+            allyDataFrame = pd.read_csv(uploadedFile)
 
             return render_template('index.html', upload_status="Upload successful!")
         except Exception as e:
@@ -214,7 +207,7 @@ def processAllyFile():
 
 @app.route('/linkStatus', methods=['GET'])
 def getLinkStatus():
-    if not authorized:
+    if not session.get('authorized'):
         return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     statusList = {'status': link}
@@ -226,10 +219,8 @@ def getLinkStatus():
 
 @app.route('/updating', methods=['GET', 'POST'])
 def updating():
-    if not authorized:
+    if not session.get('authorized'):
         return render_template('login.html', msg="Error: you must log in to access this application."), 403
-
-    global t1
 
     # GET
     if request.method == 'GET':
@@ -246,7 +237,7 @@ def updating():
         crBoxId = request.form['cr-box-id']
         mondayAPIKey = request.form['mon-api-key']
 
-        if allyDataframe is None:
+        if allyDataFrame is None:
             print("No ally file")
             flash("You must upload a valid Ally file to continue.")
 
@@ -272,11 +263,14 @@ def updating():
 
         print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
 
-        if accessTok is None:
+        if not session.get('accessTok'):
             flash('Box authorization incomplete.')
             return render_template('index.html')
 
-        t1 = Thread(target=doUpdate, args=(triggerType, boardId, crBoxId, mondayAPIKey))
+        allyData = allyDataFrame
+        accessTokVal = session["accessTok"]
+
+        t1 = Thread(target=doUpdate, args=(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTokVal))
         t1.start()
 
         return redirect(url_for('updating'))
@@ -284,13 +278,12 @@ def updating():
     return render_template('index.html')
 
 
-def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey):
+def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
     global status
     status = 0
 
     print(f"doing the update {status}")
 
-    allyData = allyDataframe
     status += 1
 
     try:
@@ -327,10 +320,11 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey):
 
 @app.route('/status', methods=['GET'])
 def getStatus():
-    if not authorized:
+    if not session.get('authorized'):
         return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     statusList = {'status': status}
+
     return json.dumps(statusList)
 
 
@@ -339,7 +333,7 @@ def getStatus():
 
 @app.route('/bug-report', methods=['GET', 'POST'])
 def bugReport():
-    if not authorized:
+    if not session.get('authorized'):
         return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     supportedTools = ["QA Update"]
@@ -378,10 +372,11 @@ def bugReport():
 
         message += f"status: {status}\n"
         message += f"link: {link}\n"
-        message += f"allyDataframe: {allyDataframe}\n"
-        message += f"accessTok: {accessTok}\n"
-        message += f"refreshTok: {refreshTok}\n"
-        message += f"csrf: {csrf}\n"
+        message += f"allyDataframe: {allyDataFrame}\n"
+        message += f"accessTok: {session['accessTok']}\n"
+        message += f"refreshTok: {session['refreshTok']}\n"
+        message += f"csrf: {session['csrf']}\n"
+        message += f"active user: {session['activeUser']}\n"
 
         sendEmail(message, f"Bug Report - {request.form['app-name']}")
         return redirect(url_for('submitted'))
@@ -409,6 +404,11 @@ def sendEmail(message, subject):
 
 
 #--------------------------
+
+@app.route('/submitted', methods=['GET'])
+def submitted():
+    msg = request.args.get('msg')
+    return render_template('submitted.html', msg=msg)
 
 
 if __name__ == '__main__':
