@@ -154,20 +154,23 @@ def getAllyLink():
         return render_template('login.html', msg="Error: you must log in to access this application."), 403
 
     if request.method == 'POST':
-        #TODO: finish fixing this
-        triggerType = request.form['trigger-type']
-        boardId = request.form['board-id']
-        crBoxId = request.form['cr-box-id']
+        allyClientId = request.form['ally-client-id']
+        allyConsumKey = request.form['ally-consum-key']
+        allyConsumSec = request.form['ally-consum-sec']
+        termCode = request.form['term-code']
 
-        if triggerType == "" or not boardId or not crBoxId:
+        if not allyClientId or not allyConsumKey or not allyConsumSec or not termCode:
             flash('All fields are required!')
-            error = True
-
+            return render_template('index.html')
+        if not termCode.isdigit():
+            flash('Invalid term code.')
+            return render_template('index.html')
 
         global link
         link = ""
 
-        t2 = Thread(target=getAllyURL)
+        t2 = Thread(target=getAllyURL, args=(allyClientId, allyConsumKey, allyConsumSec, termCode))
+
         print("Starting the thread")
         t2.start()
 
@@ -176,8 +179,8 @@ def getAllyLink():
     return render_template('index.html')
 
 
-def getAllyURL():
-    result = getURL()
+def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
+    result = getURL(allyClientId, allyConsumKey, allyConsumSec, termCode)
     global link
     if result == -1:
         link = -1
@@ -241,6 +244,7 @@ def updating():
         triggerType = request.form['trigger-type']
         boardId = request.form['board-id']
         crBoxId = request.form['cr-box-id']
+        mondayAPIKey = request.form['mon-api-key']
 
         if allyDataframe is None:
             print("No ally file")
@@ -250,7 +254,7 @@ def updating():
 
         error = False
 
-        if triggerType == "" or not boardId or not crBoxId:
+        if triggerType == "" or not boardId or not crBoxId or not mondayAPIKey:
             flash('All fields are required!')
             error = True
         else:
@@ -272,8 +276,7 @@ def updating():
             flash('Box authorization incomplete.')
             return render_template('index.html')
 
-        t1 = Thread(target=doUpdate, args=(triggerType,),
-                    kwargs={'boardId': boardId, 'crBoxId': crBoxId})
+        t1 = Thread(target=doUpdate, args=(triggerType, boardId, crBoxId, mondayAPIKey))
         t1.start()
 
         return redirect(url_for('updating'))
@@ -281,7 +284,7 @@ def updating():
     return render_template('index.html')
 
 
-def doUpdate(triggerType, boardId, crBoxId):
+def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey):
     global status
     status = 0
 
@@ -310,11 +313,11 @@ def doUpdate(triggerType, boardId, crBoxId):
 
     try:
         if triggerType == "Fill whole board":
-            fillNewBoard(completeReport, boardId)
+            fillNewBoard(completeReport, boardId, mondayAPIKey)
             print(f"Fill in complete {status}")
             status += 7
 
-        updateExistingBoard(completeReport, boardId)
+        updateExistingBoard(completeReport, boardId, mondayAPIKey)
         print(f"Update complete: {status}")
         status += 7
     except Exception as e:

@@ -13,31 +13,20 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from requests_oauthlib import OAuth1Session
-import dotenv
+#import dotenv
 import os
 import sys
 import json
 import time
 import random
 
+def getURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
+    #dotenv.load_dotenv(dotenv.find_dotenv())
 
-def writeToReport(label, object):
-    f = open("performanceReport3850265.txt", "a")
-    f.write(f"{label}: {object}\n")
-    f.close()
-
-
-f = open("performanceReport3850265.txt", "w")
-f.write("")
-f.close()
-
-def getURL():
-    dotenv.load_dotenv(dotenv.find_dotenv())
-
-    CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
-    CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
-    CLIENT_ID = os.environ.get('CLIENT_ID')
-    TERM_CODE = os.environ.get('TERM_CODE')
+    CONSUMER_KEY = allyConsumKey
+    CONSUMER_SECRET = allyConsumSec
+    CLIENT_ID = allyClientId
+    TERM_CODE = termCode
 
     t = time.localtime()
     currentTime = time.strftime("%Y-%m-%d-%H-%M", t)
@@ -61,13 +50,9 @@ def getURL():
 
     try:
         while not "url" in parsedOutput:
-            writeToReport("Attempting API call with", url)
             r = test.get(url)
             parsedOutput = json.loads(r.content)
             if "status" in parsedOutput:
-                writeToReport("API response pending...", parsedOutput['status'])
-                writeToReport("ID", parsedOutput['processId'])
-                writeToReport("parsedOutput", parsedOutput)
                 print(f"Request ID: {parsedOutput['processId']}")
                 print(f"Status: {parsedOutput['status']}\n")
                 time.sleep(7)
@@ -85,7 +70,6 @@ def getURL():
 
 
 if __name__ == "__main__":
-    writeToReport("getAllyData.py", "")
 
     dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -100,7 +84,6 @@ if __name__ == "__main__":
 
     test = OAuth1Session(CONSUMER_KEY, client_secret=CONSUMER_SECRET)
     url = f'https://prod.ally.ac/api/v1/{CLIENT_ID}/reports/terms/{TERM_CODE}/csv?role=administrator&userId=1&token={currentTime}'
-    writeToReport("Attempting API call with", url)
     r = test.get(url)
 
     loadingMessages = ["Pulling data from Ally API...", "Loading...", "Going to space...", "Locating data...",
@@ -123,24 +106,19 @@ if __name__ == "__main__":
     print("Loading...\n")
 
     while not "url" in parsedOutput:
-        writeToReport("Attempting API call with", url)
         r = test.get(url)
         parsedOutput = json.loads(r.content)
         if "status" in parsedOutput:
-            writeToReport("API response pending...", parsedOutput['status'])
-            writeToReport("ID", parsedOutput['processId'])
             print(f"Request ID: {parsedOutput['processId']}")
             print(f"Status: {parsedOutput['status']}")
             print(f"{random.choice(loadingMessages)}\n")
 
             time.sleep(7)
         else:
-            writeToReport("Process complete", r.content)
             print("Download complete.")
             break
 
     print(f"\nDone in {time.time() - beginTime:.3f} seconds!")
-    writeToReport(f"Done in {time.time() - beginTime:.3f} seconds!", "")
 
     zipURL = str(r.content[8:-2])
     # print(zipURL[1:])

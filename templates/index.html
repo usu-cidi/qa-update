@@ -21,6 +21,14 @@
 
     <h2>Update the QA Board</h2>
 
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="feature-box error-message">Error: {{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
     <div id="ally-box" class="feature-box blue">
         <br>
         <h3>1. Get the Ally Download Link</h3>
@@ -83,14 +91,6 @@
     <div class="feature-box blue">
         <br>
         <h3>3. Run the Update</h3>
-
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <p class="feature-box error-message">Error: {{ message }}</p>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
 
         <form method="POST" action="/updating">
             <div class="form-group">

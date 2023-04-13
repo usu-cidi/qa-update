@@ -621,10 +621,13 @@ Images in Use
 ### 4.12.23
 * Started adding in better/cleaner authentication
 
+### 4.13.23
+* Removed internal authorization supply
+* 
 
 ### TODO:
 Now:
-* Finish moving auth around - input validation and such
+* Remove globals
 
 * Better auth!!
   * Fix login bug
