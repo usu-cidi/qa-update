@@ -625,7 +625,8 @@ Images in Use
 * Removed internal authorization supply
 * Started using session information - fixed login bug
 * Removed most of the reliance on globals and replaced with session info - which will be more secure anyway
-* Now actually ready to move into Elastic Beanstalk if that works
+* Fixed putting in correct group when new row is created problem
+* Now actually ready to move into Elastic Beanstalk if that will work
 
 ### TODO:
 Now:

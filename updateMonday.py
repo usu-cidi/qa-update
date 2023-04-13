@@ -11,8 +11,8 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 #API_KEY = os.environ.get('MONDAY_API_KEY')
 API_URL = "https://api.monday.com/v2"
 #HEADERS = {"Authorization": API_KEY}
-NUM_STU_INDEX = 9 + 3
-# 12: number of students index - MAY BE DIFFERENT IN PRODUCTION
+NUM_STU_INDEX = 9
+# 9: number of students index - MAY BE DIFFERENT IN PRODUCTION
 DEL_MET_INDEX = 4
 # 4: delivery method index - MAY BE DIFFERENT IN PRODUCTION
 
@@ -69,7 +69,9 @@ def findGroupID(numStu):
 
 def createNewItem(rowInfo, boardId, HEADERS):
     groupID = findGroupID(rowInfo[NUM_STU_INDEX])
-    query = f'mutation ($myItemName: String!, $columnVals: JSON!) {{ create_item (board_id:{boardId}, group_id:{groupID}, item_name:$myItemName, column_values:$columnVals) {{ id }} }}'
+    query = f'mutation ($myItemName: String!, $columnVals: JSON!) ' \
+            f'{{ create_item (board_id:{boardId}, group_id:{groupID}, ' \
+            f'item_name:$myItemName, column_values:$columnVals) {{ id }} }}'
 
     rowInfo.append("Updated")
     rowInfo.append(date.today())

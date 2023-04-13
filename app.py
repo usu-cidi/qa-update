@@ -237,13 +237,14 @@ def updating():
         crBoxId = request.form['cr-box-id']
         mondayAPIKey = request.form['mon-api-key']
 
+        error = False
+
         if allyDataFrame is None:
             print("No ally file")
             flash("You must upload a valid Ally file to continue.")
+            error = True
 
         print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
-
-        error = False
 
         if triggerType == "" or not boardId or not crBoxId or not mondayAPIKey:
             flash('All fields are required!')
