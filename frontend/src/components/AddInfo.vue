@@ -1,9 +1,4 @@
 <template>
-  <!--<div class="hello">
-    <h1>HOME</h1>
-    <router-link to="/hi"> Hello </router-link>
-    <p>Goodbye world!</p>
-  </div>-->
   <div class="heading-box">
         <h1>QA Update Automation</h1>
         <p>Center for Instructional Design and Innovation - USU</p>
@@ -18,23 +13,24 @@
     <div id="ally-box" class="feature-box blue">
         <br>
         <h3>1. Get the Ally Download Link</h3>
+      <br>
 
-        <form method="POST" action="/getAllyLink">
+        <form @submit.prevent="getAllyLink" >
             <h4>Ally Client ID</h4>
-            <input type="text" name="ally-client-id" class="form-control">
+            <input type="text" id="ally-client-id" name="ally-client-id" class="form-control">
             <br>
 
             <h4>Ally Consumer Key</h4>
-            <input type="text" name="ally-consum-key" class="form-control">
+            <input type="text" id="ally-consum-key" name="ally-consum-key" class="form-control">
             <input name="check" class="visually-hidden" tabindex="-1" autocomplete="off">
             <br>
 
             <h4>Ally Consumer Secret</h4>
-            <input type="text" name="ally-consum-sec" class="form-control">
+            <input type="text" id="ally-consum-sec" name="ally-consum-sec" class="form-control">
             <br>
 
             <h4>Term Code</h4>
-            <input type="text" name="term-code" class="form-control">
+            <input type="text" id="term-code" name="term-code" class="form-control">
             <br>
 
             <button type="submit" class="btn btn-light button">Get Link</button>
@@ -135,7 +131,32 @@
 </template>
 
 <script>
+/* eslint-disable */
 export default {
   name: 'AddInfoComponent',
+  emits: ["form-submitted"],
+  methods:{
+    getAllyLink(){
+      let clientId = document.getElementById("ally-client-id").value;
+      let consumKey = document.getElementById("ally-consum-key").value;
+      let consumSec = document.getElementById("ally-consum-sec").value;
+      let termCode = document.getElementById("term-code").value;
+
+      fetch(`http://localhost:8000/?code=${code}&check=${check}`)
+          .then( response => response.json() )
+          .then( json => {
+            console.log(json)
+            let d = new Date();
+            d.setTime(d.getTime() + 1 * 24 * 60 * 60 * 1000);
+            let expires = "expires=" + d.toUTCString();
+
+            document.cookie = "Token=" + json.cookie + ";" + expires + ";path=/"
+            this.$router.push("/box-login");
+          })
+          .catch(err => {
+            console.log(err);
+          })
+    }
+  }
 }
 </script>

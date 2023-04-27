@@ -655,9 +655,12 @@ Images in Use
   * Ditching Flask entirely I think
   * We can deploy the python backend as an AWS Lambda function and use Amplify (I think) to deploy the Vue frontend
 * Started converting frontend to Vue
+* Okay we're not going to ditch Flask entirely, we'll still use it on the backend
 
 ### TODO:
-Now:
+* Refactor for deployment
+    * Add authentication with cookies
+
 * Deploy
 
 Next:
@@ -740,6 +743,7 @@ Sometime:
 * Getting uploaded files: https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
 * Sending emails: https://leimao.github.io/blog/Python-Send-Gmail/
 * Login: https://www.digitalocean.com/community/tutorials/how-to-add-authentication-to-your-app-with-flask-login
+* HTTP: https://chozinthet20602.medium.com/creating-http-request-and-response-with-python-flask-7190cc2b924a
 
 #### OAuth
 * OAuth python library: https://pypi.org/project/oauthlib/
@@ -776,6 +780,7 @@ Sometime:
 
 ### Vue
 * Router: https://pasankamburugamuwa1.medium.com/vue-router-building-multi-page-single-applications-26b52cc6125e
+* Fetch: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 
 ### AWS
 * Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/
@@ -790,6 +795,7 @@ Sometime:
 * Git branching: https://gitlab.cs.usu.edu/erik.falor/fa22-cs1440-lecturenotes/-/blob/master/Module4/Advanced_Git.md
 * Git tagging: https://gitlab.cs.usu.edu/erik.falor/fa22-cs1440-lecturenotes/-/blob/master/Using_Git/Intermediate_Git.md#visit-older-points-of-history-in-the-git-timeline
 * curl converter: https://curlconverter.com/python/
+* Flask and Vue cookie authentication: https://fareedidris.medium.com/cookie-based-authentication-using-flask-and-vue-js-part-1-c625a530c157
 
 
 

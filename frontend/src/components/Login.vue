@@ -1,0 +1,59 @@
+<template>
+  <div class="heading-box">
+        <h1>QA Update Automation</h1>
+        <p>Center for Instructional Design and Innovation - USU</p>
+        <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
+        <a href="https://github.com/emmalynnnn/cidi-monday-QA-automation">[Source]</a>
+    </div>
+
+    <br>
+
+    <div class="feature-box blue">
+        <br>
+        <h3>Please Enter Your Access Code:</h3>
+
+        <form @submit.prevent="checkAuth" >
+                <input id="check" name="check" class="visually-hidden" tabindex="-1" autocomplete="off">
+                <br>
+                <input id="code" type="text" name="code" class="form-control"><!--</input>-->
+                <br>
+                <button type="submit" class="btn btn-light button">Submit</button>
+
+            <br>
+        </form>
+      <br>
+
+        <!--{% if msg %}
+            <p class="text-danger">{{ msg | safe }}</p>
+        {% endif %}-->
+
+    </div>
+</template>
+
+<script>
+/* eslint-disable */
+export default {
+  name: 'LoginComponent',
+  emits: ["form-submitted"],
+  methods:{
+    checkAuth(){
+      let check = document.getElementById("check").value;
+      let code = document.getElementById("code").value;
+      fetch(`http://localhost:8000/?code=${code}&check=${check}`)
+          .then( response => response.json() )
+          .then( json => {
+            console.log(json)
+            let d = new Date();
+            d.setTime(d.getTime() + 1 * 24 * 60 * 60 * 1000);
+            let expires = "expires=" + d.toUTCString();
+
+            document.cookie = "Token=" + json.cookie + ";" + expires + ";path=/"
+            this.$router.push("/box-login");
+          })
+          .catch(err => {
+            console.log(err);
+          })
+    }
+  }
+}
+</script>

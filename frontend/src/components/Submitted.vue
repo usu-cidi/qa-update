@@ -19,8 +19,7 @@
         <p>I will get back to you promptly with an update if you included your contact information.</p>
         <br>
 
-
-        <!-----------------------
+    <!-----------------------
     Title: HTML – How to Show Text Above Image on Hover
     Author: Singh, Yogesh
     12.5.2022 (accessed 1.25.2023)
