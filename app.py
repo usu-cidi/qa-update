@@ -306,10 +306,11 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
         return
 
     try:
-        if triggerType == "Fill whole board":
+        if triggerType == "new":
             fillNewBoard(completeReport, boardId, mondayAPIKey)
             print(f"Fill in complete {status}")
             status += 7
+            return
 
         updateExistingBoard(completeReport, boardId, mondayAPIKey)
         print(f"Update complete: {status}")

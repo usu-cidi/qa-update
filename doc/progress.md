@@ -626,7 +626,25 @@ Images in Use
 * Started using session information - fixed login bug
 * Removed most of the reliance on globals and replaced with session info - which will be more secure anyway
 * Fixed putting in correct group when new row is created problem
-* Now actually ready to move into Elastic Beanstalk if that will work
+* Now actually ready to move onto AWS if that will work
+
+### 4.14.23
+* Started working through AWS's `wild-rydes` tutorial
+  * https://www.youtube.com/watch?v=GPme1i1VyQQ
+  * https://webapp.serverlessworkshops.io/usermanagement/recap/
+  * https://aws.amazon.com/getting-started/hands-on/build-serverless-web-app-lambda-apigateway-s3-dynamodb-cognito/module-1/
+  * https://aws.amazon.com/getting-started/hands-on/build-serverless-web-app-lambda-apigateway-s3-dynamodb-cognito/
+
+### 4.17.23
+* Finished WildRydes tutorial
+* Started trying to follow again for my application
+  * ... I really wish I had just done all of this is js/node :/
+
+### 4.18.23
+* Continuing to work on deployment
+
+### 4.19.23
+* Populated board with Summer courses - I'm going to do it this time instead of Jenn since I've been messing with stuff
 
 ### TODO:
 Now:
@@ -636,11 +654,17 @@ Next:
 * Ask about adding new columns to main board
 
 Sometime:
-* Fix the hard coded index problem while getting column values
+* Fix the hard coded index problem while getting column values?
+
+
+### Next Version:
 * Stop update button
 * Always need more security
 * Decide about adding Ally time stamp back
-* Better progress bar
+* Better progress bar 
+* Add back fun Ally waiting things
+* Send performance report
+* Report courses that failed to add
 
 
 ## Dependencies:
@@ -744,9 +768,10 @@ Sometime:
 * virtualenv: https://help.pythonanywhere.com/pages/Virtualenvs/
 * dotenv: https://help.pythonanywhere.com/pages/environment-variables-for-web-apps/
 
-### AWS Lambda
+### AWS
 * Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/
 * Separating deployment environments: https://www.google.com/search?q=separate+dev+and+prod+code+aws+lambda&rlz=1C5CHFA_enUS1023US1023&oq=separate+dev+and+prod+code+aws+lambda&aqs=chrome..69i57j33i160i395l3.13252j1j9&sourceid=chrome&ie=UTF-8
+* https://github.com/aws-amplify/amplify-cli/issues/10497
 
 ### Misc
 * Citing code: https://uark.libguides.com/CSCE/CitingCode

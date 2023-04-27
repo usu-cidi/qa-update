@@ -12,9 +12,7 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 API_URL = "https://api.monday.com/v2"
 #HEADERS = {"Authorization": API_KEY}
 NUM_STU_INDEX = 9
-# 9: number of students index - MAY BE DIFFERENT IN PRODUCTION
-DEL_MET_INDEX = 4
-# 4: delivery method index - MAY BE DIFFERENT IN PRODUCTION
+# 9: number of students index - from Meghan's file
 
 COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", "status8", "__of_students",
            "__content_in_use",
@@ -22,13 +20,13 @@ COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", 
            "kaltura_vids", "youtube", "flash_content", "broken_links", "navigation_items", "status48",
            "overall_a11y_score",
            "files_ally_score", "wysiwyg_ally_score", "__of_pdf_files", "pdf_files_in_use", "pdf_scanned_not_ocr_d",
-           "images", "images_wo_alt_text", "numbers", "status_15", "date"]
-# "status_15": trigger column - MAY BE DIFFERENT IN PRODUCTION
-# "date": last updated column - MAY BE DIFFERENT IN PRODUCTION
+           "images", "images_wo_alt_text", "numbers", "status_12", "date"]
+# "status_15": trigger column - DEV, "status_12": Summer 2023
+# "date": last updated column - DEV - same in Summer 2023
 
-SMALL_COL_IDS = ["status_15", "date"]
-# "status_15": trigger column - MAY BE DIFFERENT IN PRODUCTION
-# "date": last updated column - MAY BE DIFFERENT IN PRODUCTION
+SMALL_COL_IDS = ["status_12", "date"]
+# "status_15": trigger column - DEV, "status_12": Summer 2023
+# "date": last updated column - DEV  - same in Summer 2023
 
 GROUP_IDS = {100: "new_group659", 50: "new_group84060", 20: "new_group63769", 10: "new_group69712", 1: "new_group",
              0: "new_group7956"}
@@ -68,6 +66,7 @@ def findGroupID(numStu):
 
 
 def createNewItem(rowInfo, boardId, HEADERS):
+    #print(f"Looking at {rowInfo[NUM_STU_INDEX]}")
     groupID = findGroupID(rowInfo[NUM_STU_INDEX])
     query = f'mutation ($myItemName: String!, $columnVals: JSON!) ' \
             f'{{ create_item (board_id:{boardId}, group_id:{groupID}, ' \
