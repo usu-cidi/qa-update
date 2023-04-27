@@ -38,10 +38,10 @@
         <br>
         <p>Note: it may take a few minutes for the link to be generated.</p>
 
-        <!--<p>{{ link }}</p>-->
-        <!--{% if status %}
-            <p id="status-marker">{{ status }}</p>
-        {% endif %}-->
+        <p v-if="link">{{ link }}</p>
+        <div v-if="linkLoading">
+          <LoadingBar/>
+        </div>
 
     </div>
     <div class="feature-box blue">
@@ -132,30 +132,59 @@
 
 <script>
 /* eslint-disable */
+import LoadingBar from "./LoadingBar.vue";
 export default {
   name: 'AddInfoComponent',
   emits: ["form-submitted"],
-  methods:{
+  components: {
+    LoadingBar
+  },
+  data() {
+    return {
+      link: "",
+      linkLoading: false,
+    }
+  },
+  methods: {
     getAllyLink(){
+      this.link = "Loading...";
+      this.linkLoading = true;
+
       let clientId = document.getElementById("ally-client-id").value;
       let consumKey = document.getElementById("ally-consum-key").value;
       let consumSec = document.getElementById("ally-consum-sec").value;
       let termCode = document.getElementById("term-code").value;
 
-      fetch(`http://localhost:8000/?code=${code}&check=${check}`)
-          .then( response => response.json() )
-          .then( json => {
-            console.log(json)
-            let d = new Date();
-            d.setTime(d.getTime() + 1 * 24 * 60 * 60 * 1000);
-            let expires = "expires=" + d.toUTCString();
+      console.log(clientId, consumSec, consumKey, termCode);
 
-            document.cookie = "Token=" + json.cookie + ";" + expires + ";path=/"
-            this.$router.push("/box-login");
+      let inputData = {clientId: clientId, consumKey: consumKey, consumSec: consumSec, termCode: termCode};
+      this.postData("http://localhost:8000/get-ally-link", inputData).then((data) => {
+        console.log(data);
+        this.linkLoading = false;
+        this.link = data.link;
+
+        //TODO: left off here- we can't get data back from the server for some reason
+      });
+
+    },
+    async postData(url, data) {
+      return fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+          .then(res => res.json())
+          .then((obj) => {
+            return obj;
           })
           .catch(err => {
             console.log(err);
-          })
+          });
     }
   }
 }

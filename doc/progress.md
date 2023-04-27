@@ -656,10 +656,11 @@ Images in Use
   * We can deploy the python backend as an AWS Lambda function and use Amplify (I think) to deploy the Vue frontend
 * Started converting frontend to Vue
 * Okay we're not going to ditch Flask entirely, we'll still use it on the backend
+* Was successfully able to talk to the server, added a loading animation, now we need to get the response back from the server
 
 ### TODO:
 * Refactor for deployment
-    * Add authentication with cookies
+* Shorten cookie length
 
 * Deploy
 

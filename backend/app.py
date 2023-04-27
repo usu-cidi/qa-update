@@ -23,7 +23,7 @@ status = "inactive"
 allyDataFrame = None
 
 COOKIE = "crunch"
-FRONT_URL = "http://localhost:8080"
+FRONT_URL = "http://localhost:8000"
 
 
 def checkAuth(cookie):
@@ -32,9 +32,21 @@ def checkAuth(cookie):
     else:
         return False
 
+
 def noAuthResponse():
     response = jsonify({'error': 'not authenticated'})
     response.headers.add('Access-Control-Allow-Origin', FRONT_URL)
+    return response
+
+
+def prepResponse(data, requestURL):
+    response = jsonify(data)
+    if requestURL.startswith(FRONT_URL):
+        #print("Passed!")
+        response.headers.add('Access-Control-Allow-Origin', '*')
+    else:
+        #print("Didn't pass :(")
+        response.headers.add('Access-Control-Allow-Origin', FRONT_URL)
     return response
 
 
@@ -70,49 +82,72 @@ def loginBox():
 #--------------------------
 
 
-@app.route('/getAllyLink', methods=['POST'])
+@app.route('/get-ally-link', methods=['POST'])
 def getAllyLink():
-    if not checkAuth(request.cookies.get("Token")):
-        return noAuthResponse(), 401
+    #if not checkAuth(request.cookies.get("Token")):
+    #    return noAuthResponse(), 401
 
-    #TODO: left off here - get info from POST
+    requestInfo = json.loads(request.data)
+    print(requestInfo)
 
-    allyClientId = request.form['ally-client-id']
-    allyConsumKey = request.form['ally-consum-key']
-    allyConsumSec = request.form['ally-consum-sec']
-    termCode = request.form['term-code']
+    allyClientId = requestInfo["clientId"]
+    allyConsumKey = requestInfo["consumKey"]
+    allyConsumSec = requestInfo["consumSec"]
+    termCode = requestInfo["termCode"]
 
+    # TODO: all fields are required!!
 
-    if request.method == 'POST':
+    #global link
+    #link = ""
 
+    #t2 = Thread(target=getAllyURL, args=(allyClientId, allyConsumKey, allyConsumSec, termCode))
 
-        if not allyClientId or not allyConsumKey or not allyConsumSec or not termCode:
-            flash('All fields are required!')
-            return render_template('index.html')
-        if not termCode.isdigit():
-            flash('Invalid term code.')
-            return render_template('index.html')
+    #print("Starting the thread")
+    #t2.start()
 
-        global link
-        link = ""
+    url = getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode)
+    if url == -1:
+        print("Getting ally url failed")
+        return prepResponse({"error": "getting ally link failed"}, request.url), 500
 
-        t2 = Thread(target=getAllyURL, args=(allyClientId, allyConsumKey, allyConsumSec, termCode))
+    print({"link": url})
+    return prepResponse({"link": url}, request.url), 200
 
-        print("Starting the thread")
-        t2.start()
-
-        return render_template('index.html', status=f"Loading....")
-
-    return render_template('index.html')
+    #
+    #
+    #
+    # if request.method == 'POST':
+    #
+    #
+    #     if not allyClientId or not allyConsumKey or not allyConsumSec or not termCode:
+    #         flash('All fields are required!')
+    #         return render_template('index.html')
+    #     if not termCode.isdigit():
+    #         flash('Invalid term code.')
+    #         return render_template('index.html')
+    #
+    #     global link
+    #     link = ""
+    #
+    #     t2 = Thread(target=getAllyURL, args=(allyClientId, allyConsumKey, allyConsumSec, termCode))
+    #
+    #     print("Starting the thread")
+    #     t2.start()
+    #
+    #     return render_template('index.html', status=f"Loading....")
+    #
+    # return render_template('index.html')
 
 
 def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
     result = getURL(allyClientId, allyConsumKey, allyConsumSec, termCode)
-    global link
+    #global link
     if result == -1:
-        link = -1
+        #link = -1
+        return -1
     else:
-        link = f"http{result[5:-1]}"
+        #link = f"http{result[5:-1]}"
+        return f"http{result[5:-1]}"
 
 
 @app.route('/processAllyFile', methods=['POST'])
