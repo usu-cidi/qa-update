@@ -646,6 +646,16 @@ Images in Use
 ### 4.19.23
 * Populated board with Summer courses - I'm going to do it this time instead of Jenn since I've been messing with stuff
 
+### 4.27.23
+* I've decided to pivot my efforts
+  * The backend for this application can be python, but I think my mistake was trying too hard to make everything in python
+  * The frontend and backend are all tangled up, which could be why I'm having such a hard time with deployment
+* New design:
+  * Vue frontend which makes fetch requests to python backend
+  * Ditching Flask entirely I think
+  * We can deploy the python backend as an AWS Lambda function and use Amplify (I think) to deploy the Vue frontend
+* Started converting frontend to Vue
+
 ### TODO:
 Now:
 * Deploy
@@ -764,9 +774,8 @@ Sometime:
 * Upload file: https://developer.box.com/reference/post-files-content/
 * OAuth 2.0 flow: https://medium.com/box-developer-blog/getting-started-with-box-python-sdk-and-oauth-2-0-77607441170d
 
-### Python Anywhere
-* virtualenv: https://help.pythonanywhere.com/pages/Virtualenvs/
-* dotenv: https://help.pythonanywhere.com/pages/environment-variables-for-web-apps/
+### Vue
+* Router: https://pasankamburugamuwa1.medium.com/vue-router-building-multi-page-single-applications-26b52cc6125e
 
 ### AWS
 * Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/
