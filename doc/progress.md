@@ -658,6 +658,11 @@ Images in Use
 * Okay we're not going to ditch Flask entirely, we'll still use it on the backend
 * Was successfully able to talk to the server, added a loading animation, now we need to get the response back from the server
 
+### 5.1.23
+* Spent a long time fixing a CORS error
+* Added some input validation for getting the ally link
+* 
+
 ### TODO:
 * Refactor for deployment
 * Shorten cookie length
@@ -686,6 +691,8 @@ Sometime:
 * openpyxl: `pip3 install openpyxl`
 * Requests-OAuthlib: `pip3 install requests-oauthlib`
 * dotenv: `pip3 install python-dotenv --user`
+* Flask
+* flask-cors
 
 ## Sources & References:
 

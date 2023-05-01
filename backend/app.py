@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for, session
+from flask_cors import CORS
 import dotenv    # for dev
 from boxsdk import Client, OAuth2
 import os
@@ -16,6 +17,7 @@ from getAllyData import getURL
 
 
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = os.environ.get('CSRF')
 
 link = "inactive"
@@ -39,14 +41,8 @@ def noAuthResponse():
     return response
 
 
-def prepResponse(data, requestURL):
+def prepResponse(data):
     response = jsonify(data)
-    if requestURL.startswith(FRONT_URL):
-        #print("Passed!")
-        response.headers.add('Access-Control-Allow-Origin', '*')
-    else:
-        #print("Didn't pass :(")
-        response.headers.add('Access-Control-Allow-Origin', FRONT_URL)
     return response
 
 
@@ -63,13 +59,9 @@ def initialLogin():
     authorizedUsers = json.loads(os.environ.get("AUTH_USERS"))
     if submittedCode in authorizedUsers:
         print(f"{authorizedUsers[submittedCode]} is trying to access the site with approved code {submittedCode}")
-        response = jsonify({'cookie': COOKIE})
-        response.headers.add('Access-Control-Allow-Origin', FRONT_URL)
-        return response, 200
+        return prepResponse({'cookie': COOKIE}), 200
 
-    response = jsonify({'cookie': 'pshhh you thought :/'})
-    response.headers.add('Access-Control-Allow-Origin', FRONT_URL)
-    return response, 401
+    return prepResponse({'cookie': 'pshhh you thought :/'}), 401
 
 #--------------------------
 
@@ -95,7 +87,8 @@ def getAllyLink():
     allyConsumSec = requestInfo["consumSec"]
     termCode = requestInfo["termCode"]
 
-    # TODO: all fields are required!!
+    if not allyClientId or not allyConsumKey or not allyConsumSec or not termCode:
+        return prepResponse({"error": "invalid input"}), 400
 
     #global link
     #link = ""
@@ -108,10 +101,12 @@ def getAllyLink():
     url = getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode)
     if url == -1:
         print("Getting ally url failed")
-        return prepResponse({"error": "getting ally link failed"}, request.url), 500
+        return prepResponse({"error": "getting ally link failed"}), 500
 
-    print({"link": url})
-    return prepResponse({"link": url}, request.url), 200
+    response = prepResponse({"link": url})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    print(response)
+    return response, 200
 
     #
     #

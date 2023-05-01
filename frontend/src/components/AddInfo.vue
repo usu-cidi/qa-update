@@ -38,8 +38,11 @@
         <br>
         <p>Note: it may take a few minutes for the link to be generated.</p>
 
-        <p v-if="link">{{ link }}</p>
+      <p v-if="error" class="error-message">{{ error }}</p>
+
+        <a v-if="link" :href="link">Click here to download the Ally Accessibility report</a>
         <div v-if="linkLoading">
+          <p>Loading...</p>
           <LoadingBar/>
         </div>
 
@@ -143,42 +146,54 @@ export default {
     return {
       link: "",
       linkLoading: false,
+      error: "",
     }
   },
   methods: {
     getAllyLink(){
-      this.link = "Loading...";
-      this.linkLoading = true;
+      this.error = "";
 
       let clientId = document.getElementById("ally-client-id").value;
       let consumKey = document.getElementById("ally-consum-key").value;
       let consumSec = document.getElementById("ally-consum-sec").value;
       let termCode = document.getElementById("term-code").value;
 
+      if (!clientId || !consumKey || !consumSec || !termCode) {
+        this.error = "All fields are required";
+        return;
+      }
+      if (isNaN(clientId) || isNaN(termCode)) {
+        this.error = "Invalid input";
+        return;
+      }
+
       console.log(clientId, consumSec, consumKey, termCode);
+
+      this.linkLoading = true;
 
       let inputData = {clientId: clientId, consumKey: consumKey, consumSec: consumSec, termCode: termCode};
       this.postData("http://localhost:8000/get-ally-link", inputData).then((data) => {
         console.log(data);
         this.linkLoading = false;
         this.link = data.link;
-
-        //TODO: left off here- we can't get data back from the server for some reason
       });
 
     },
-    async postData(url, data) {
+    postData(url, data) {
       return fetch(url, {
         method: "POST",
-        mode: "no-cors",
+        /*mode: "no-cors",*/
         cache: "no-cache",
         credentials: "same-origin",
         headers: {
+          Accept: 'application.json',
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
       })
-          .then(res => res.json())
+          .then(res => {
+            return res.json();
+          })
           .then((obj) => {
             return obj;
           })
