@@ -29,6 +29,7 @@ FRONT_URL = "http://localhost:8000"
 
 
 def checkAuth(cookie):
+    print(f"Is {cookie} equal to {COOKIE}???")
     if cookie == COOKIE:
         return True
     else:
@@ -37,12 +38,13 @@ def checkAuth(cookie):
 
 def noAuthResponse():
     response = jsonify({'error': 'not authenticated'})
-    response.headers.add('Access-Control-Allow-Origin', FRONT_URL)
+    response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 
 def prepResponse(data):
     response = jsonify(data)
+    response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 
@@ -77,10 +79,15 @@ def loginBox():
 @app.route('/get-ally-link', methods=['POST'])
 def getAllyLink():
     #if not checkAuth(request.cookies.get("Token")):
-    #    return noAuthResponse(), 401
+        #return noAuthResponse(), 401
 
     requestInfo = json.loads(request.data)
     print(requestInfo)
+
+    #if not requestInfo["check"] == "":
+    #    print("Caught a bot!! Get out of here!")
+    #    response = jsonify({'message': 'suspicious access attempt'})
+    #    return response, 401
 
     allyClientId = requestInfo["clientId"]
     allyConsumKey = requestInfo["consumKey"]
@@ -90,92 +97,55 @@ def getAllyLink():
     if not allyClientId or not allyConsumKey or not allyConsumSec or not termCode:
         return prepResponse({"error": "invalid input"}), 400
 
-    #global link
-    #link = ""
-
-    #t2 = Thread(target=getAllyURL, args=(allyClientId, allyConsumKey, allyConsumSec, termCode))
-
-    #print("Starting the thread")
-    #t2.start()
-
     url = getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode)
     if url == -1:
         print("Getting ally url failed")
         return prepResponse({"error": "getting ally link failed"}), 500
 
     response = prepResponse({"link": url})
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    #response.headers.add('Access-Control-Allow-Origin', '*')
     print(response)
     return response, 200
-
-    #
-    #
-    #
-    # if request.method == 'POST':
-    #
-    #
-    #     if not allyClientId or not allyConsumKey or not allyConsumSec or not termCode:
-    #         flash('All fields are required!')
-    #         return render_template('index.html')
-    #     if not termCode.isdigit():
-    #         flash('Invalid term code.')
-    #         return render_template('index.html')
-    #
-    #     global link
-    #     link = ""
-    #
-    #     t2 = Thread(target=getAllyURL, args=(allyClientId, allyConsumKey, allyConsumSec, termCode))
-    #
-    #     print("Starting the thread")
-    #     t2.start()
-    #
-    #     return render_template('index.html', status=f"Loading....")
-    #
-    # return render_template('index.html')
 
 
 def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
     result = getURL(allyClientId, allyConsumKey, allyConsumSec, termCode)
-    #global link
     if result == -1:
-        #link = -1
         return -1
     else:
-        #link = f"http{result[5:-1]}"
         return f"http{result[5:-1]}"
 
 
-@app.route('/processAllyFile', methods=['POST'])
+@app.route('/process-ally-file', methods=['POST'])
 def processAllyFile():
-    if not session.get('authorized'):
-        return render_template('login.html', msg="Error: you must log in to access this application."), 403
+    #if not checkAuth(request.cookies.get("Token")):
+        #return noAuthResponse(), 401
 
-    if request.method == 'POST':
-        if request.form["check"]:
-            print("Caught a bot!! Get out of here!")
-            return redirect(url_for('submitted', msg="Error: please contact your site admin."))
+    #print(request.files["file"])
+    #requestInfo = json.loads(request.files)
+    print(request.files)
+    print(request.form)
+    #print(request.files["file"])
+    return prepResponse({"message": "File cannot be read :(("}), 200
 
-        try:
-            uploadedFile = request.files["allyFile"]
-            global allyDataFrame
-            allyDataFrame = pd.read_csv(uploadedFile)
+    print(requestInfo)
 
-            return render_template('index.html', upload_status="Upload successful!")
-        except Exception as e:
-            uploadErr = "File is invalid or failed to upload. Please try again."
-            print(e)
-            return render_template('index.html', upload_err=uploadErr)
+    #if not requestInfo["check"] == "":
+    #    print("Caught a bot!! Get out of here!")
+    #    response = jsonify({'message': 'suspicious access attempt'})
+    #    return response, 401
 
-    return render_template('index.html')
+    try:
+        uploadedFile = request.files["allyFile"]
+        global allyDataFrame
+        allyDataFrame = pd.read_csv(uploadedFile)
 
-
-@app.route('/linkStatus', methods=['GET'])
-def getLinkStatus():
-    if not session.get('authorized'):
-        return render_template('login.html', msg="Error: you must log in to access this application."), 403
-
-    statusList = {'status': link}
-    return json.dumps(statusList)
+        response = prepResponse({"message": "Upload successful"})
+        print(response)
+        return response, 200
+    except Exception as e:
+        print(e)
+        return prepResponse({"message": "File is invalid or failed to upload. Please try again."}), 400
 
 
 #--------------------------

@@ -38,7 +38,7 @@
         <br>
         <p>Note: it may take a few minutes for the link to be generated.</p>
 
-      <p v-if="error" class="error-message">{{ error }}</p>
+      <p v-if="error1" class="error-message">{{ error1 }}</p>
 
         <a v-if="link" :href="link">Click here to download the Ally Accessibility report</a>
         <div v-if="linkLoading">
@@ -52,24 +52,22 @@
 
         <h3>2. Upload the Ally File</h3>
 
-        <p>Unzip the Ally folder and upload the file called courses.csv here for processing.</p>
-        <form method="POST" action="/processAllyFile" enctype="multipart/form-data">
+        <p>Unzip the Ally folder you just downloaded and upload the file called courses.csv here for processing.</p>
+        <!--<form @submit.prevent="processAllyFile" enctype="multipart/form-data">-->
+        <!--<form @submit.prevent="processAllyFile">-->
+      <div>
             <input name="check" class="visually-hidden" tabindex="-1" autocomplete="off">
-            <input type="file" id="allyFile" name="allyFile"/>
+            <input type="file" id="file" ref="file" @change="handleFileUpload()"/>
             <br><br>
 
-            <button type="submit" class="btn btn-light button">Upload</button>
-        </form>
+            <button v-on:click="processAllyFile()" class="btn btn-light button">Upload</button>
+        <!--</form>-->
+      </div>
 
-        <!--{% if upload_err %}
-            <p class="feature-box error-message">{{ upload_err }}</p>
-        {% endif %}
+      <br>
 
-        {% if upload_status %}
-            <p class="feature-box drk-blue">{{ upload_status }}</p>
-        {% endif %}-->
-
-        <br>
+      <p v-if="error2" class="error-message">{{ error2 }}</p>
+      <p v-if="uploadMessage">{{ uploadMessage }}</p>
 
     </div>
 
@@ -146,12 +144,37 @@ export default {
     return {
       link: "",
       linkLoading: false,
-      error: "",
+      error1: "",
+      error2: "",
+      file: "",
+      SERVER_URL: "http://localhost:8000/",
+      uploadMessage: "",
+      form: {
+        method: '',
+        icon: ''
+      },
     }
   },
   methods: {
+    handleFileUpload(e){
+      this.file = this.$refs.file.files[0];
+      console.log("Handled upload")
+    },
+    processAllyFile(){
+      console.log("Processing file")
+      this.error2 = "";
+      let formData = new FormData();
+      formData.append('file', this.file);
+
+      console.log("Form: " + formData)
+
+      this.postData(this.SERVER_URL + "process-ally-file", formData, 'multipart/form-data', false).then((data) => {
+        console.log(data);
+        this.uploadMessage = data.message;
+      });
+    },
     getAllyLink(){
-      this.error = "";
+      this.error1 = "";
 
       let clientId = document.getElementById("ally-client-id").value;
       let consumKey = document.getElementById("ally-consum-key").value;
@@ -159,11 +182,11 @@ export default {
       let termCode = document.getElementById("term-code").value;
 
       if (!clientId || !consumKey || !consumSec || !termCode) {
-        this.error = "All fields are required";
+        this.error1 = "All fields are required";
         return;
       }
       if (isNaN(clientId) || isNaN(termCode)) {
-        this.error = "Invalid input";
+        this.error1 = "Invalid input";
         return;
       }
 
@@ -172,24 +195,31 @@ export default {
       this.linkLoading = true;
 
       let inputData = {clientId: clientId, consumKey: consumKey, consumSec: consumSec, termCode: termCode};
-      this.postData("http://localhost:8000/get-ally-link", inputData).then((data) => {
+      this.postData(this.SERVER_URL + "get-ally-link", inputData).then((data) => {
         console.log(data);
         this.linkLoading = false;
         this.link = data.link;
       });
-
     },
-    postData(url, data) {
+    postData(url, data, contentType="application/json", stringify=true) {
+      let theBody;
+      if (stringify) {
+        theBody = JSON.stringify(data);
+      } else {
+        theBody = data;
+      }
+
       return fetch(url, {
         method: "POST",
         /*mode: "no-cors",*/
         cache: "no-cache",
         credentials: "same-origin",
+        connection: "keep-alive",
         headers: {
           Accept: 'application.json',
-          "Content-Type": "application/json",
+          "Content-Type": contentType,
         },
-        body: JSON.stringify(data)
+        body: theBody
       })
           .then(res => {
             return res.json();
