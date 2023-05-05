@@ -21,12 +21,12 @@ COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", 
            "overall_a11y_score",
            "files_ally_score", "wysiwyg_ally_score", "__of_pdf_files", "pdf_files_in_use", "pdf_scanned_not_ocr_d",
            "images", "images_wo_alt_text", "numbers", "status_12", "date"]
-# "status_15": trigger column - DEV, "status_12": Summer 2023
-# "date": last updated column - DEV - same in Summer 2023
+# "status_15": trigger column - DEV, "status_12": Summer 2023, "status_13": Fall 2023
+# "date": last updated column - DEV - same in Summer 2023 & Fall 2023
 
 SMALL_COL_IDS = ["status_12", "date"]
-# "status_15": trigger column - DEV, "status_12": Summer 2023
-# "date": last updated column - DEV  - same in Summer 2023
+# "status_15": trigger column - DEV, "status_12": Summer 2023, "status_13": Fall 2023
+# "date": last updated column - DEV - same in Summer 2023 & Fall 2023
 
 GROUP_IDS = {100: "new_group659", 50: "new_group84060", 20: "new_group63769", 10: "new_group69712", 1: "new_group",
              0: "new_group7956"}
@@ -84,13 +84,13 @@ def createNewItem(rowInfo, boardId, HEADERS):
     #print(vars)
 
     data = {'query': query, 'variables': vars}
+    r = requests.post(url=API_URL, json=data, headers=HEADERS)  # make request
 
     try:
-        r = requests.post(url=API_URL, json=data, headers=HEADERS)  # make request
-
         return r.json()["data"]["create_item"]["id"]
     except Exception as e:
-        print(f":( {e}")
+        print(f":( error when creating new row {e}")
+        print(r.json())
         return None
 
 def updateRow(itemID, rowInfo, boardId, HEADERS):
@@ -106,11 +106,12 @@ def updateRow(itemID, rowInfo, boardId, HEADERS):
 
     data = {'query': query, 'variables': vars}
 
+    r = requests.post(url=API_URL, json=data, headers=HEADERS)  # make request
     try:
-        r = requests.post(url=API_URL, json=data, headers=HEADERS)  # make request
         return r.json()["data"]["change_multiple_column_values"]["id"]
     except Exception as e:
-        print(e)
+        print(f":(( Error updating row {e}")
+        print(r.json())
         return None
 
 
@@ -133,6 +134,10 @@ def fillNewBoard(courseDF, boardId, mondayAPIKey):
 
         rowData = courseDF.iloc[i].values.tolist()
         rowData = removeNaN(rowData)
+
+        if "Study Abroad" in rowData:
+            print("Replacing 'Study Abroad' with 'Supervised'.")
+            rowData[rowData.index("Study Abroad")] = "Supervised"
 
         itemID = createNewItem(rowData, boardId, HEADERS)
         if itemID is None:
@@ -169,6 +174,10 @@ def updateExistingBoard(courseDF, boardId, mondayAPIKey):
 
         rowData = courseDF.iloc[i].values.tolist()
         rowData = removeNaN(rowData)
+
+        if "Study Abroad" in rowData:
+            print("Replacing 'Study Abroad' with 'Supervised'.")
+            rowData[rowData.index("Study Abroad")] = "Supervised"
 
         # just for update ---
         if courseDF["Course"][i] in currBoard:
