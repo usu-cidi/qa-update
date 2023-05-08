@@ -164,17 +164,11 @@ export default {
           fileElement = document.querySelector('#file-field'),
           request = new XMLHttpRequest(),
           data = new FormData(formElement);
-      //data.append('files', fileElement.files);
-      request.open('POST', 'http://localhost:8000/process-ally-file', true);
+      request.open('POST', this.SERVER_URL + 'process-ally-file', true);
       request.send(data);
-      // stop the event from propagating so route won't change
       e.preventDefault();
       e.stopPropagation();
 
-      /*this.postData(this.SERVER_URL + "process-ally-file", formData, 'multipart/form-data', false).then((data) => {
-        console.log(data);
-        this.uploadMessage = data.message;
-      });*/
     },
     getAllyLink(){
       this.error1 = "";

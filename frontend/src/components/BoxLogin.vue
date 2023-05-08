@@ -29,14 +29,10 @@
                     </svg>
                 </div>
 
-                <!--<button type="button" class="btn btn-primary" data-toggle="tooltip"
-                    onclick="window.location='{{auth_url}}'">Authorize this app on Box.com</button>
-                <br />
-                <span class="mb-0 text-muted">
-                    {% if msg %}
-                        <span class="text-danger">{{ msg | safe }}</span>
-                    {% endif %}
-                </span>-->
+                <a class="btn btn-primary" data-toggle="tooltip"
+                    :href="url" >Authorize this app on Box.com</a>
+                <br/>
+
                 <br />
                 <p>(You must have a USU Box account to use this application.)</p>
             </div>
@@ -50,7 +46,36 @@
 </template>
 
 <script>
+/* eslint-disable */
+
 export default {
   name: 'BoxLoginComponent',
+  created() {
+    fetch(this.SERVER_URL + "get-box-url")
+        .then(r => r.json())
+        .then(response => {
+          console.log(response.authUrl);
+          //return response.authUrl;
+          this.url = response.authUrl;
+        })
+        .catch(err => {
+          console.log(err);
+          //return("")
+        })
+  },
+  computed: {
+
+  },
+  methods: {
+
+  },
+  data() {
+    return {
+      accessToken: "",
+      refreshToken: "",
+      SERVER_URL: "http://localhost:8000/",
+      url: ""
+    }
+  }
 }
 </script>

@@ -24,8 +24,11 @@ link = "inactive"
 status = "inactive"
 allyDataFrame = None
 
+accessToken = ""
+
 COOKIE = "crunch"
 FRONT_URL = "http://localhost:8000"
+CLIENT_URL = "http://localhost:8080/"
 ALLOWED_EXTENSIONS = {'csv'}
 
 
@@ -69,10 +72,68 @@ def initialLogin():
 #--------------------------
 
 
-@app.route('/box-login', methods=['GET', 'POST'])
-def loginBox():
-    #TODO
-    pass
+@app.route('/get-box-url', methods=['GET'])
+def getBoxUrl():
+    # if not checkAuth(request.cookies.get("Token")):
+    #   return noAuthResponse(), 401
+
+    oauth = OAuth2(
+        client_id=os.environ.get('BOX_CLIENT_ID'),
+        client_secret=os.environ.get('BOX_SECRET'),
+        store_tokens=store_tokens,
+    )
+
+    auth_url, csrf_token = oauth.get_authorization_url('http://localhost:8000/oauth/callback')
+    #session['csrf'] = csrf_token
+
+    return prepResponse({'authUrl': auth_url, 'csrfTok': csrf_token}), 200
+
+
+def store_tokens(access_token: str, refresh_token: str) -> bool:
+    """
+    Store the access and refresh tokens for the current user
+    """
+
+    global accessToken
+    accessToken = access_token
+
+    print(f"Here is the access token!! {accessToken}")
+
+    return True
+
+
+@app.route('/oauth/callback')
+def oauth_callback():
+    # if not checkAuth(request.cookies.get("Token")):
+    #   return noAuthResponse(), 401
+
+    code = request.args.get('code')
+    state = request.args.get('state')
+    error = request.args.get('error')
+    error_description = request.args.get('error_description')
+
+    if error == 'access_denied':
+        print("denial caught!")
+        msg = 'You denied access to your Box account. You must authorize QA Update to access your ' \
+              'account to use this application.'
+    else:
+        msg = error_description
+
+    if msg is not None:
+        return prepResponse({'Error': msg}), 400
+
+    oauth = OAuth2(
+        client_id=os.environ.get('BOX_CLIENT_ID'),
+        client_secret=os.environ.get('BOX_SECRET'),
+        store_tokens=store_tokens
+    )
+
+    access_token, refresh_token = oauth.authenticate(code)
+    print(access_token)
+    #print(accessToken)
+
+    #return redirect(f"{FRONT_URL}add-info")
+    return prepResponse({'access_token': access_token, 'accessToken': accessToken}), 200
 
 #--------------------------
 

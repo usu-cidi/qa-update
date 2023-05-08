@@ -667,11 +667,11 @@ Images in Use
 
 ### 5.8.23
 * Enabling file upload to server
-* 
+* Now going back to re-enable the box auth stuff
+  * Able to get access token, working on redirecting back to the add-info page
 
 ### TODO:
 * Refactor for deployment
-* Shorten cookie length
 
 * Deploy
 
