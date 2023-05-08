@@ -26,6 +26,7 @@ allyDataFrame = None
 
 COOKIE = "crunch"
 FRONT_URL = "http://localhost:8000"
+ALLOWED_EXTENSIONS = {'csv'}
 
 
 def checkAuth(cookie):
@@ -124,25 +125,16 @@ def processAllyFile():
     #print(request.files["file"])
     #requestInfo = json.loads(request.files)
     print(request.files)
-    print(request.form)
     #print(request.files["file"])
-    return prepResponse({"message": "File cannot be read :(("}), 200
-
-    print(requestInfo)
-
-    #if not requestInfo["check"] == "":
-    #    print("Caught a bot!! Get out of here!")
-    #    response = jsonify({'message': 'suspicious access attempt'})
-    #    return response, 401
 
     try:
-        uploadedFile = request.files["allyFile"]
-        global allyDataFrame
-        allyDataFrame = pd.read_csv(uploadedFile)
+        for file in request.files.getlist('files'):
+            if file and file.filename.split('.')[-1].lower() in ALLOWED_EXTENSIONS:
+                global allyDataFrame
+                allyDataFrame = pd.read_csv(file)
+                print(allyDataFrame)
 
-        response = prepResponse({"message": "Upload successful"})
-        print(response)
-        return response, 200
+        return prepResponse({"message": "Upload successful"}), 200
     except Exception as e:
         print(e)
         return prepResponse({"message": "File is invalid or failed to upload. Please try again."}), 400

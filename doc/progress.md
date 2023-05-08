@@ -664,6 +664,9 @@ Images in Use
 
 ### 5.5.23
 * A few fixes with monday stuff
+
+### 5.8.23
+* Enabling file upload to server
 * 
 
 ### TODO:

@@ -55,14 +55,14 @@
         <p>Unzip the Ally folder you just downloaded and upload the file called courses.csv here for processing.</p>
         <!--<form @submit.prevent="processAllyFile" enctype="multipart/form-data">-->
         <!--<form @submit.prevent="processAllyFile">-->
-      <div>
+      <form id="upload-form">
             <input name="check" class="visually-hidden" tabindex="-1" autocomplete="off">
-            <input type="file" id="file" ref="file" @change="handleFileUpload()"/>
+            <input type="file" id="file-field" ref="file" name="files"/>
             <br><br>
 
-            <button v-on:click="processAllyFile()" class="btn btn-light button">Upload</button>
+            <button v-on:click="processAllyFile" class="btn btn-light button">Upload</button>
         <!--</form>-->
-      </div>
+      </form>
 
       <br>
 
@@ -156,22 +156,25 @@ export default {
     }
   },
   methods: {
-    handleFileUpload(e){
-      this.file = this.$refs.file.files[0];
-      console.log("Handled upload")
-    },
-    processAllyFile(){
+    processAllyFile: function(e) {
       console.log("Processing file")
       this.error2 = "";
-      let formData = new FormData();
-      formData.append('file', this.file);
 
-      console.log("Form: " + formData)
+      var formElement = document.querySelector('#upload-form'),
+          fileElement = document.querySelector('#file-field'),
+          request = new XMLHttpRequest(),
+          data = new FormData(formElement);
+      //data.append('files', fileElement.files);
+      request.open('POST', 'http://localhost:8000/process-ally-file', true);
+      request.send(data);
+      // stop the event from propagating so route won't change
+      e.preventDefault();
+      e.stopPropagation();
 
-      this.postData(this.SERVER_URL + "process-ally-file", formData, 'multipart/form-data', false).then((data) => {
+      /*this.postData(this.SERVER_URL + "process-ally-file", formData, 'multipart/form-data', false).then((data) => {
         console.log(data);
         this.uploadMessage = data.message;
-      });
+      });*/
     },
     getAllyLink(){
       this.error1 = "";
