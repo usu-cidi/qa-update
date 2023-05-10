@@ -30,6 +30,7 @@ COOKIE = "crunch"
 FRONT_URL = "http://localhost:8000"
 CLIENT_URL = "http://localhost:8080/"
 ALLOWED_EXTENSIONS = {'csv'}
+REDIRECT_URL = 'http://localhost:8080/oauth/callback'
 
 
 def checkAuth(cookie):
@@ -57,7 +58,6 @@ def initialLogin():
     submittedCode = request.args.get("code")
 
     if request.args.get("check") != "":
-        print("Caught a bot!! Get out of here!")
         response = jsonify({'cookie': 'pshhh you thought :/'})
         response.headers.add('Access-Control-Allow-Origin', FRONT_URL)
         return response, 401
@@ -83,7 +83,7 @@ def getBoxUrl():
         store_tokens=store_tokens,
     )
 
-    auth_url, csrf_token = oauth.get_authorization_url('http://localhost:8000/oauth/callback')
+    auth_url, csrf_token = oauth.get_authorization_url(REDIRECT_URL)
     #session['csrf'] = csrf_token
 
     return prepResponse({'authUrl': auth_url, 'csrfTok': csrf_token}), 200
@@ -102,38 +102,28 @@ def store_tokens(access_token: str, refresh_token: str) -> bool:
     return True
 
 
-@app.route('/oauth/callback')
+@app.route('/finish-oauth', methods=['POST'])
 def oauth_callback():
-    # if not checkAuth(request.cookies.get("Token")):
-    #   return noAuthResponse(), 401
 
-    code = request.args.get('code')
-    state = request.args.get('state')
-    error = request.args.get('error')
-    error_description = request.args.get('error_description')
+    code = json.loads(request.data)["code"]
+    state = json.loads(request.data)["state"]
 
-    if error == 'access_denied':
-        print("denial caught!")
-        msg = 'You denied access to your Box account. You must authorize QA Update to access your ' \
-              'account to use this application.'
-    else:
-        msg = error_description
+    print(f"code: {code}")
 
-    if msg is not None:
-        return prepResponse({'Error': msg}), 400
+    try:
+        oauth = OAuth2(
+            client_id=os.environ.get('BOX_CLIENT_ID'),
+            client_secret=os.environ.get('BOX_SECRET'),
+            store_tokens=store_tokens
+        )
 
-    oauth = OAuth2(
-        client_id=os.environ.get('BOX_CLIENT_ID'),
-        client_secret=os.environ.get('BOX_SECRET'),
-        store_tokens=store_tokens
-    )
+        access_token, refresh_token = oauth.authenticate(code)
+        print(access_token)
 
-    access_token, refresh_token = oauth.authenticate(code)
-    print(access_token)
-    #print(accessToken)
+        return prepResponse({'access_token': access_token, 'result': "Success"}), 200
+    except Exception as e:
+        return prepResponse({'access_token': "", 'result': f"Failed: {e}"}), 200
 
-    #return redirect(f"{FRONT_URL}add-info")
-    return prepResponse({'access_token': access_token, 'accessToken': accessToken}), 200
 
 #--------------------------
 
@@ -204,173 +194,131 @@ def processAllyFile():
 #--------------------------
 
 
-@app.route('/updating', methods=['GET', 'POST'])
+@app.route('/update', methods=['POST'])
 def updating():
-    if not session.get('authorized'):
-        return render_template('login.html', msg="Error: you must log in to access this application."), 403
+    # if not checkAuth(request.cookies.get("Token")):
+    #   return noAuthResponse(), 401
 
-    # GET
-    if request.method == 'GET':
-        return render_template('updating.html')
+    # if not requestInfo["check"] == "":
+    #    print("Caught a bot!! Get out of here!")
+    #    response = jsonify({'message': 'suspicious access attempt'})
+    #    return response, 401
 
-    if request.method == 'POST':
+    requestInfo = json.loads(request.data)
 
-        if request.form["check"]:
-            print("Caught a bot!! Get out of here!")
-            return redirect(url_for('submitted', msg="Error: please contact your site admin."))
+    triggerType = requestInfo['trigger-type']
+    boardId = requestInfo['board-id']
+    crBoxId = requestInfo['cr-box-id']
+    mondayAPIKey = requestInfo['mon-api-key']
 
-        triggerType = request.form['trigger-type']
-        boardId = request.form['board-id']
-        crBoxId = request.form['cr-box-id']
-        mondayAPIKey = request.form['mon-api-key']
+    error = False
+    errorMessage = ""
 
-        error = False
+    if allyDataFrame is None:
+        errorMessage += "Ally file invalid. "
+        error = True
 
-        if allyDataFrame is None:
-            print("No ally file")
-            flash("You must upload a valid Ally file to continue.")
+    print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
+
+    if triggerType == "" or not boardId or not crBoxId or not mondayAPIKey:
+        errorMessage += 'All fields are required! '
+        error = True
+    else:
+        if triggerType != "update" and triggerType != "new":
+            errorMessage += 'Invalid update type (stop messing with my dev tools!) '
+            error = True
+        if not boardId.isdigit() or int(boardId) <= 0:
+            errorMessage += 'Invalid monday board ID '
+            error = True
+        if not crBoxId.isdigit() or int(crBoxId) <= 0:
+            errorMessage += 'Invalid course report ID'
             error = True
 
-        print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
+    if not accessToken:
+        errorMessage += 'Box authorization incomplete. '
 
-        if triggerType == "" or not boardId or not crBoxId or not mondayAPIKey:
-            flash('All fields are required!')
-            error = True
-        else:
-            if triggerType != "update" and triggerType != "new":
-                flash('Invalid update type (stop messing with my dev tools!)')
-                error = True
-            if not boardId.isdigit() or int(boardId) <= 0:
-                flash('Invalid monday board ID')
-                error = True
-            if not crBoxId.isdigit() or int(crBoxId) <= 0:
-                flash('Invalid course report ID')
-                error = True
-        if error:
-            return render_template('index.html')
+    if error:
+        return prepResponse({"updateStatus": "The following error(s) occurred: " + errorMessage}), 400
 
-        print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
+    print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
 
-        if not session.get('accessTok'):
-            flash('Box authorization incomplete.')
-            return render_template('index.html')
+    allyData = allyDataFrame
+    accessTokVal = accessToken
 
-        allyData = allyDataFrame
-        accessTokVal = session["accessTok"]
-
-        t1 = Thread(target=doUpdate, args=(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTokVal))
-        t1.start()
-
-        return redirect(url_for('updating'))
-
-    return render_template('index.html')
+    result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTokVal)
+    return prepResponse({"updateStatus": "Complete", "result": result}), 200
 
 
 def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
-    global status
-    status = 0
-
-    print(f"doing the update {status}")
-
-    status += 1
-
     try:
         courseReportData = getDataFromBox(crBoxId, 'excel', accessTok)
-        print(f"gotten course report {status}")
-        status += 1
     except Exception as e:
         print(e)
-        status = "error1"
-        return
+        return f"Exception getting box data: {e}"
 
     try:
         completeReport = combineReports(courseReportData, allyData)
-        print(f"combined reports {status}")
-        status += 1
     except Exception as e:
         print(e)
-        status = "error2"
-        return
+        return f"Exception combining reports: {e}"
 
     try:
         if triggerType == "new":
-            fillNewBoard(completeReport, boardId, mondayAPIKey)
-            print(f"Fill in complete {status}")
-            status += 7
-            return
+            results = fillNewBoard(completeReport, boardId, mondayAPIKey)
+            return f"Added {results} new rows."
 
-        updateExistingBoard(completeReport, boardId, mondayAPIKey)
-        print(f"Update complete: {status}")
-        status += 7
+        results = updateExistingBoard(completeReport, boardId, mondayAPIKey)
+        return f"Added {results[0]} new rows and audited {results[1]} existing rows."
     except Exception as e:
         print(e)
-        status = "error3"
-
-
-@app.route('/status', methods=['GET'])
-def getStatus():
-    if not session.get('authorized'):
-        return render_template('login.html', msg="Error: you must log in to access this application."), 403
-
-    statusList = {'status': status}
-
-    return json.dumps(statusList)
+        return f"Exception updating monday: {e}"
 
 
 #--------------------------
 
 
-@app.route('/bug-report', methods=['GET', 'POST'])
+@app.route('/send-bug-email', methods=['POST'])
 def bugReport():
-    if not session.get('authorized'):
-        return render_template('login.html', msg="Error: you must log in to access this application."), 403
+    # if not checkAuth(request.cookies.get("Token")):
+    #   return noAuthResponse(), 401
 
     supportedTools = ["QA Update"]
 
-    # GET
-    if request.method == 'GET':
-        return render_template('bugReport.html')
+    requestInfo = json.loads(request.data)
 
-    if request.method == 'POST':
-        if request.form["check"]:
-            print("Caught a bot!! Get out of here!")
-            return redirect(url_for('submitted', msg="Error: please contact your site admin."))
+    if not requestInfo["app-name"] in supportedTools:
+        return redirect(url_for('submitted', msg='Invalid application name (stop messing with my dev tools!)'))
 
-        if not request.form["app-name"] in supportedTools:
-            return redirect(url_for('submitted', msg='Invalid application name (stop messing with my dev tools!)'))
+    reportInfo = {
+        "App Name": requestInfo["app-name"],
+        "Date and time": requestInfo["date-time"],
+        "Expected Behavior": requestInfo["expected-behavior"],
+        "Actual Behavior": requestInfo["actual-behavior"],
+        "Errors": requestInfo["errors"],
+        "Browser": requestInfo["browser"],
+        "Other Info": requestInfo["other-info"],
+        "Name": requestInfo["name"],
+        "Email": requestInfo["email"],
+    }
 
-        reportInfo = {
-            "App Name": request.form["app-name"],
-            "Date and time": request.form["date-time"],
-            "Expected Behavior": request.form["expected-behavior"],
-            "Actual Behavior": request.form["actual-behavior"],
-            "Errors": request.form["errors"],
-            "Browser": request.form["browser"],
-            "Other Info": request.form["other-info"],
-            "Name": request.form["name"],
-            "Email": request.form["email"],
-        }
+    message = f"Bug reported for {requestInfo['app-name']} submitted on {datetime.now()}" \
+              f"\n\n------Form Info------\n"
 
-        message = f"Bug reported for {request.form['app-name']} submitted on {datetime.now()}" \
-                  f"\n\n------Form Info------\n"
+    for info in reportInfo:
+        message += f"{info}: {reportInfo[info]}\n"
 
-        for info in reportInfo:
-            message += f"{info}: {reportInfo[info]}\n"
+    message += "\n------Runtime Info------\n"
 
-        message += "\n------Runtime Info------\n"
+    message += f"status: {status}\n"
+    message += f"link: {link}\n"
+    message += f"allyDataframe: {allyDataFrame}\n"
+    message += f"accessTok: {accessToken}\n"
+    #message += f"refreshTok: {session['refreshTok']}\n"
+    #message += f"csrf: {session['csrf']}\n"
+    #message += f"active user: {session['activeUser']}\n"
 
-        message += f"status: {status}\n"
-        message += f"link: {link}\n"
-        message += f"allyDataframe: {allyDataFrame}\n"
-        message += f"accessTok: {session['accessTok']}\n"
-        message += f"refreshTok: {session['refreshTok']}\n"
-        message += f"csrf: {session['csrf']}\n"
-        message += f"active user: {session['activeUser']}\n"
-
-        sendEmail(message, f"Bug Report - {request.form['app-name']}")
-        return redirect(url_for('submitted'))
-
-    return render_template('bugReport.html')
+    sendEmail(message, f"Bug Report - {requestInfo['app-name']}")
+    return prepResponse({"result": "Email sent"}), 200
 
 
 def sendEmail(message, subject):
@@ -393,11 +341,6 @@ def sendEmail(message, subject):
 
 
 #--------------------------
-
-@app.route('/submitted', methods=['GET'])
-def submitted():
-    msg = request.args.get('msg')
-    return render_template('submitted.html', msg=msg)
 
 
 if __name__ == '__main__':

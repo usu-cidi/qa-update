@@ -670,8 +670,13 @@ Images in Use
 * Now going back to re-enable the box auth stuff
   * Able to get access token, working on redirecting back to the add-info page
 
+### 5.10.23
+* Finally got past Box authorization again
+* Just about finished with the refactor
+
 ### TODO:
 * Refactor for deployment
+* Finish error handling for bug report page
 
 * Deploy
 
@@ -794,6 +799,7 @@ Sometime:
 
 ### Vue
 * Router: https://pasankamburugamuwa1.medium.com/vue-router-building-multi-page-single-applications-26b52cc6125e
+  * https://router.vuejs.org/guide/essentials/navigation.html
 * Fetch: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 
 ### AWS

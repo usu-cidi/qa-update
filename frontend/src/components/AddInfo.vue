@@ -75,17 +75,16 @@
         <br>
         <h3>3. Run the Update</h3>
 
-        <form method="POST" action="/updating">
+        <form @submit.prevent="runUpdate">
             <div class="form-group">
-                <!--<label for="trigger-type">Update Type</label>-->
                 <br><h4>Monday API Key</h4>
-                <input type="text" name="mon-api-key" class="form-control">
+                <input type="text" id="mon-api-key" name="mon-api-key" class="form-control">
                 <br>
 
                 <h4>Update Type</h4>
                 <p>Select 'Update existing board' if you are updating a board that already exists (mid-semester).
             Select 'Fill in new board' if you are filling in a completely blank board at the beginning of a semester. </p>
-                <select name="trigger-type" class="form-select">
+                <select name="trigger-type" id="trigger-type" class="form-select">
                     <option value=""></option>
                     <option value="update">Update existing board</option>
                     <option value="new">Fill in new board</option>
@@ -98,9 +97,8 @@
                 <p>Enter the <a href="https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s">
                     board id</a> for the monday.com board you're updating (found in the url).</p>
                 <img class="url-ex" src="../assets/mon-ex.png" />
-                <!--<label for="board-id">Board ID</label>-->
                 <br>
-                <input type="text" name="board-id" class="form-control">
+                <input type="text" name="board-id" id="board-id" class="form-control">
 
 
                 <br>
@@ -108,9 +106,8 @@
                 <p>Enter the <a href="https://developer.box.com/reference/get-files-id/#:~:text=The%20ID%20for%20any%20file,123%20the%20file_id%20is%20123%20.">
                     Box file ID</a> for the most recent Course Summary file from the Canvas Data Reports (found in the url).</p>
                 <img class="url-ex" src="../assets/box-ex.png" />
-                <!--<label for="cr-box-id">Course Report File Box ID</label>-->
                 <br>
-                <input type="text" name="cr-box-id" class="form-control">
+                <input type="text" name="cr-box-id" id="cr-box-id" class="form-control">
             </div>
 
             <br>
@@ -120,6 +117,8 @@
             <div class="form-group">
                 <button type="submit" class="btn btn-light button">Submit</button>
             </div>
+
+          <p v-if="error3" class="error-message">{{ error3 }}</p>
 
             <br>
         </form>
@@ -146,6 +145,7 @@ export default {
       linkLoading: false,
       error1: "",
       error2: "",
+      error3: "",
       file: "",
       SERVER_URL: "http://localhost:8000/",
       uploadMessage: "",
@@ -154,6 +154,9 @@ export default {
         icon: ''
       },
     }
+  },
+  created() {
+
   },
   methods: {
     processAllyFile: function(e) {
@@ -169,6 +172,34 @@ export default {
       e.preventDefault();
       e.stopPropagation();
 
+      this.uploadMessage = "Upload successful.";
+    },
+    runUpdate() {
+      this.error3 = "";
+
+      let monAPIKey = document.getElementById("mon-api-key").value;
+      let updateType = document.getElementById("trigger-type").value;
+      let monBoardId = document.getElementById("board-id").value;
+      let crBoxId = document.getElementById("cr-box-id").value;
+
+      if (!monAPIKey || !updateType || !monBoardId || !crBoxId) {
+        this.error3 = "All fields are required";
+        return;
+      }
+      if ((updateType !== "update") && (updateType !== "new")) {
+        this.error3 = "Stop messing with my dev tools :(";
+        return;
+      }
+
+      if (!this.uploadMessage) {
+        this.error3 = "Please return to step 2 and upload the Ally Course Accessibility file."
+        return;
+      }
+
+      console.log(monAPIKey, updateType, monBoardId, crBoxId);
+      let params = {monAPIKey: monAPIKey, updateType: updateType, monBoardId: monBoardId, crBoxId: crBoxId}
+
+      this.$router.push({ path: '/updating', query: params })
     },
     getAllyLink(){
       this.error1 = "";

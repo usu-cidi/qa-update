@@ -147,6 +147,8 @@ def fillNewBoard(courseDF, boardId, mondayAPIKey):
         numNew += 1
         print(f"{courseDF['Course'][i]} added as new row")
 
+    return numNew
+
 
 def updateExistingBoard(courseDF, boardId, mondayAPIKey):
     HEADERS = {"Authorization": mondayAPIKey}
@@ -197,5 +199,7 @@ def updateExistingBoard(courseDF, boardId, mondayAPIKey):
                 continue
             numNew += 1
             print(f"{courseDF['Course'][i]} added as new row")
+
+    return [numNew, numUpdated]
 
 

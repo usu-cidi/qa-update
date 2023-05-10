@@ -16,6 +16,7 @@
 
     <div class="feature-box blue">
         <br>
+      <h2>Thank you for submitting a bug report!</h2>
         <p>I will get back to you promptly with an update if you included your contact information.</p>
         <br>
 
