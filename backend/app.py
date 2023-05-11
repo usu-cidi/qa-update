@@ -3,7 +3,6 @@ from flask_cors import CORS
 import dotenv    # for dev
 from boxsdk import Client, OAuth2
 import os
-from threading import Thread
 import json
 import pandas as pd
 import smtplib, ssl
@@ -155,7 +154,6 @@ def getAllyLink():
         return prepResponse({"error": "getting ally link failed"}), 500
 
     response = prepResponse({"link": url})
-    #response.headers.add('Access-Control-Allow-Origin', '*')
     print(response)
     return response, 200
 
@@ -173,10 +171,8 @@ def processAllyFile():
     #if not checkAuth(request.cookies.get("Token")):
         #return noAuthResponse(), 401
 
-    #print(request.files["file"])
-    #requestInfo = json.loads(request.files)
+
     print(request.files)
-    #print(request.files["file"])
 
     try:
         for file in request.files.getlist('files'):
@@ -281,6 +277,8 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
 def bugReport():
     # if not checkAuth(request.cookies.get("Token")):
     #   return noAuthResponse(), 401
+
+    print("We are supposed to send an email now!!")
 
     supportedTools = ["QA Update"]
 

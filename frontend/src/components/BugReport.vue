@@ -60,6 +60,7 @@
 
                 <button type="submit" class="btn btn-light button">Submit</button>
               <br>
+                <p>Submission may take a moment, please wait to be redirected.</p>
             </div>
 
         </form>
@@ -91,7 +92,7 @@ export default {
       let inputData = {"app-name": this.appName, "date-time": this.date, "expected-behavior": this.expected,
         "actual-behavior": this.actual, "errors": this.errors, "browser": this.browser,
         "other-info": this.otherInfo, "name": this.submitterName, "email": this.email};
-      this.postData(this.SERVER_URL + "", inputData)
+      this.postData(this.SERVER_URL + "send-bug-email", inputData)
           .then((data) => {
             console.log(data);
             this.$router.push({ path: '/submitted'});

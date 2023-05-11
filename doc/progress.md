@@ -674,6 +674,10 @@ Images in Use
 * Finally got past Box authorization again
 * Just about finished with the refactor
 
+### 5.11.23
+* Finished with refactor
+* 
+
 ### TODO:
 * Refactor for deployment
 * Finish error handling for bug report page
