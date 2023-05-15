@@ -1,17 +1,17 @@
-import dotenv
-import os
+#import dotenv
+#import os
 from boxsdk import Client, OAuth2
 import pandas as pd
 import io
 
-dotenv.load_dotenv(dotenv.find_dotenv())
+#dotenv.load_dotenv(dotenv.find_dotenv())
 
 
 def getDataFromBox(fileId, fileType, accessToken):
 
     auth = OAuth2(
-        client_id=os.environ.get('BOX_CLIENT_ID'),
-        client_secret=os.environ.get('BOX_SECRET'),
+        client_id=process.env.BOX_CLIENT_ID,
+        client_secret=process.env.BOX_SECRET,
         access_token=accessToken
     )
     client = Client(auth)
@@ -37,19 +37,6 @@ def getDataFromBox(fileId, fileType, accessToken):
         boxData = pd.read_csv(toread)
 
     return boxData
-
-def sendFileToBox(folderId, fileName):
-    auth = OAuth2(
-        client_id=os.environ.get('BOX_CLIENT_ID'),
-        client_secret=os.environ.get('BOX_SECRET'),
-        access_token=os.environ.get('BOX_ACCESS'),
-    )
-    client = Client(auth)
-
-    newFile = client.folder(folderId).upload(fileName)
-    print(f'File "{newFile.name}" uploaded to Box with file ID {newFile.id}')
-
-    return newFile.id
 
 if __name__ == '__main__':
     getWithNewAuth()

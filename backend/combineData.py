@@ -13,17 +13,12 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import pandas as pd
-import os
+#import os
 from time import time
 import sys
-import dotenv
+#import dotenv
 
-dotenv.load_dotenv(dotenv.find_dotenv())
-
-def writeToReport(label, object):
-    f = open("performanceReport3850265.txt", "a")
-    f.write(f"{label}: {object}\n")
-    f.close()
+#dotenv.load_dotenv(dotenv.find_dotenv())
 
 def combineReports(courseDataFrame, allyDataFrame):
 
@@ -45,17 +40,14 @@ def combineReports(courseDataFrame, allyDataFrame):
             #writeToReport("Successfully matched", courseNames[i])
         except KeyError:
             print(f"{courseNames[i]} could not be matched in the ally file.")
-            writeToReport("Not found in ally file", courseNames[i])
         except Exception as e:
             print(f"Error in {courseNames[i]}: {e}")
-            writeToReport(f"Error in {courseNames[i]}", e)
 
     return courseDataFrame
 
 
 if __name__ == "__main__":
     print("Combining the course report with the Ally report...")
-    writeToReport("combineSheets.py", "")
 
     COURSE_REPORT_FILENAME = "course-report.xlsx"
     ALLY_FILENAME = "courses.csv"
@@ -71,4 +63,3 @@ if __name__ == "__main__":
     print(completeReport.to_string())
 
     print(f"\nDone in {time() - beginTime:.3f} seconds!", file=sys.stderr)
-    writeToReport(f"Done in {time() - beginTime:.3f} seconds!", "")

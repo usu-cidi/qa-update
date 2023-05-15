@@ -1,12 +1,12 @@
 import requests
 import json
-import dotenv
-import os
+#import dotenv
+#import os
 from combineData import combineReports
 import pandas as pd
 from datetime import date
 
-dotenv.load_dotenv(dotenv.find_dotenv())
+#dotenv.load_dotenv(dotenv.find_dotenv())
 
 #API_KEY = os.environ.get('MONDAY_API_KEY')
 API_URL = "https://api.monday.com/v2"

@@ -677,14 +677,15 @@ Images in Use
 ### 5.11.23
 * Finished with refactor
 * Merged back in with the deployment branch
-* Ready to start working on AWS deployment again
-* Trying to fix cookie issues first really fast
-  * The browser says it's sending the cookie but I can't find any from the backend
+* Trying to fix cookie issues
+  * The browser says it's sending the cookie but I can't find it in the backend
 
 ### 5.15.23
 * Fixed cookie issues
 * Adding more error handling
-* 
+* Ready to restart with AWS
+* Successfully deployed frontend
+* Working on backend
 
 ### TODO:
 * Deploy
@@ -711,8 +712,9 @@ Sometime:
 * openpyxl: `pip3 install openpyxl`
 * Requests-OAuthlib: `pip3 install requests-oauthlib`
 * dotenv: `pip3 install python-dotenv --user`
-* Flask
-* flask-cors
+* flask==1.1.4
+* flask-cors: 3.0.10
+* 
 
 ## Sources & References:
 

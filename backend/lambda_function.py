@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for, session
 from flask_cors import CORS
-import dotenv    # for dev
+# import dotenv    # for dev
 from boxsdk import Client, OAuth2
-import os
+# import os
 import json
 import pandas as pd
 import smtplib, ssl
@@ -14,10 +14,9 @@ from combineData import combineReports
 from updateMonday import fillNewBoard, updateExistingBoard
 from getAllyData import getURL
 
-
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
-app.config['SECRET_KEY'] = os.environ.get('CSRF')
+app.config['SECRET_KEY'] = process.env.CSRF
 
 link = "inactive"
 status = "inactive"
@@ -27,12 +26,15 @@ accessToken = ""
 boxCSRF = ""
 activeUser = ""
 
-COOKIE = os.environ.get('COOKIE')
+COOKIE = process.env.COOKIE
 FRONT_URL = "http://localhost:8000"
-CLIENT_URL = "http://localhost:8080/"
-CLIENT_URL_CORS = "http://localhost:8080"
+# CLIENT_URL = "http://localhost:8080/"
+# CLIENT_URL_CORS = "http://localhost:8080"
+CLIENT_URL = "https://master.d3kepc58nvsh8n.amplifyapp.com/"
+CLIENT_URL_CORS = "https://master.d3kepc58nvsh8n.amplifyapp.com"
 ALLOWED_EXTENSIONS = {'csv'}
-REDIRECT_URL = 'http://localhost:8080/oauth/callback'
+# REDIRECT_URL = 'http://localhost:8080/oauth/callback'
+REDIRECT_URL = 'https://master.d3kepc58nvsh8n.amplifyapp.com/oauth/callback'
 
 
 def checkAuth(cookie):
@@ -52,7 +54,7 @@ def noAuthResponse():
 
 def prepResponse(data):
     response = jsonify(data)
-    #response.headers.add('Access-Control-Allow-Origin', '*')
+    # response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Origin', CLIENT_URL_CORS)
     response.headers.add('Access-Control-Allow-Credentials', "true")
     return response
@@ -60,6 +62,8 @@ def prepResponse(data):
 
 @app.route('/', methods=['GET'])
 def initialLogin():
+    return prepResponse({'response': 'hello world!!!'}), 200
+
     submittedCode = request.args.get("code")
 
     if request.args.get("check") != "":
@@ -67,7 +71,7 @@ def initialLogin():
         response.headers.add('Access-Control-Allow-Origin', FRONT_URL)
         return response, 401
 
-    authorizedUsers = json.loads(os.environ.get("AUTH_USERS"))
+    authorizedUsers = json.loads(process.env.AUTH_USERS)
     if submittedCode in authorizedUsers:
         global activeUser
         activeUser = authorizedUsers[submittedCode]
@@ -79,19 +83,18 @@ def initialLogin():
 
     return prepResponse({'cookie': 'pshhh you thought :/'}), 401
 
-#--------------------------
+
+# --------------------------
 
 
 @app.route('/get-box-url', methods=['GET'])
 def getBoxUrl():
-    print(request.cookies)
-    print(f"The cookie: {request.cookies.get('Token')}")
     if not checkAuth(request.cookies.get("Token")):
         return noAuthResponse(), 401
 
     oauth = OAuth2(
-        client_id=os.environ.get('BOX_CLIENT_ID'),
-        client_secret=os.environ.get('BOX_SECRET'),
+        client_id=process.env.BOX_CLIENT_ID,
+        client_secret=process.env.BOX_SECRET,
         store_tokens=store_tokens,
     )
 
@@ -117,7 +120,6 @@ def store_tokens(access_token: str, refresh_token: str) -> bool:
 
 @app.route('/finish-oauth', methods=['POST'])
 def oauth_callback():
-
     code = json.loads(request.data)["code"]
     state = json.loads(request.data)["state"]
 
@@ -125,8 +127,8 @@ def oauth_callback():
 
     try:
         oauth = OAuth2(
-            client_id=os.environ.get('BOX_CLIENT_ID'),
-            client_secret=os.environ.get('BOX_SECRET'),
+            client_id=process.env.BOX_CLIENT_ID,
+            client_secret=process.env.BOX_SECRET,
             store_tokens=store_tokens
         )
 
@@ -138,7 +140,7 @@ def oauth_callback():
         return prepResponse({'access_token': "", 'result': f"Failed: {e}"}), 200
 
 
-#--------------------------
+# --------------------------
 
 
 @app.route('/get-ally-link', methods=['POST'])
@@ -195,7 +197,7 @@ def processAllyFile():
         return prepResponse({"message": "File is invalid or failed to upload. Please try again."}), 400
 
 
-#--------------------------
+# --------------------------
 
 
 @app.route('/update', methods=['POST'])
@@ -275,7 +277,7 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
         return f"Exception updating monday. {e}"
 
 
-#--------------------------
+# --------------------------
 
 
 @app.route('/send-bug-email', methods=['POST'])
@@ -326,9 +328,9 @@ def bugReport():
 def sendEmail(message, subject):
     port = 465  # For SSL
     smtp_server = "smtp.gmail.com"
-    sender_email = os.environ.get('DEV_EMAIL')
-    receiver_email = os.environ.get('DEV_EMAIL')
-    password = os.environ.get('EMAIL_PASS')
+    sender_email = process.env.DEV_EMAIL
+    receiver_email = process.env.DEV_EMAIL
+    password = process.env.EMAIL_PASS
 
     msg = EmailMessage()
     msg.set_content(message)
@@ -342,7 +344,7 @@ def sendEmail(message, subject):
         server.send_message(msg, from_addr=sender_email, to_addrs=receiver_email)
 
 
-#--------------------------
+# --------------------------
 
 
 if __name__ == '__main__':

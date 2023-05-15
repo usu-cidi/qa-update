@@ -1,9 +1,4 @@
 <template>
-  <!--<div class="hello">
-    <h1>HOME</h1>
-    <router-link to="/hi"> Hello </router-link>
-    <p>Goodbye world!</p>
-  </div>-->
   <div class="heading-box">
         <h1>QA Update Automation</h1>
         <p>Center for Instructional Design and Innovation - USU</p>

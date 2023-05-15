@@ -14,7 +14,7 @@
 
 from requests_oauthlib import OAuth1Session
 #import dotenv
-import os
+#import os
 import sys
 import json
 import time
@@ -73,10 +73,10 @@ if __name__ == "__main__":
 
     #dotenv.load_dotenv(dotenv.find_dotenv())
 
-    CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
-    CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
-    CLIENT_ID = os.environ.get('CLIENT_ID')
-    TERM_CODE = os.environ.get('TERM_CODE')
+    #CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
+    #CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
+    #CLIENT_ID = os.environ.get('CLIENT_ID')
+    #TERM_CODE = os.environ.get('TERM_CODE')
 
     t = time.localtime()
     currentTime = time.strftime("%Y-%m-%d-%H-%M", t)
