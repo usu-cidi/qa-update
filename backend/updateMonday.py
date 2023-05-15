@@ -20,11 +20,11 @@ COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", 
            "kaltura_vids", "youtube", "flash_content", "broken_links", "navigation_items", "status48",
            "overall_a11y_score",
            "files_ally_score", "wysiwyg_ally_score", "__of_pdf_files", "pdf_files_in_use", "pdf_scanned_not_ocr_d",
-           "images", "images_wo_alt_text", "numbers", "status_12", "date"]
+           "images", "images_wo_alt_text", "numbers", "status_15", "date"]
 # "status_15": trigger column - DEV, "status_12": Summer 2023, "status_13": Fall 2023
 # "date": last updated column - DEV - same in Summer 2023 & Fall 2023
 
-SMALL_COL_IDS = ["status_12", "date"]
+SMALL_COL_IDS = ["status_15", "date"]
 # "status_15": trigger column - DEV, "status_12": Summer 2023, "status_13": Fall 2023
 # "date": last updated column - DEV - same in Summer 2023 & Fall 2023
 

@@ -23,9 +23,7 @@
         </form>
       <br>
 
-        <!--{% if msg %}
-            <p class="text-danger">{{ msg | safe }}</p>
-        {% endif %}-->
+      <p class="error-message" v-if="error">{{error}}</p>
 
     </div>
 </template>
@@ -35,6 +33,11 @@
 export default {
   name: 'LoginComponent',
   emits: ["form-submitted"],
+  data() {
+    return {
+      error: "",
+    }
+  },
   methods:{
     checkAuth(){
       let check = document.getElementById("check").value;
@@ -48,7 +51,12 @@ export default {
             let expires = "expires=" + d.toUTCString();
 
             document.cookie = "Token=" + json.cookie + ";" + expires + ";path=/"
-            this.$router.push("/box-login");
+
+            if (json.cookie === 'pshhh you thought :/') {
+              this.error = "Invalid authentication. Please contact your system admin."
+            } else {
+              this.$router.push("/box-login");
+            }
           })
           .catch(err => {
             console.log(err);

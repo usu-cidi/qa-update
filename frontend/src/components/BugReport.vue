@@ -110,7 +110,7 @@ export default {
         method: "POST",
         /*mode: "no-cors",*/
         cache: "no-cache",
-        credentials: "same-origin",
+        credentials: "include",
         connection: "keep-alive",
         headers: {
           Accept: 'application.json',

@@ -21,6 +21,8 @@
       <h2>Update complete!</h2>
     </div>
 
+    <h2 v-if="error" class="error-message">Error completing update.</h2>
+
     <p v-if="responseMessage">{{responseMessage}}</p>
 
   </div>
@@ -50,6 +52,7 @@ export default {
       updateComplete: false,
       SERVER_URL: "http://localhost:8000/",
       responseMessage: "",
+      error: false,
     }
   },
   mounted() {
@@ -67,9 +70,13 @@ export default {
           this.updateInProgress = false;
           if (response.updateStatus === "Complete") {
             this.updateComplete = true;
+          } else if (response.updateStatus === "Incomplete (error)") {
+            this.error = true;
+            this.responseMessage = "Please contact your developer by filling out a bug report form below. " +
+                "Include the following message: ";
           }
           if (response.result) {
-            this.responseMessage = response.result;
+            this.responseMessage += response.result;
           }
     }).catch(err => {
       console.log(err);
@@ -90,7 +97,7 @@ export default {
         method: "POST",
         /*mode: "no-cors",*/
         cache: "no-cache",
-        credentials: "same-origin",
+        credentials: "include",
         connection: "keep-alive",
         headers: {
           Accept: 'application.json',

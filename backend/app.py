@@ -16,7 +16,7 @@ from getAllyData import getURL
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 app.config['SECRET_KEY'] = os.environ.get('CSRF')
 
 link = "inactive"
@@ -24,10 +24,13 @@ status = "inactive"
 allyDataFrame = None
 
 accessToken = ""
+boxCSRF = ""
+activeUser = ""
 
-COOKIE = "crunch"
+COOKIE = os.environ.get('COOKIE')
 FRONT_URL = "http://localhost:8000"
 CLIENT_URL = "http://localhost:8080/"
+CLIENT_URL_CORS = "http://localhost:8080"
 ALLOWED_EXTENSIONS = {'csv'}
 REDIRECT_URL = 'http://localhost:8080/oauth/callback'
 
@@ -42,13 +45,16 @@ def checkAuth(cookie):
 
 def noAuthResponse():
     response = jsonify({'error': 'not authenticated'})
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Origin', CLIENT_URL_CORS)
+    response.headers.add('Access-Control-Allow-Credentials', "true")
     return response
 
 
 def prepResponse(data):
     response = jsonify(data)
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    #response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Origin', CLIENT_URL_CORS)
+    response.headers.add('Access-Control-Allow-Credentials', "true")
     return response
 
 
@@ -63,8 +69,13 @@ def initialLogin():
 
     authorizedUsers = json.loads(os.environ.get("AUTH_USERS"))
     if submittedCode in authorizedUsers:
+        global activeUser
+        activeUser = authorizedUsers[submittedCode]
         print(f"{authorizedUsers[submittedCode]} is trying to access the site with approved code {submittedCode}")
-        return prepResponse({'cookie': COOKIE}), 200
+
+        response = prepResponse({'cookie': COOKIE})
+        response.set_cookie("Bonus cookie", "crunch crunch")
+        return response, 200
 
     return prepResponse({'cookie': 'pshhh you thought :/'}), 401
 
@@ -73,8 +84,10 @@ def initialLogin():
 
 @app.route('/get-box-url', methods=['GET'])
 def getBoxUrl():
-    # if not checkAuth(request.cookies.get("Token")):
-    #   return noAuthResponse(), 401
+    print(request.cookies)
+    print(f"The cookie: {request.cookies.get('Token')}")
+    if not checkAuth(request.cookies.get("Token")):
+        return noAuthResponse(), 401
 
     oauth = OAuth2(
         client_id=os.environ.get('BOX_CLIENT_ID'),
@@ -83,7 +96,8 @@ def getBoxUrl():
     )
 
     auth_url, csrf_token = oauth.get_authorization_url(REDIRECT_URL)
-    #session['csrf'] = csrf_token
+    global boxCSRF
+    boxCSRF = csrf_token
 
     return prepResponse({'authUrl': auth_url, 'csrfTok': csrf_token}), 200
 
@@ -129,16 +143,11 @@ def oauth_callback():
 
 @app.route('/get-ally-link', methods=['POST'])
 def getAllyLink():
-    #if not checkAuth(request.cookies.get("Token")):
-        #return noAuthResponse(), 401
+    if not checkAuth(request.cookies.get("Token")):
+        return noAuthResponse(), 401
 
     requestInfo = json.loads(request.data)
     print(requestInfo)
-
-    #if not requestInfo["check"] == "":
-    #    print("Caught a bot!! Get out of here!")
-    #    response = jsonify({'message': 'suspicious access attempt'})
-    #    return response, 401
 
     allyClientId = requestInfo["clientId"]
     allyConsumKey = requestInfo["consumKey"]
@@ -153,9 +162,7 @@ def getAllyLink():
         print("Getting ally url failed")
         return prepResponse({"error": "getting ally link failed"}), 500
 
-    response = prepResponse({"link": url})
-    print(response)
-    return response, 200
+    return prepResponse({"link": url}), 200
 
 
 def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
@@ -168,9 +175,8 @@ def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
 
 @app.route('/process-ally-file', methods=['POST'])
 def processAllyFile():
-    #if not checkAuth(request.cookies.get("Token")):
-        #return noAuthResponse(), 401
-
+    if not checkAuth(request.cookies.get("Token")):
+        return noAuthResponse(), 401
 
     print(request.files)
 
@@ -180,6 +186,8 @@ def processAllyFile():
                 global allyDataFrame
                 allyDataFrame = pd.read_csv(file)
                 print(allyDataFrame)
+            else:
+                return prepResponse({"message": "File type is invalid. The file should be named courses.csv."}), 400
 
         return prepResponse({"message": "Upload successful"}), 200
     except Exception as e:
@@ -192,13 +200,8 @@ def processAllyFile():
 
 @app.route('/update', methods=['POST'])
 def updating():
-    # if not checkAuth(request.cookies.get("Token")):
-    #   return noAuthResponse(), 401
-
-    # if not requestInfo["check"] == "":
-    #    print("Caught a bot!! Get out of here!")
-    #    response = jsonify({'message': 'suspicious access attempt'})
-    #    return response, 401
+    if not checkAuth(request.cookies.get("Token")):
+        return noAuthResponse(), 401
 
     requestInfo = json.loads(request.data)
 
@@ -242,6 +245,8 @@ def updating():
     accessTokVal = accessToken
 
     result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTokVal)
+    if result.startswith("Exception"):
+        return prepResponse({"updateStatus": "Incomplete (error)", "result": result}), 500
     return prepResponse({"updateStatus": "Complete", "result": result}), 200
 
 
@@ -250,13 +255,13 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
         courseReportData = getDataFromBox(crBoxId, 'excel', accessTok)
     except Exception as e:
         print(e)
-        return f"Exception getting box data: {e}"
+        return f"Exception getting box data. {e}"
 
     try:
         completeReport = combineReports(courseReportData, allyData)
     except Exception as e:
         print(e)
-        return f"Exception combining reports: {e}"
+        return f"Exception combining reports. {e}"
 
     try:
         if triggerType == "new":
@@ -267,7 +272,7 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
         return f"Added {results[0]} new rows and audited {results[1]} existing rows."
     except Exception as e:
         print(e)
-        return f"Exception updating monday: {e}"
+        return f"Exception updating monday. {e}"
 
 
 #--------------------------
@@ -275,8 +280,8 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
 
 @app.route('/send-bug-email', methods=['POST'])
 def bugReport():
-    # if not checkAuth(request.cookies.get("Token")):
-    #   return noAuthResponse(), 401
+    if not checkAuth(request.cookies.get("Token")):
+        return noAuthResponse(), 401
 
     print("We are supposed to send an email now!!")
 
@@ -311,9 +316,8 @@ def bugReport():
     message += f"link: {link}\n"
     message += f"allyDataframe: {allyDataFrame}\n"
     message += f"accessTok: {accessToken}\n"
-    #message += f"refreshTok: {session['refreshTok']}\n"
-    #message += f"csrf: {session['csrf']}\n"
-    #message += f"active user: {session['activeUser']}\n"
+    message += f"csrf: {boxCSRF}\n"
+    message += f"active user: {activeUser}\n"
 
     sendEmail(message, f"Bug Report - {requestInfo['app-name']}")
     return prepResponse({"result": "Email sent"}), 200

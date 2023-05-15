@@ -676,12 +676,17 @@ Images in Use
 
 ### 5.11.23
 * Finished with refactor
+* Merged back in with the deployment branch
+* Ready to start working on AWS deployment again
+* Trying to fix cookie issues first really fast
+  * The browser says it's sending the cookie but I can't find any from the backend
+
+### 5.15.23
+* Fixed cookie issues
+* Adding more error handling
 * 
 
 ### TODO:
-* Refactor for deployment
-* Finish error handling for bug report page
-
 * Deploy
 
 Next:

@@ -167,12 +167,29 @@ export default {
           fileElement = document.querySelector('#file-field'),
           request = new XMLHttpRequest(),
           data = new FormData(formElement);
+
+      request.onreadystatechange = () => {
+        if (request.readyState === 4) {
+          this.callback(request.response);
+        }
+      };
+
       request.open('POST', this.SERVER_URL + 'process-ally-file', true);
+      request.withCredentials = true;
       request.send(data);
       e.preventDefault();
       e.stopPropagation();
 
-      this.uploadMessage = "Upload successful.";
+    },
+    callback(res) {
+      let response = JSON.parse(res);
+      console.log(response);
+      console.log(response.message);
+      if (response.message !== 'Upload successful') {
+        this.uploadMessage = "Error: " + response.message;
+      } else {
+        this.uploadMessage = "Upload successful.";
+      }
     },
     runUpdate() {
       this.error3 = "";
@@ -225,8 +242,14 @@ export default {
       let inputData = {clientId: clientId, consumKey: consumKey, consumSec: consumSec, termCode: termCode};
       this.postData(this.SERVER_URL + "get-ally-link", inputData).then((data) => {
         console.log(data);
-        this.linkLoading = false;
-        this.link = data.link;
+        if (data.error !== undefined) {
+          this.error1 = "Operation failed. Please check your authentication and other inputs and try again. " +
+              "If the issue persists, contact your system admin.";
+          this.linkLoading = false;
+        } else {
+          this.linkLoading = false;
+          this.link = data.link;
+        }
       });
     },
     postData(url, data, contentType="application/json", stringify=true) {
@@ -241,7 +264,7 @@ export default {
         method: "POST",
         /*mode: "no-cors",*/
         cache: "no-cache",
-        credentials: "same-origin",
+        credentials: "include",
         connection: "keep-alive",
         headers: {
           Accept: 'application.json',

@@ -51,7 +51,7 @@
 export default {
   name: 'BoxLoginComponent',
   created() {
-    fetch(this.SERVER_URL + "get-box-url")
+    fetch(this.SERVER_URL + "get-box-url", {credentials: "include"})
         .then(r => r.json())
         .then(response => {
           console.log(response.authUrl);
