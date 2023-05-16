@@ -13,8 +13,6 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from requests_oauthlib import OAuth1Session
-#import dotenv
-#import os
 import sys
 import json
 import time
@@ -68,58 +66,3 @@ def getURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
         return -1
 
 
-
-if __name__ == "__main__":
-
-    #dotenv.load_dotenv(dotenv.find_dotenv())
-
-    #CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
-    #CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
-    #CLIENT_ID = os.environ.get('CLIENT_ID')
-    #TERM_CODE = os.environ.get('TERM_CODE')
-
-    t = time.localtime()
-    currentTime = time.strftime("%Y-%m-%d-%H-%M", t)
-    beginTime = time.time()
-
-    test = OAuth1Session(CONSUMER_KEY, client_secret=CONSUMER_SECRET)
-    url = f'https://prod.ally.ac/api/v1/{CLIENT_ID}/reports/terms/{TERM_CODE}/csv?role=administrator&userId=1&token={currentTime}'
-    r = test.get(url)
-
-    loadingMessages = ["Pulling data from Ally API...", "Loading...", "Going to space...", "Locating data...",
-                       "Organizing spreadsheets...", "Connecting with Canvas...",
-                       "Taking a coffee break (being a computer is hard work!)", "Loading...", "Loading...",
-                       "Loading...", "Loading...", "Loading...", "Loading...",
-                       "Rearranging solar panels...", "Hacking government computers...", "Preparing data...",
-                       "Preparing data...", "API response pending...", "API response pending...",
-                       "Preparing file...", "Solving the WORDLE...", "Loading...",
-                       "Convincing reCAPTCHA I'm not a robot...", "Judging your OS...", "Preparing data..."]
-
-    if (r.content == b'The supplied authentication is invalid'):
-        print(r.content)
-        print(r)
-        sys.exit(1)
-
-    parsedOutput = json.loads(r.content)
-
-    print("Pulling data from Ally API")
-    print("Loading...\n")
-
-    while not "url" in parsedOutput:
-        r = test.get(url)
-        parsedOutput = json.loads(r.content)
-        if "status" in parsedOutput:
-            print(f"Request ID: {parsedOutput['processId']}")
-            print(f"Status: {parsedOutput['status']}")
-            print(f"{random.choice(loadingMessages)}\n")
-
-            time.sleep(7)
-        else:
-            print("Download complete.")
-            break
-
-    print(f"\nDone in {time.time() - beginTime:.3f} seconds!")
-
-    zipURL = str(r.content[8:-2])
-    # print(zipURL[1:])
-    os.system(f'open {zipURL[1:]}')

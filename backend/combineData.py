@@ -13,12 +13,9 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import pandas as pd
-#import os
 from time import time
 import sys
-#import dotenv
 
-#dotenv.load_dotenv(dotenv.find_dotenv())
 
 def combineReports(courseDataFrame, allyDataFrame):
 

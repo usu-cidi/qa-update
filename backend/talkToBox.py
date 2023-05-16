@@ -1,17 +1,21 @@
-#import dotenv
-#import os
+import dotenv
+import os
 from boxsdk import Client, OAuth2
 import pandas as pd
 import io
 
-#dotenv.load_dotenv(dotenv.find_dotenv())
+dotenv.load_dotenv(dotenv.find_dotenv())
 
+BOX_CLIENT_ID = process.env.BOX_CLIENT_ID
+#BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
+BOX_SECRET = process.env.BOX_SECRET
+#BOX_SECRET = os.environ.get("BOX_SECRET")
 
 def getDataFromBox(fileId, fileType, accessToken):
 
     auth = OAuth2(
-        client_id=process.env.BOX_CLIENT_ID,
-        client_secret=process.env.BOX_SECRET,
+        client_id=BOX_CLIENT_ID,
+        client_secret=BOX_SECRET,
         access_token=accessToken
     )
     client = Client(auth)
@@ -37,6 +41,3 @@ def getDataFromBox(fileId, fileType, accessToken):
         boxData = pd.read_csv(toread)
 
     return boxData
-
-if __name__ == '__main__':
-    getWithNewAuth()

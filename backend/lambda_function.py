@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for, session
 from flask_cors import CORS
-# import dotenv    # for dev
+#import dotenv    # for dev
 from boxsdk import Client, OAuth2
-# import os
+#import os
 import json
 import pandas as pd
 import smtplib, ssl
@@ -16,7 +16,9 @@ from getAllyData import getURL
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
+
 app.config['SECRET_KEY'] = process.env.CSRF
+#app.config['SECRET_KEY'] = os.environ.get('CSRF')
 
 link = "inactive"
 status = "inactive"
@@ -27,6 +29,8 @@ boxCSRF = ""
 activeUser = ""
 
 COOKIE = process.env.COOKIE
+#COOKIE = os.environ.get("COOKIE")
+
 FRONT_URL = "http://localhost:8000"
 # CLIENT_URL = "http://localhost:8080/"
 # CLIENT_URL_CORS = "http://localhost:8080"
@@ -36,6 +40,18 @@ ALLOWED_EXTENSIONS = {'csv'}
 # REDIRECT_URL = 'http://localhost:8080/oauth/callback'
 REDIRECT_URL = 'https://master.d3kepc58nvsh8n.amplifyapp.com/oauth/callback'
 
+BOX_CLIENT_ID = process.env.BOX_CLIENT_ID
+#BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
+BOX_SECRET = process.env.BOX_SECRET
+#BOX_SECRET = os.environ.get("BOX_SECRET")
+
+DEV_EMAIL = process.env.DEV_EMAIL
+#DEV_EMAIL = os.environ.get("DEV_EMAIL")
+EMAIL_PASS = process.env.EMAIL_PASS
+#EMAIL_PASS = os.environ.get("EMAIL_PASS")
+
+AUTH_USERS = process.env.AUTH_USERS
+#AUTH_USERS = os.environ.get('AUTH_USERS')
 
 def checkAuth(cookie):
     print(f"Is {cookie} equal to {COOKIE}???")
@@ -71,7 +87,7 @@ def initialLogin():
         response.headers.add('Access-Control-Allow-Origin', FRONT_URL)
         return response, 401
 
-    authorizedUsers = json.loads(process.env.AUTH_USERS)
+    authorizedUsers = json.loads(AUTH_USERS)
     if submittedCode in authorizedUsers:
         global activeUser
         activeUser = authorizedUsers[submittedCode]
@@ -93,8 +109,8 @@ def getBoxUrl():
         return noAuthResponse(), 401
 
     oauth = OAuth2(
-        client_id=process.env.BOX_CLIENT_ID,
-        client_secret=process.env.BOX_SECRET,
+        client_id=BOX_CLIENT_ID,
+        client_secret=BOX_SECRET,
         store_tokens=store_tokens,
     )
 
@@ -127,8 +143,8 @@ def oauth_callback():
 
     try:
         oauth = OAuth2(
-            client_id=process.env.BOX_CLIENT_ID,
-            client_secret=process.env.BOX_SECRET,
+            client_id=BOX_CLIENT_ID,
+            client_secret=BOX_SECRET,
             store_tokens=store_tokens
         )
 
@@ -328,9 +344,9 @@ def bugReport():
 def sendEmail(message, subject):
     port = 465  # For SSL
     smtp_server = "smtp.gmail.com"
-    sender_email = process.env.DEV_EMAIL
-    receiver_email = process.env.DEV_EMAIL
-    password = process.env.EMAIL_PASS
+    sender_email = DEV_EMAIL
+    receiver_email = DEV_EMAIL
+    password = EMAIL_PASS
 
     msg = EmailMessage()
     msg.set_content(message)

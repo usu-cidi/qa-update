@@ -687,6 +687,14 @@ Images in Use
 * Successfully deployed frontend
 * Working on backend
 
+### 5.16.23
+* Working more on deploying backend
+* Fixed an issue with the hardcoded column names
+* Fixed appengine error by installing urllib==1.23 first thing, now getting a numpy error I need to look into
+  * Resources:
+    * https://numpy.org/devdocs/user/troubleshooting-importerror.html
+    * https://github.com/numpy/numpy/issues/21312
+
 ### TODO:
 * Deploy
 
@@ -817,6 +825,11 @@ Sometime:
 * Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/
 * Separating deployment environments: https://www.google.com/search?q=separate+dev+and+prod+code+aws+lambda&rlz=1C5CHFA_enUS1023US1023&oq=separate+dev+and+prod+code+aws+lambda&aqs=chrome..69i57j33i160i395l3.13252j1j9&sourceid=chrome&ie=UTF-8
 * https://github.com/aws-amplify/amplify-cli/issues/10497
+* WildRydes tutorial: https://webapp.serverlessworkshops.io/restfulapis/updateconfig/
+* Dependencies: 
+  * https://docs.aws.amazon.com/lambda/latest/dg/python-package.html
+  * https://www.linkedin.com/pulse/add-external-python-libraries-aws-lambda-using-layers-gabe-olokun/
+* 
 
 ### Misc
 * Citing code: https://uark.libguides.com/CSCE/CitingCode

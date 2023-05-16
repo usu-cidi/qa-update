@@ -10,7 +10,7 @@ __pycache__/
 data/
 *.txt
 
-
+*.zip
 venv
 .DS_Store
 __pycache__
