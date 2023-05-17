@@ -1,15 +1,15 @@
-import dotenv
+#import dotenv
 import os
 from boxsdk import Client, OAuth2
 import pandas as pd
 import io
 
-dotenv.load_dotenv(dotenv.find_dotenv())
+#dotenv.load_dotenv(dotenv.find_dotenv())
 
-BOX_CLIENT_ID = process.env.BOX_CLIENT_ID
-#BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
-BOX_SECRET = process.env.BOX_SECRET
-#BOX_SECRET = os.environ.get("BOX_SECRET")
+#BOX_CLIENT_ID = process.env.BOX_CLIENT_ID
+BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
+#BOX_SECRET = process.env.BOX_SECRET
+BOX_SECRET = os.environ.get("BOX_SECRET")
 
 def getDataFromBox(fileId, fileType, accessToken):
 

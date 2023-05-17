@@ -1,13 +1,15 @@
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for, session
 from flask_cors import CORS
-#import dotenv    # for dev
+# import dotenv    # for dev
 from boxsdk import Client, OAuth2
-#import os
+import os
 import json
 import pandas as pd
 import smtplib, ssl
 from email.message import EmailMessage
 from datetime import datetime
+
+import awsgi
 
 from talkToBox import getDataFromBox
 from combineData import combineReports
@@ -17,8 +19,8 @@ from getAllyData import getURL
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
-app.config['SECRET_KEY'] = process.env.CSRF
-#app.config['SECRET_KEY'] = os.environ.get('CSRF')
+# app.config['SECRET_KEY'] = process.env.CSRF
+app.config['SECRET_KEY'] = os.environ.get('CSRF')
 
 link = "inactive"
 status = "inactive"
@@ -28,8 +30,8 @@ accessToken = ""
 boxCSRF = ""
 activeUser = ""
 
-COOKIE = process.env.COOKIE
-#COOKIE = os.environ.get("COOKIE")
+# COOKIE = process.env.COOKIE
+COOKIE = os.environ.get("COOKIE")
 
 FRONT_URL = "http://localhost:8000"
 # CLIENT_URL = "http://localhost:8080/"
@@ -40,18 +42,19 @@ ALLOWED_EXTENSIONS = {'csv'}
 # REDIRECT_URL = 'http://localhost:8080/oauth/callback'
 REDIRECT_URL = 'https://master.d3kepc58nvsh8n.amplifyapp.com/oauth/callback'
 
-BOX_CLIENT_ID = process.env.BOX_CLIENT_ID
-#BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
-BOX_SECRET = process.env.BOX_SECRET
-#BOX_SECRET = os.environ.get("BOX_SECRET")
+# BOX_CLIENT_ID = process.env.BOX_CLIENT_ID
+BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
+# BOX_SECRET = process.env.BOX_SECRET
+BOX_SECRET = os.environ.get("BOX_SECRET")
 
-DEV_EMAIL = process.env.DEV_EMAIL
-#DEV_EMAIL = os.environ.get("DEV_EMAIL")
-EMAIL_PASS = process.env.EMAIL_PASS
-#EMAIL_PASS = os.environ.get("EMAIL_PASS")
+# DEV_EMAIL = process.env.DEV_EMAIL
+DEV_EMAIL = os.environ.get("DEV_EMAIL")
+# EMAIL_PASS = process.env.EMAIL_PASS
+EMAIL_PASS = os.environ.get("EMAIL_PASS")
 
-AUTH_USERS = process.env.AUTH_USERS
-#AUTH_USERS = os.environ.get('AUTH_USERS')
+# AUTH_USERS = process.env.AUTH_USERS
+AUTH_USERS = os.environ.get('AUTH_USERS')
+
 
 def checkAuth(cookie):
     print(f"Is {cookie} equal to {COOKIE}???")
@@ -62,42 +65,57 @@ def checkAuth(cookie):
 
 
 def noAuthResponse():
-    response = jsonify({'error': 'not authenticated'})
-    response.headers.add('Access-Control-Allow-Origin', CLIENT_URL_CORS)
-    response.headers.add('Access-Control-Allow-Credentials', "true")
+    return prepResponse({'error': 'not authenticated'})
+    # response.headers.add('Access-Control-Allow-Origin', CLIENT_URL_CORS)
+    # response.headers.add('Access-Control-Allow-Credentials', "true")
     return response
 
 
-def prepResponse(data):
-    response = jsonify(data)
+def prepResponse(body, code=200, isBase64Encoded="false"):
+    # body = jsonify(data)
     # response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Origin', CLIENT_URL_CORS)
-    response.headers.add('Access-Control-Allow-Credentials', "true")
+    response = {
+        "isBase64Encoded": isBase64Encoded,
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": CLIENT_URL_CORS, 'Access-Control-Allow-Credentials': "true"},
+        "body": body
+    }
+    # response.headers.add('Access-Control-Allow-Origin', CLIENT_URL_CORS)
+    # response.headers.add('Access-Control-Allow-Credentials', "true")
     return response
 
 
-@app.route('/', methods=['GET'])
-def initialLogin():
-    return prepResponse({'response': 'hello world!!!'}), 200
+@app.route('/test')
+def test():
+    return prepResponse("{'response': 'hello world!!!'}")
 
+
+@app.route('/login', methods=['GET'])
+def initialLogin():
     submittedCode = request.args.get("code")
+    print(submittedCode)
 
     if request.args.get("check") != "":
         response = jsonify({'cookie': 'pshhh you thought :/'})
         response.headers.add('Access-Control-Allow-Origin', FRONT_URL)
-        return response, 401
+        return response
 
-    authorizedUsers = json.loads(AUTH_USERS)
+    print(AUTH_USERS)
+    try:
+        authorizedUsers = json.loads(AUTH_USERS)
+    except Exception as e:
+        print(e)
+        return prepResponse({'cookie': 'pshhh you thought :/'}, 401)
     if submittedCode in authorizedUsers:
         global activeUser
         activeUser = authorizedUsers[submittedCode]
         print(f"{authorizedUsers[submittedCode]} is trying to access the site with approved code {submittedCode}")
 
         response = prepResponse({'cookie': COOKIE})
-        response.set_cookie("Bonus cookie", "crunch crunch")
-        return response, 200
+        # response.set_cookie("Bonus cookie", "crunch crunch")
+        return response
 
-    return prepResponse({'cookie': 'pshhh you thought :/'}), 401
+    return prepResponse({'cookie': 'pshhh you thought :/'}, 401)
 
 
 # --------------------------
@@ -105,8 +123,8 @@ def initialLogin():
 
 @app.route('/get-box-url', methods=['GET'])
 def getBoxUrl():
-    if not checkAuth(request.cookies.get("Token")):
-        return noAuthResponse(), 401
+    # if not checkAuth(request.cookies.get("Token")):
+    #    return noAuthResponse(), 401
 
     oauth = OAuth2(
         client_id=BOX_CLIENT_ID,
@@ -161,11 +179,12 @@ def oauth_callback():
 
 @app.route('/get-ally-link', methods=['POST'])
 def getAllyLink():
-    if not checkAuth(request.cookies.get("Token")):
-        return noAuthResponse(), 401
+    print("In get ally link")
+    # if not checkAuth(request.cookies.get("Token")):
+    #    return noAuthResponse(), 401
 
     requestInfo = json.loads(request.data)
-    print(requestInfo)
+    print("The request info is " + requestInfo)
 
     allyClientId = requestInfo["clientId"]
     allyConsumKey = requestInfo["consumKey"]
@@ -180,7 +199,9 @@ def getAllyLink():
         print("Getting ally url failed")
         return prepResponse({"error": "getting ally link failed"}), 500
 
-    return prepResponse({"link": url}), 200
+    response = prepResponse({"link": url})
+    print(response)
+    return response
 
 
 def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
@@ -193,8 +214,8 @@ def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
 
 @app.route('/process-ally-file', methods=['POST'])
 def processAllyFile():
-    if not checkAuth(request.cookies.get("Token")):
-        return noAuthResponse(), 401
+    # if not checkAuth(request.cookies.get("Token")):
+    #    return noAuthResponse(), 401
 
     print(request.files)
 
@@ -218,8 +239,8 @@ def processAllyFile():
 
 @app.route('/update', methods=['POST'])
 def updating():
-    if not checkAuth(request.cookies.get("Token")):
-        return noAuthResponse(), 401
+    # if not checkAuth(request.cookies.get("Token")):
+    #    return noAuthResponse(), 401
 
     requestInfo = json.loads(request.data)
 
@@ -298,8 +319,8 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
 
 @app.route('/send-bug-email', methods=['POST'])
 def bugReport():
-    if not checkAuth(request.cookies.get("Token")):
-        return noAuthResponse(), 401
+    # if not checkAuth(request.cookies.get("Token")):
+    #    return noAuthResponse(), 401
 
     print("We are supposed to send an email now!!")
 
@@ -365,4 +386,8 @@ def sendEmail(message, subject):
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True, host="localhost")
-    dotenv.load_dotenv(dotenv.find_dotenv())
+    # dotenv.load_dotenv(dotenv.find_dotenv())
+
+
+def lambda_handler(event, context):
+    return awsgi.response(app, event, context)

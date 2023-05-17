@@ -695,6 +695,11 @@ Images in Use
     * https://numpy.org/devdocs/user/troubleshooting-importerror.html
     * https://github.com/numpy/numpy/issues/21312
 
+### 5.17.23
+* Still working on backend issues
+* The backend seems to be working, now I will start working on connecting it to the frontend
+* Unsure how to pass cookies through the proxy integration into my application
+
 ### TODO:
 * Deploy
 
@@ -829,6 +834,13 @@ Sometime:
 * Dependencies: 
   * https://docs.aws.amazon.com/lambda/latest/dg/python-package.html
   * https://www.linkedin.com/pulse/add-external-python-libraries-aws-lambda-using-layers-gabe-olokun/
+* Proxy integration response format: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-output-format
+* Proxy integrations: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-create-api-as-simple-proxy
+  * https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html
+* awsgi: https://spiegelmock.com/2018/09/06/serverless-python-web-applications-with-aws-lambda-and-flask/
+  * https://github.com/slank/awsgi
+* Environment vars: https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html
+* Numpy/Pandas import problems
 * 
 
 ### Misc

@@ -1,22 +1,22 @@
 <template>
-  <div class="heading-box">
-        <h1>QA Update Automation</h1>
-        <p>Center for Instructional Design and Innovation - USU</p>
-        <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
-        <a href="https://github.com/emmalynnnn/cidi-monday-QA-automation">[Source]</a>
-    </div>
+  <div className="heading-box">
+    <h1>QA Update Automation</h1>
+    <p>Center for Instructional Design and Innovation - USU</p>
+    <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
+    <a href="https://github.com/emmalynnnn/cidi-monday-QA-automation">[Source]</a>
+  </div>
 
+  <br>
+
+  <div className="feature-box blue">
     <br>
+    <h3>Verifying Box authentication....</h3>
 
-    <div class="feature-box blue">
-        <br>
-        <h3>Verifying Box authentication....</h3>
-
-      <div v-if="errorText">
-        <p>{{errorText}}</p>
-        <a class="btn btn-dark button" href="/box-login">Authorize again</a>
-      </div>
+    <div v-if="errorText">
+      <p>{{ er rorText }}</p>
+      <a className="btn btn-dark button" href="/box-login">Authorize again</a>
     </div>
+  </div>
 </template>
 
 <script>
@@ -24,14 +24,15 @@
 
 export default {
   name: 'LoadingBoxComponent',
-  data () {
+  data() {
     return {
       errorText: "",
-      SERVER_URL: "http://localhost:8000/",
+      //SERVER_URL: "http://localhost:8000/",
+      SERVER_URL: "https://8mdwy25ju2.execute-api.us-east-2.amazonaws.com/prod/",
     }
   },
-  methods:{
-    postData(url, data, contentType="application/json", stringify=true) {
+  methods: {
+    postData(url, data, contentType = "application/json", stringify = true) {
       let theBody;
       if (stringify) {
         theBody = JSON.stringify(data);
@@ -80,12 +81,14 @@ export default {
       this.postData(this.SERVER_URL + "finish-oauth", {code: code, state: state})
           .then((data) => {
             console.log(data);
+            data = data.body;
+            console.log(data);
             if (data.result === "Success") {
-              this.$router.replace({ path: '/add-info'})
+              this.$router.replace({path: '/add-info'})
             } else {
               this.errorText = "Box authorization failed: " + data.result;
             }
-        });
+          });
     }
 
   },
