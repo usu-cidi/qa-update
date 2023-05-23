@@ -1,6 +1,19 @@
+# Copyright (C) 2023  Emma Lynn
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, version 3 of the License.
+#
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for, session
 from flask_cors import CORS
-# import dotenv    # for dev
 from boxsdk import Client, OAuth2
 import os
 import json
@@ -19,7 +32,6 @@ from getAllyData import getURL
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
-# app.config['SECRET_KEY'] = process.env.CSRF
 app.config['SECRET_KEY'] = os.environ.get('CSRF')
 
 link = "inactive"
@@ -30,101 +42,41 @@ accessToken = ""
 boxCSRF = ""
 activeUser = ""
 
-# COOKIE = process.env.COOKIE
 COOKIE = os.environ.get("COOKIE")
 
 FRONT_URL = "http://localhost:8000"
-# CLIENT_URL = "http://localhost:8080/"
-# CLIENT_URL_CORS = "http://localhost:8080"
 CLIENT_URL = "https://master.d3kepc58nvsh8n.amplifyapp.com/"
 CLIENT_URL_CORS = "https://master.d3kepc58nvsh8n.amplifyapp.com"
 ALLOWED_EXTENSIONS = {'csv'}
-# REDIRECT_URL = 'http://localhost:8080/oauth/callback'
 REDIRECT_URL = 'https://master.d3kepc58nvsh8n.amplifyapp.com/oauth/callback'
 
-# BOX_CLIENT_ID = process.env.BOX_CLIENT_ID
 BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
-# BOX_SECRET = process.env.BOX_SECRET
 BOX_SECRET = os.environ.get("BOX_SECRET")
 
-# DEV_EMAIL = process.env.DEV_EMAIL
 DEV_EMAIL = os.environ.get("DEV_EMAIL")
-# EMAIL_PASS = process.env.EMAIL_PASS
 EMAIL_PASS = os.environ.get("EMAIL_PASS")
 
-# AUTH_USERS = process.env.AUTH_USERS
 AUTH_USERS = os.environ.get('AUTH_USERS')
 
 
-def checkAuth(cookie):
-    print(f"Is {cookie} equal to {COOKIE}???")
-    if cookie == COOKIE:
-        return True
-    else:
-        return False
-
-
-def noAuthResponse():
-    return prepResponse({'error': 'not authenticated'})
-    # response.headers.add('Access-Control-Allow-Origin', CLIENT_URL_CORS)
-    # response.headers.add('Access-Control-Allow-Credentials', "true")
-    return response
-
-
 def prepResponse(body, code=200, isBase64Encoded="false"):
-    # body = jsonify(data)
-    # response.headers.add('Access-Control-Allow-Origin', '*')
     response = {
         "isBase64Encoded": isBase64Encoded,
         "statusCode": 200,
-        "headers": {"Access-Control-Allow-Origin": CLIENT_URL_CORS, 'Access-Control-Allow-Credentials': "true"},
+        "headers": { "Access-Control-Allow-Origin": CLIENT_URL_CORS, 'Access-Control-Allow-Credentials': "true" },
         "body": body
     }
-    # response.headers.add('Access-Control-Allow-Origin', CLIENT_URL_CORS)
-    # response.headers.add('Access-Control-Allow-Credentials', "true")
     return response
-
 
 @app.route('/test')
 def test():
     return prepResponse("{'response': 'hello world!!!'}")
-
-
-@app.route('/login', methods=['GET'])
-def initialLogin():
-    submittedCode = request.args.get("code")
-    print(submittedCode)
-
-    if request.args.get("check") != "":
-        response = jsonify({'cookie': 'pshhh you thought :/'})
-        response.headers.add('Access-Control-Allow-Origin', FRONT_URL)
-        return response
-
-    print(AUTH_USERS)
-    try:
-        authorizedUsers = json.loads(AUTH_USERS)
-    except Exception as e:
-        print(e)
-        return prepResponse({'cookie': 'pshhh you thought :/'}, 401)
-    if submittedCode in authorizedUsers:
-        global activeUser
-        activeUser = authorizedUsers[submittedCode]
-        print(f"{authorizedUsers[submittedCode]} is trying to access the site with approved code {submittedCode}")
-
-        response = prepResponse({'cookie': COOKIE})
-        # response.set_cookie("Bonus cookie", "crunch crunch")
-        return response
-
-    return prepResponse({'cookie': 'pshhh you thought :/'}, 401)
-
 
 # --------------------------
 
 
 @app.route('/get-box-url', methods=['GET'])
 def getBoxUrl():
-    # if not checkAuth(request.cookies.get("Token")):
-    #    return noAuthResponse(), 401
 
     oauth = OAuth2(
         client_id=BOX_CLIENT_ID,
@@ -179,12 +131,10 @@ def oauth_callback():
 
 @app.route('/get-ally-link', methods=['POST'])
 def getAllyLink():
-    print("In get ally link")
-    # if not checkAuth(request.cookies.get("Token")):
-    #    return noAuthResponse(), 401
 
     requestInfo = json.loads(request.data)
-    print("The request info is " + requestInfo)
+    print(requestInfo)
+    print("The request info is " + str(requestInfo))
 
     allyClientId = requestInfo["clientId"]
     allyConsumKey = requestInfo["consumKey"]
@@ -214,11 +164,7 @@ def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
 
 @app.route('/process-ally-file', methods=['POST'])
 def processAllyFile():
-    # if not checkAuth(request.cookies.get("Token")):
-    #    return noAuthResponse(), 401
-
     print(request.files)
-
     try:
         for file in request.files.getlist('files'):
             if file and file.filename.split('.')[-1].lower() in ALLOWED_EXTENSIONS:
@@ -239,9 +185,6 @@ def processAllyFile():
 
 @app.route('/update', methods=['POST'])
 def updating():
-    # if not checkAuth(request.cookies.get("Token")):
-    #    return noAuthResponse(), 401
-
     requestInfo = json.loads(request.data)
 
     triggerType = requestInfo['trigger-type']
@@ -319,9 +262,6 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
 
 @app.route('/send-bug-email', methods=['POST'])
 def bugReport():
-    # if not checkAuth(request.cookies.get("Token")):
-    #    return noAuthResponse(), 401
-
     print("We are supposed to send an email now!!")
 
     supportedTools = ["QA Update"]
@@ -386,7 +326,6 @@ def sendEmail(message, subject):
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True, host="localhost")
-    # dotenv.load_dotenv(dotenv.find_dotenv())
 
 
 def lambda_handler(event, context):

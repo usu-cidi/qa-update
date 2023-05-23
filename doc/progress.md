@@ -700,6 +700,13 @@ Images in Use
 * The backend seems to be working, now I will start working on connecting it to the frontend
 * Unsure how to pass cookies through the proxy integration into my application
 
+### 5.23.23
+* Removing cookie authentication from this version for simplicity
+* Done with deployment except for the following issue:
+* Encountered issue with Lambda's max timeout of 15 minutes - the actual update can take a couple hours...
+  * Multithreading is not an option: [`Do not make API calls concurrently`](https://developer.monday.com/api-reference/docs/development-best-practices#:~:text=Do%20not%20make%20API%20calls,the%20board%20can%20become%20corrupted.)
+  * 
+
 ### TODO:
 * Deploy
 
@@ -718,6 +725,8 @@ Sometime:
 * Add back fun Ally waiting things
 * Send performance report
 * Report courses that failed to add
+* Authentication
+* Combine steps two and three
 
 
 ## Dependencies:

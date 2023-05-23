@@ -19,7 +19,6 @@ import time
 import random
 
 def getURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
-    #dotenv.load_dotenv(dotenv.find_dotenv())
 
     CONSUMER_KEY = allyConsumKey
     CONSUMER_SECRET = allyConsumSec

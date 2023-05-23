@@ -1,18 +1,19 @@
 <template>
-  <div class="heading-box">
-        <h1>QA Update Automation</h1>
-        <p>Center for Instructional Design and Innovation - USU</p>
-        <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
-        <a href="https://github.com/emmalynnnn/cidi-monday-QA-automation">[Source]</a>
-    </div>
+  <div className="heading-box">
+    <h1>QA Update Automation</h1>
+    <p>Center for Instructional Design and Innovation - USU</p>
+    <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
+    <a href="https://github.com/emmalynnnn/cidi-monday-QA-automation">[Source]</a>
+  </div>
 
-    <br>
+  <br>
 
-  <div class="feature-box blue">
+  <div className="feature-box blue">
     <br>
     <div v-if="updateInProgress">
       <h2>Update in progress...</h2>
-      <p>The Monday Board will be updated automatically using the API. Each row will be given the "Updated" status when the row has been updated.</p>
+      <p>The Monday Board will be updated automatically using the API. Each row will be given the "Updated" status when
+        the row has been updated.</p>
 
       <BigLoading/>
     </div>
@@ -21,20 +22,20 @@
       <h2>Update complete!</h2>
     </div>
 
-    <h2 v-if="error" class="error-message">Error completing update.</h2>
+    <h2 v-if="error" className="error-message">Error completing update.</h2>
 
-    <p v-if="responseMessage">{{responseMessage}}</p>
+    <p v-if="responseMessage">{{ re sponseMessage }}</p>
 
   </div>
 
   <br>
 
-  <a class="btn btn-dark button" href="/">Back &lt;</a>
+  <a className="btn btn-dark button" href="/">Back &lt;</a>
   <p v-if="updateInProgress">(Update process will continue if incomplete!)</p>
 
   <br>
   <p>Something not working right?</p>
-  <a class="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
+  <a className="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
 </template>
 
 <script>
@@ -46,11 +47,12 @@ export default {
   components: {
     BigLoading
   },
-  data () {
+  data() {
     return {
       updateInProgress: true,
       updateComplete: false,
-      SERVER_URL: "http://localhost:8000/",
+      //SERVER_URL: "http://localhost:8000/",
+      SERVER_URL: "https://8mdwy25ju2.execute-api.us-east-2.amazonaws.com/prod/",
       responseMessage: "",
       error: false,
     }
@@ -63,29 +65,40 @@ export default {
     let monBoardId = this.$route.query.monBoardId;
     let crBoxId = this.$route.query.crBoxId;
 
-    let inputData = {"trigger-type": updateType, 'board-id': monBoardId, 'cr-box-id': crBoxId, 'mon-api-key': monAPIKey};
+    let inputData = {
+      "trigger-type": updateType,
+      'board-id': monBoardId,
+      'cr-box-id': crBoxId,
+      'mon-api-key': monAPIKey
+    };
     this.postData(this.SERVER_URL + "update", inputData)
         .then((response) => {
+          response = response.body;
           console.log(response);
           this.updateInProgress = false;
           if (response.updateStatus === "Complete") {
+            console.log("Hello we are complete");
             this.updateComplete = true;
           } else if (response.updateStatus === "Incomplete (error)") {
             this.error = true;
             this.responseMessage = "Please contact your developer by filling out a bug report form below. " +
                 "Include the following message: ";
+          } else if (response.updateStatus !== "Complete") {
+            this.error = true;
+            this.responseMessage = "Please contact your developer by filling out a bug report form below. " +
+                "Include the following message: " + response.updateStatus;
           }
           if (response.result) {
             this.responseMessage += response.result;
           }
-    }).catch(err => {
+        }).catch(err => {
       console.log(err);
       this.responseMessage = "Error, please contact your developer by filling out a bug report form below. " +
           "Include the following message: " + err;
     });
   },
-  methods:{
-    postData(url, data, contentType="application/json", stringify=true) {
+  methods: {
+    postData(url, data, contentType = "application/json", stringify = true) {
       let theBody;
       if (stringify) {
         theBody = JSON.stringify(data);
@@ -97,7 +110,7 @@ export default {
         method: "POST",
         /*mode: "no-cors",*/
         cache: "no-cache",
-        credentials: "include",
+        credentials: "same-origin",
         connection: "keep-alive",
         headers: {
           Accept: 'application.json',

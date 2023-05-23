@@ -1,14 +1,23 @@
-#import dotenv
+# Copyright (C) 2023  Emma Lynn
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, version 3 of the License.
+#
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import os
 from boxsdk import Client, OAuth2
 import pandas as pd
 import io
 
-#dotenv.load_dotenv(dotenv.find_dotenv())
-
-#BOX_CLIENT_ID = process.env.BOX_CLIENT_ID
 BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
-#BOX_SECRET = process.env.BOX_SECRET
 BOX_SECRET = os.environ.get("BOX_SECRET")
 
 def getDataFromBox(fileId, fileType, accessToken):
@@ -19,17 +28,10 @@ def getDataFromBox(fileId, fileType, accessToken):
         access_token=accessToken
     )
     client = Client(auth)
-    # me = client.user().get()
-    # print(f'My user ID is {me.id}')
 
     file_info = client.file(fileId)
-    # print(file_info.get().content())
 
     some_bytes = file_info.get().content()
-
-    #binary_file = open("my_file.csv", "wb")
-    #binary_file.write(some_bytes)
-    #binary_file.close()
 
     toread = io.BytesIO()
     toread.write(some_bytes)  # pass your `decrypted` string as the argument here

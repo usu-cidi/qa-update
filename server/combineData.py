@@ -15,8 +15,6 @@
 import pandas as pd
 from time import time
 import sys
-
-
 def combineReports(courseDataFrame, allyDataFrame):
 
     allyDict = {}
@@ -41,22 +39,3 @@ def combineReports(courseDataFrame, allyDataFrame):
             print(f"Error in {courseNames[i]}: {e}")
 
     return courseDataFrame
-
-
-if __name__ == "__main__":
-    print("Combining the course report with the Ally report...")
-
-    COURSE_REPORT_FILENAME = "course-report.xlsx"
-    ALLY_FILENAME = "courses.csv"
-    beginTime = time()
-
-    meghanDataObj = pd.read_excel(COURSE_REPORT_FILENAME)
-    meghanData = pd.DataFrame(meghanDataObj)
-
-    allyDataObj = pd.read_csv(ALLY_FILENAME)
-    allyData = pd.DataFrame(allyDataObj)
-
-    completeReport = combineReports(meghanData, allyData)
-    print(completeReport.to_string())
-
-    print(f"\nDone in {time() - beginTime:.3f} seconds!", file=sys.stderr)
