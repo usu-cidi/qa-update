@@ -271,13 +271,13 @@ def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey):
 
     response = botoClient.invoke(
         FunctionName='arn:aws:lambda:us-east-2:218287806266:function:QAAutomationBackendContinued',
-        InvocationType='RequestResponse',
+        InvocationType='Event',
         Payload=json.dumps(inputParams)
     )
 
-    responseFromChild = json.load(response['Payload'])
+    # responseFromChild = json.load(response['Payload'])
 
-    toReturn = f"We tried to send it!! {str(responseFromChild)}"
+    toReturn = f"We tried to send it!!"
     return toReturn
 
 

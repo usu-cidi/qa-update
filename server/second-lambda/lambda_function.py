@@ -5,6 +5,7 @@ from email.message import EmailMessage
 from datetime import datetime
 import pandas as pd
 import requests
+import boto3
 
 from updateMonday import simulateUpdate, doOneUpdate
 
@@ -42,8 +43,27 @@ def lambda_handler(event, context):
 
     failsafe = 0
     while not completeReport.empty:
-
+        if failsafe >= 10:
+            return
         # check if we're almost out of time, if we are and we're not done, pass stuff to next one
+        if context.get_remaining_time_in_millis() < 4000:  # <- 4 seconds
+            # if context.get_remaining_time_in_millis() < 10000: <- 10 seconds
+            if completeReport.empty:
+                return
+                print("BAD BAD BAD BAD DELETE IT DELETE IT BAD")
+            reportToSend = completeReport.to_json(orient='index')
+            dataToPass = {
+                "triggerType": triggerType,
+                "completeReport": reportToSend,
+                "boardId": boardId,
+                "mondayAPIKey": mondayAPIKey,
+                "recipient": recipient,
+                "numNew": numNew,
+                "numUpdated": numUpdated
+            }
+            make_recursive_call(event, context, dataToPass)
+            return
+            print("We should not be here....")
 
         completeReport = simulateUpdate(completeReport)
         # result = doOneUpdate(completeReport, boardId, mondayAPIKey, currBoard)
@@ -53,14 +73,10 @@ def lambda_handler(event, context):
 
         # print(failsafe)
         if failsafe >= 10:
-            return {'status': 'failed'}
+            return
         failsafe += 1;
 
     composeEmail(triggerType, completeReport, boardId, mondayAPIKey, recipient)
-
-    return {
-        'status': 'successful! thank youuu'
-    }
 
     # if triggerType == "new":
     #    results = fillNewBoard(completeReport, boardId, mondayAPIKey)
@@ -69,7 +85,18 @@ def lambda_handler(event, context):
     # return f"Added {results[0]} new rows and audited {results[1]} existing rows."
 
 
+def make_recursive_call(event, context, theData):
+    print("Making a recursive call...")
+    botoClient = boto3.client('lambda')
+    botoClient.invoke(
+        FunctionName='arn:aws:lambda:us-east-2:218287806266:function:QAAutomationBackendContinued',
+        InvocationType='Event',
+        Payload=json.dumps(theData)
+    )
+
+
 def composeEmail(triggerType, completeReport, boardId, mondayAPIKey, recipient):
+    print("Time to send an email...")
     msg = "Hello! We are sending an email from the child lambda!\nGuess what we know!!\n"
     msg += f"{triggerType}\n{completeReport}\n{boardId}\n{mondayAPIKey}"
 

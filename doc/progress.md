@@ -727,16 +727,15 @@ Images in Use
   * Add timeout watchdog function
   * Add code to TERMINATE EXECUTION if done, recursively call function and kill self if not done before timeout
     * If done, send completion email
+* I have implemented the steps, it seems to be working except that I got three confirmation emails (one for each function invocation)
+which is sus... but I don't think we have a runaway lambda which is good
+  * Well the second time I did it, I only got one email.... so idk what that's about
+* It seems like it's working - I'll need to do more testing tomorrow and clean up a few things but it seems like it's fine
 
 ### TODO:
 * Deploy
 * Test running things at the same time
-
-Next:
-* Ask about adding new columns to main board
-
-Sometime:
-* Fix the hard coded index problem while getting column values?
+* Box url lag
 
 
 ### Next Version:
@@ -870,7 +869,9 @@ Sometime:
 * awsgi: https://spiegelmock.com/2018/09/06/serverless-python-web-applications-with-aws-lambda-and-flask/
   * https://github.com/slank/awsgi
 * Environment vars: https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html
-* Numpy/Pandas import problems
+* Invoking a lambda from another lambda: https://www.sqlshack.com/calling-an-aws-lambda-function-from-another-lambda-function/#:~:text=In%20order%20to%20allow%20the,role%20to%20the%20lambda%20function
+* Recursive lambda functions: https://medium.com/inspiredbrilliance/aws-lambda-long-running-functions-using-tail-recursion-6f5b59133a94
+* Long-running serverless functions: https://medium.com/@vsaravind007/implementing-long-running-serverless-functions-with-aws-lambda-fe06d97120b2
 * 
 
 ### Misc
