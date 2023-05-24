@@ -23,6 +23,9 @@ from email.message import EmailMessage
 from datetime import datetime
 
 import awsgi
+import boto3
+
+botoClient = boto3.client('lambda')
 
 from talkToBox import getDataFromBox
 from combineData import combineReports
@@ -63,21 +66,22 @@ def prepResponse(body, code=200, isBase64Encoded="false"):
     response = {
         "isBase64Encoded": isBase64Encoded,
         "statusCode": 200,
-        "headers": { "Access-Control-Allow-Origin": CLIENT_URL_CORS, 'Access-Control-Allow-Credentials': "true" },
+        "headers": {"Access-Control-Allow-Origin": CLIENT_URL_CORS, 'Access-Control-Allow-Credentials': "true"},
         "body": body
     }
     return response
 
+
 @app.route('/test')
 def test():
     return prepResponse("{'response': 'hello world!!!'}")
+
 
 # --------------------------
 
 
 @app.route('/get-box-url', methods=['GET'])
 def getBoxUrl():
-
     oauth = OAuth2(
         client_id=BOX_CLIENT_ID,
         client_secret=BOX_SECRET,
@@ -131,7 +135,6 @@ def oauth_callback():
 
 @app.route('/get-ally-link', methods=['POST'])
 def getAllyLink():
-
     requestInfo = json.loads(request.data)
     print(requestInfo)
     print("The request info is " + str(requestInfo))
@@ -227,7 +230,7 @@ def updating():
     accessTokVal = accessToken
 
     result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTokVal)
-    if result.startswith("Exception"):
+    if result == None or result.startswith("Exception"):
         return prepResponse({"updateStatus": "Incomplete (error)", "result": result}), 500
     return prepResponse({"updateStatus": "Complete", "result": result}), 200
 
@@ -245,16 +248,37 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
         print(e)
         return f"Exception combining reports. {e}"
 
-    try:
-        if triggerType == "new":
-            results = fillNewBoard(completeReport, boardId, mondayAPIKey)
-            return f"Added {results} new rows."
+    # completeReport = "pretending this is the complete report"
 
-        results = updateExistingBoard(completeReport, boardId, mondayAPIKey)
-        return f"Added {results[0]} new rows and audited {results[1]} existing rows."
+    try:
+        return doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey)
     except Exception as e:
         print(e)
         return f"Exception updating monday. {e}"
+
+
+def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey):
+    reportToSend = completeReport.to_json(orient='index')
+    inputParams = {
+        "triggerType": triggerType,
+        "completeReport": reportToSend,
+        "boardId": boardId,
+        "mondayAPIKey": mondayAPIKey,
+        "recipient": DEV_EMAIL,
+        "numNew": 0,
+        "numUpdated": 0
+    }
+
+    response = botoClient.invoke(
+        FunctionName='arn:aws:lambda:us-east-2:218287806266:function:QAAutomationBackendContinued',
+        InvocationType='RequestResponse',
+        Payload=json.dumps(inputParams)
+    )
+
+    responseFromChild = json.load(response['Payload'])
+
+    toReturn = f"We tried to send it!! {str(responseFromChild)}"
+    return toReturn
 
 
 # --------------------------

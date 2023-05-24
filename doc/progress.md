@@ -705,10 +705,32 @@ Images in Use
 * Done with deployment except for the following issue:
 * Encountered issue with Lambda's max timeout of 15 minutes - the actual update can take a couple hours...
   * Multithreading is not an option: [`Do not make API calls concurrently`](https://developer.monday.com/api-reference/docs/development-best-practices#:~:text=Do%20not%20make%20API%20calls,the%20board%20can%20become%20corrupted.)
-  * 
+
+### 5.24.23
+* Idea:
+  * Combine sheets and get dataframe that monday is updated with in original lambda
+  * When that is complete send response to client saying that part of the process is 
+  complete and that you will get an email update when the process is done
+    * So we'll have to add a section where the email is asked for
+  * Send the dataframe, monday api key, update type, and email to a second lambda function
+  * The second lambda will update monday, removing rows from the dataframe as it goes until it is out of rows to update
+    * When it is about to run out of time if there is more to do, it will call itself again with the shorter 
+    dataframe and then kill itself to prevent too many concurrent executions
+* Steps to try and implements
+  * Commit everything to git to save progress
+  * Try to get our first lambda calling the other one
+  * Send relevant data to second lambda
+  * Get sending completion email working from second lambda
+  * Change timeout to a really short time so that we can simulate running out of time with our small sample
+  * Edit update monday code to do rows one at a time
+  * Add code to remove row from dataframe after update is complete
+  * Add timeout watchdog function
+  * Add code to TERMINATE EXECUTION if done, recursively call function and kill self if not done before timeout
+    * If done, send completion email
 
 ### TODO:
 * Deploy
+* Test running things at the same time
 
 Next:
 * Ask about adding new columns to main board
@@ -721,7 +743,6 @@ Sometime:
 * Stop update button
 * Always need more security
 * Decide about adding Ally time stamp back
-* Better progress bar 
 * Add back fun Ally waiting things
 * Send performance report
 * Report courses that failed to add
