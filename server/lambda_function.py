@@ -194,6 +194,7 @@ def updating():
     boardId = requestInfo['board-id']
     crBoxId = requestInfo['cr-box-id']
     mondayAPIKey = requestInfo['mon-api-key']
+    email = requestInfo['email']
 
     error = False
     errorMessage = ""
@@ -204,7 +205,7 @@ def updating():
 
     print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
 
-    if triggerType == "" or not boardId or not crBoxId or not mondayAPIKey:
+    if triggerType == "" or not boardId or not crBoxId or not mondayAPIKey or not email:
         errorMessage += 'All fields are required! '
         error = True
     else:
@@ -229,13 +230,13 @@ def updating():
     allyData = allyDataFrame
     accessTokVal = accessToken
 
-    result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTokVal)
+    result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTokVal, email)
     if result == None or result.startswith("Exception"):
         return prepResponse({"updateStatus": "Incomplete (error)", "result": result}), 500
-    return prepResponse({"updateStatus": "Complete", "result": result}), 200
+    return prepResponse({"updateStatus": "Successfully initiated", "result": result}), 200
 
 
-def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
+def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok, email):
     try:
         courseReportData = getDataFromBox(crBoxId, 'excel', accessTok)
     except Exception as e:
@@ -248,25 +249,24 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok):
         print(e)
         return f"Exception combining reports. {e}"
 
-    # completeReport = "pretending this is the complete report"
-
     try:
-        return doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey)
+        return doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email)
     except Exception as e:
         print(e)
         return f"Exception updating monday. {e}"
 
 
-def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey):
+def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email):
     reportToSend = completeReport.to_json(orient='index')
     inputParams = {
         "triggerType": triggerType,
         "completeReport": reportToSend,
         "boardId": boardId,
         "mondayAPIKey": mondayAPIKey,
-        "recipient": DEV_EMAIL,
+        "recipient": DEV_EMAIL,  # email,
         "numNew": 0,
-        "numUpdated": 0
+        "numUpdated": 0,
+        "lambdaCycles": 0,
     }
 
     response = botoClient.invoke(
@@ -277,7 +277,7 @@ def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey):
 
     # responseFromChild = json.load(response['Payload'])
 
-    toReturn = f"We tried to send it!!"
+    toReturn = f"Data blended and monday update successfully initiated."
     return toReturn
 
 

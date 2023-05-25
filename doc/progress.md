@@ -732,10 +732,25 @@ which is sus... but I don't think we have a runaway lambda which is good
   * Well the second time I did it, I only got one email.... so idk what that's about
 * It seems like it's working - I'll need to do more testing tomorrow and clean up a few things but it seems like it's fine
 
+### 5.25.23
+* Added email field
+* Fixed box link lag issue
+* It seems to be working except that sometimes it does things too many times... :(
+  * Sooo that's weird
+  * Very strange- it seems like the duplicate is triggered on the last invocation (which may not be the last invocation of the duplicate cause it has to handle the duplicates on the monday board)
+  * It doesn't mess up the monday board cause it checks to see what's been added in the meantime but it will send two completion emails
+  * Okay it looks like this was because 4 second wasn't fast enough to finish execution (send the email) so since the invocation was async
+  it just tried again after the hard timeout - which explains the two emails, and only on the last one
+  * To be a little safer, I'll increase the timeout buffer to 15 seconds
+* Not enough time to do a full test today now, I'll do that next week as well as testing trying to do two updates at the same time
+* Added exception handling in second lambda
+
+
 ### TODO:
 * Deploy
-* Test running things at the same time
-* Box url lag
+  * Test running things at the same time
+  * Test full update
+  * Change email field to use the input field
 
 
 ### Next Version:

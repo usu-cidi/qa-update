@@ -13,76 +13,73 @@ DEV_EMAIL = os.environ.get("DEV_EMAIL")
 EMAIL_PASS = os.environ.get("EMAIL_PASS")
 API_URL = "https://api.monday.com/v2"
 
+TIMEOUT = 15000  # <- 15 seconds
+
 
 def lambda_handler(event, context):
-    triggerType = event["triggerType"]
-    encodedCompleteReport = event["completeReport"]
-    boardId = event["boardId"]
-    mondayAPIKey = event["mondayAPIKey"]
-    recipient = event["recipient"]
-    numNew = event["numNew"]
-    numUpdated = event["numUpdated"]
+    try:
+        triggerType = event["triggerType"]
+        encodedCompleteReport = event["completeReport"]
+        boardId = event["boardId"]
+        mondayAPIKey = event["mondayAPIKey"]
+        recipient = event["recipient"]
+        numNew = event["numNew"]
+        numUpdated = event["numUpdated"]
+        lambdaCycles = event["lambdaCycles"]
 
-    completeReport = pd.read_json(encodedCompleteReport, orient='index')
+        lambdaCycles += 1;
 
-    print(f"Invoking with {len(completeReport.index)} rows left.")
-    print(f"{triggerType}, {completeReport}, {boardId}, {mondayAPIKey}, {recipient}");
+        completeReport = pd.read_json(encodedCompleteReport, orient='index')
 
-    currBoard = {}
+        print(f"Invoking ({lambdaCycles}) with {len(completeReport.index)} rows left.")
 
-    # if triggerType == "update":
-    #    HEADERS = {"Authorization": mondayAPIKey}
-    #    getIdsQuery = f'{{ boards(ids:{boardId}) {{ name items {{ name id }} }} }}'
-    #    data = {'query': getIdsQuery}
+        currBoard = {}
 
-    #    r = requests.post(url=API_URL, json=data, headers=HEADERS)
-    #    jsonObj = json.loads(r.content)
+        if triggerType == "update":
+            HEADERS = {"Authorization": mondayAPIKey}
+            getIdsQuery = f'{{ boards(ids:{boardId}) {{ name items {{ name id }} }} }}'
+            data = {'query': getIdsQuery}
 
-    #    for theRow in jsonObj["data"]["boards"][0]["items"]:
-    #        currBoard[theRow["name"]] = theRow["id"]
+            r = requests.post(url=API_URL, json=data, headers=HEADERS)
+            jsonObj = json.loads(r.content)
 
-    failsafe = 0
-    while not completeReport.empty:
-        if failsafe >= 10:
-            return
-        # check if we're almost out of time, if we are and we're not done, pass stuff to next one
-        if context.get_remaining_time_in_millis() < 4000:  # <- 4 seconds
-            # if context.get_remaining_time_in_millis() < 10000: <- 10 seconds
-            if completeReport.empty:
+            for theRow in jsonObj["data"]["boards"][0]["items"]:
+                currBoard[theRow["name"]] = theRow["id"]
+
+        failsafe = 0
+        while not completeReport.empty:
+            # if failsafe >= 10:
+            #    return
+            # check if we're almost out of time, if we are and we're not done, pass stuff to next one
+            if context.get_remaining_time_in_millis() <= TIMEOUT:
+                if completeReport.empty:
+                    return
+                    print("BAD BAD BAD BAD DELETE IT DELETE IT BAD")
+                reportToSend = completeReport.to_json(orient='index')
+                dataToPass = {
+                    "triggerType": triggerType,
+                    "completeReport": reportToSend,
+                    "boardId": boardId,
+                    "mondayAPIKey": mondayAPIKey,
+                    "recipient": recipient,
+                    "numNew": numNew,
+                    "numUpdated": numUpdated,
+                    "lambdaCycles": lambdaCycles
+                }
+                make_recursive_call(event, context, dataToPass)
                 return
-                print("BAD BAD BAD BAD DELETE IT DELETE IT BAD")
-            reportToSend = completeReport.to_json(orient='index')
-            dataToPass = {
-                "triggerType": triggerType,
-                "completeReport": reportToSend,
-                "boardId": boardId,
-                "mondayAPIKey": mondayAPIKey,
-                "recipient": recipient,
-                "numNew": numNew,
-                "numUpdated": numUpdated
-            }
-            make_recursive_call(event, context, dataToPass)
-            return
-            print("We should not be here....")
+                print("We should not be here....")
 
-        completeReport = simulateUpdate(completeReport)
-        # result = doOneUpdate(completeReport, boardId, mondayAPIKey, currBoard)
-        # completeReport = result[0]
-        # numUpdated += result[1]
-        # numNew += result[2]
+            # completeReport = simulateUpdate(completeReport)
+            result = doOneUpdate(completeReport, boardId, mondayAPIKey, currBoard)
+            completeReport = result[0]
+            numUpdated += result[1]
+            numNew += result[2]
 
-        # print(failsafe)
-        if failsafe >= 10:
-            return
-        failsafe += 1;
-
-    composeEmail(triggerType, completeReport, boardId, mondayAPIKey, recipient)
-
-    # if triggerType == "new":
-    #    results = fillNewBoard(completeReport, boardId, mondayAPIKey)
-    #    return f"Added {results} new rows."
-    # results = updateExistingBoard(completeReport, boardId, mondayAPIKey)
-    # return f"Added {results[0]} new rows and audited {results[1]} existing rows."
+        composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles)
+    except Exception as e:
+        print(e.message)
+        composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, e)
 
 
 def make_recursive_call(event, context, theData):
@@ -95,12 +92,36 @@ def make_recursive_call(event, context, theData):
     )
 
 
-def composeEmail(triggerType, completeReport, boardId, mondayAPIKey, recipient):
-    print("Time to send an email...")
-    msg = "Hello! We are sending an email from the child lambda!\nGuess what we know!!\n"
-    msg += f"{triggerType}\n{completeReport}\n{boardId}\n{mondayAPIKey}"
+def composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles):
+    print("Time to send an email")
+    sub = f"QA Update Completion {datetime.now()}"
 
-    sendEmail(msg, "Test From Child", recipient)
+    msg = f"You initiated an update (type: {triggerType}) of "
+    msg += f"the QA board with the following id: {boardId}. "
+    msg += f"The update is now complete after {lambdaCycles} lambda cycles.\n\n"
+    msg += f"As a result of the update:\n {numNew} new rows were added"
+    msg += f"\n {numUpdated} existing rows were audited and updated if needed\n\n"
+    msg += "Thanks for updating the QA board!\n\n"
+    msg += "(Something not working as expected? Fill out a bug report here: https://master.d3kepc58nvsh8n.amplifyapp.com/bug-report)"
+
+    sendEmail(msg, sub, recipient)
+
+
+def composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, err):
+    print("Time to send an error email")
+    sub = f"QA Update Completion {datetime.now()}"
+
+    msg = f"You initiated an update (type: {triggerType}) of "
+    msg += f"the QA board with the following id: {boardId}. "
+
+    msg += f"The update failed for the following reason: {err.message}.\n"
+    msg += f"Please fill out a bug report form and include the text of this message: https://master.d3kepc58nvsh8n.amplifyapp.com/bug-report\n"
+
+    msg += f"{lambdaCycles} lambda cycles; {numNew} attempted new rows; {numUpdated} attempted updated rows;\n\n"
+
+    msg += f"Full stack trace: {err}."
+
+    sendEmail(msg, sub, recipient)
 
 
 def sendEmail(message, subject, recipient):
