@@ -745,12 +745,22 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Not enough time to do a full test today now, I'll do that next week as well as testing trying to do two updates at the same time
 * Added exception handling in second lambda
 
+### 5.30.23
+* Fixed a gateway timeout issue while getting the ally link
+* Tried to do full test, ran into lambda invocation data transfer limit
+  * So I had to change it so that the data frame is sent to S3 instead of being sent a parameter
+  * Which is fine- but now I don't have time for the full test again.... sooo I guess that's moving to tomorrow
+* Started writing some more docs
 
 ### TODO:
 * Deploy
   * Test running things at the same time
   * Test full update
+  * Re-enable email forwarding
   * Change email field to use the input field
+  * Finish writing docs
+  * Update `cidi-docs`
+  * Show Jenn
 
 
 ### Next Version:
@@ -887,6 +897,8 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Invoking a lambda from another lambda: https://www.sqlshack.com/calling-an-aws-lambda-function-from-another-lambda-function/#:~:text=In%20order%20to%20allow%20the,role%20to%20the%20lambda%20function
 * Recursive lambda functions: https://medium.com/inspiredbrilliance/aws-lambda-long-running-functions-using-tail-recursion-6f5b59133a94
 * Long-running serverless functions: https://medium.com/@vsaravind007/implementing-long-running-serverless-functions-with-aws-lambda-fe06d97120b2
+* S3 objects: https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingObjects.html
+* Writing to S3 from lambda: https://stackoverflow.com/questions/48945389/how-could-i-use-aws-lambda-to-write-file-to-s3-python
 * 
 
 ### Misc

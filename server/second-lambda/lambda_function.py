@@ -12,14 +12,16 @@ from updateMonday import simulateUpdate, doOneUpdate
 DEV_EMAIL = os.environ.get("DEV_EMAIL")
 EMAIL_PASS = os.environ.get("EMAIL_PASS")
 API_URL = "https://api.monday.com/v2"
+S3_BUCKET = 'qa-update-data-bucket'
+FILE_NAME = "qa-update-data.txt"
 
-TIMEOUT = 15000  # <- 15 seconds
+TIMEOUT = 30000  # <- 30 seconds
 
 
 def lambda_handler(event, context):
     try:
         triggerType = event["triggerType"]
-        encodedCompleteReport = event["completeReport"]
+        objKey = event["completeReportName"]
         boardId = event["boardId"]
         mondayAPIKey = event["mondayAPIKey"]
         recipient = event["recipient"]
@@ -29,7 +31,11 @@ def lambda_handler(event, context):
 
         lambdaCycles += 1;
 
-        completeReport = pd.read_json(encodedCompleteReport, orient='index')
+        # completeReport = pd.read_json(encodedCompleteReport, orient='index')
+        s3_client = boto3.client("s3")
+        encoded_file_content = s3_client.get_object(Bucket=S3_BUCKET, Key=objKey)["Body"].read()
+        fileContent = encoded_file_content.decode("utf-8")
+        completeReport = pd.read_json(fileContent, orient='index')
 
         print(f"Invoking ({lambdaCycles}) with {len(completeReport.index)} rows left.")
 
@@ -55,10 +61,22 @@ def lambda_handler(event, context):
                 if completeReport.empty:
                     return
                     print("BAD BAD BAD BAD DELETE IT DELETE IT BAD")
-                reportToSend = completeReport.to_json(orient='index')
+
+                string = completeReport.to_json(orient='index')
+                encoded_string = string.encode("utf-8")
+
+                s3_path = "" + FILE_NAME
+
+                s3 = boto3.resource("s3")
+                s3Response = s3.Bucket(S3_BUCKET).put_object(Key=s3_path, Body=encoded_string)
+                # print(s3Response)
+                print(s3Response.key)
+                key = s3Response.key
+
+                # reportToSend = completeReport.to_json(orient='index')
                 dataToPass = {
                     "triggerType": triggerType,
-                    "completeReport": reportToSend,
+                    "completeReportName": key,
                     "boardId": boardId,
                     "mondayAPIKey": mondayAPIKey,
                     "recipient": recipient,
@@ -78,7 +96,7 @@ def lambda_handler(event, context):
 
         composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles)
     except Exception as e:
-        print(e.message)
+        print(e)
         composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, e)
 
 
@@ -109,17 +127,15 @@ def composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycl
 
 def composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, err):
     print("Time to send an error email")
-    sub = f"QA Update Completion {datetime.now()}"
+    sub = f"QA Update Error {datetime.now()}"
 
     msg = f"You initiated an update (type: {triggerType}) of "
     msg += f"the QA board with the following id: {boardId}. "
 
-    msg += f"The update failed for the following reason: {err.message}.\n"
+    msg += f"The update failed for the following reason: {err}.\n"
     msg += f"Please fill out a bug report form and include the text of this message: https://master.d3kepc58nvsh8n.amplifyapp.com/bug-report\n"
 
     msg += f"{lambdaCycles} lambda cycles; {numNew} attempted new rows; {numUpdated} attempted updated rows;\n\n"
-
-    msg += f"Full stack trace: {err}."
 
     sendEmail(msg, sub, recipient)
 

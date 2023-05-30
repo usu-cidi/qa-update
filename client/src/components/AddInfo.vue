@@ -264,9 +264,32 @@ export default {
             }
           }).catch(err => {
         console.log(err);
-        this.linkLoading = false;
-        this.error1 = "Operation failed. Please check your authentication and other inputs and try again. " +
-            "If the issue persists, contact your system admin.";
+        this.tryLinkAgain(inputData, 0);
+      });
+    },
+    tryLinkAgain(inputData, invocationCount) {
+      this.postData(this.SERVER_URL + "get-ally-link", inputData)
+          .then((data) => {
+            console.log(data);
+            data = data.body;
+            console.log(data);
+            if (data.error !== undefined) {
+              this.error1 = "Operation failed. Please check your authentication and other inputs and try again. " +
+                  "If the issue persists, contact your system admin.";
+              this.linkLoading = false;
+            } else {
+              this.linkLoading = false;
+              this.link = data.link;
+            }
+          }).catch(err => {
+        console.log(err);
+        if (invocationCount > 10) {
+          this.linkLoading = false;
+          this.error1 = "Operation failed. Please check your authentication and other inputs and try again. " +
+              "If the issue persists, contact your system admin.";
+        } else {
+          this.tryLinkAgain(inputData, invocationCount + 1);
+        }
       });
     },
     postData(url, data, contentType="application/json", stringify=true) {

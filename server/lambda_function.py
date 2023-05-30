@@ -22,6 +22,8 @@ import smtplib, ssl
 from email.message import EmailMessage
 from datetime import datetime
 
+from io import BytesIO
+
 import awsgi
 import boto3
 
@@ -257,10 +259,24 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok, e
 
 
 def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email):
-    reportToSend = completeReport.to_json(orient='index')
+    # string = completeReport.to_string()
+    string = completeReport.to_json(orient='index')
+    encoded_string = string.encode("utf-8")
+
+    bucket_name = "qa-update-data-bucket"
+    file_name = "qa-update-data.txt"
+    s3_path = "" + file_name
+
+    s3 = boto3.resource("s3")
+    s3Response = s3.Bucket(bucket_name).put_object(Key=s3_path, Body=encoded_string)
+    print(s3Response)
+    print(s3Response.key)
+    key = s3Response.key
+
+    # reportToSend = completeReport.to_json(orient='index')
     inputParams = {
         "triggerType": triggerType,
-        "completeReport": reportToSend,
+        "completeReportName": key,
         "boardId": boardId,
         "mondayAPIKey": mondayAPIKey,
         "recipient": DEV_EMAIL,  # email,
@@ -277,7 +293,7 @@ def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email):
 
     # responseFromChild = json.load(response['Payload'])
 
-    toReturn = f"Data blended and monday update successfully initiated."
+    toReturn = f"Uploaded data has been blended and the monday update has been successfully initiated."
     return toReturn
 
 

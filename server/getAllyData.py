@@ -26,11 +26,11 @@ def getURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
     TERM_CODE = termCode
 
     t = time.localtime()
-    currentTime = time.strftime("%Y-%m-%d-%H-%M", t)
+    #currentTime = time.strftime("%Y-%m-%d-%H-%M", t)
     beginTime = time.time()
 
     test = OAuth1Session(CONSUMER_KEY, client_secret=CONSUMER_SECRET)
-    url = f'https://prod.ally.ac/api/v1/{CLIENT_ID}/reports/terms/{TERM_CODE}/csv?role=administrator&userId=1'#  &token={currentTime}'
+    url = f'https://prod.ally.ac/api/v1/{CLIENT_ID}/reports/terms/{TERM_CODE}/csv?role=administrator&userId=1' #&token={currentTime}'
     r = test.get(url)
 
     if (r.content == b'The supplied authentication is invalid'):
