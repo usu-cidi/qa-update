@@ -35,7 +35,7 @@ and `terms.csv`. Upload `courses.csv` in step 2 and click the `Upload` button. Y
 
 <img src="./doc/mon-ex.png">
 
-* Enter the Box file ID for the most recent Course Summary file from the Canvas Data Reports (found in the url). 
+* Enter the [Box file ID](https://developer.box.com/reference/get-files-id/#:~:text=The%20ID%20for%20any%20file,123%20the%20file_id%20is%20123%20) for the most recent Course Summary file from the Canvas Data Reports (found in the url). 
 
 <img src="./doc/box-ex.png">
 
@@ -59,7 +59,9 @@ Note: currently, only one update can be run at a time. This functionality will b
 ## Prepping a New QA Board
 When a new QA Board has been created and needs to be populated with data, follow these steps to prep the board.
 * Add the following automations to the board:
+
 <img src="./doc/automations.png">
+
 * If the columns `Update status` and `Last updated` do not already exist, add them to the end of the columns of the main board and hide them from the `QA View`.
 * Let the developer in charge of maintenance on this tool (currently Emma Lynn - a02391851@usu.edu) that a new term needs to be opened.
 * When you are notified that support for the new board has been added, select `Fill in new board` when updating the board using the tool.
