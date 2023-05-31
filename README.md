@@ -11,6 +11,10 @@ This repository contains a script that will:
 
 _Note: This program has only been tested on Macs up to this point. If you want to use this on another OS, you are welcome to try it and if there are issues please follow the Bug Report instructions at the bottom of this page to indicate your interest in better support for other Operating Systems._
 
+## THIS VERSION HAS BEEN DEPRECATED
+Please switch to the `main` branch and use this tool via the web application. Thank you.
+
+
 ## Start here!
 In these instructions, I will walk you through the process of running this program.
 We will be running the program using the Command Line. When I give you a command to run, it will look like this:
