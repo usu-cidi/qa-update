@@ -32,9 +32,13 @@ and `terms.csv`. Upload `courses.csv` in step 2 and click the `Upload` button. Y
 * Enter your [API key for monday.com](https://support.monday.com/hc/en-us/articles/360005144659-Does-monday-com-have-an-API-#h_01EZ9M2KTTMA4ZJERGFQDYM4WR).
 * Select `Update existing board` if you are updating a board that already exists (mid-semester). Select `Fill in new board` if you are filling in a completely blank board at the beginning of a semester.
 * Enter the [board id](https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s) for the monday.com board you're updating (found in the url).
+
 <img src="./doc/mon-ex.png">
+
 * Enter the Box file ID for the most recent Course Summary file from the Canvas Data Reports (found in the url). 
+
 <img src="./doc/box-ex.png">
+
 * Enter your email. A completion report will be sent to you once the update is complete.
 * Click `Submit`. Note that the update cannot be stopped once it is initiated.
 * The update will begin. The monday board will be automatically updated using the API. You will
