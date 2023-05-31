@@ -21,6 +21,7 @@ import pandas as pd
 import smtplib, ssl
 from email.message import EmailMessage
 from datetime import datetime
+# from threading import Thread
 
 from io import BytesIO
 
@@ -42,6 +43,7 @@ app.config['SECRET_KEY'] = os.environ.get('CSRF')
 link = "inactive"
 status = "inactive"
 allyDataFrame = None
+updateStarted = False
 
 accessToken = ""
 boxCSRF = ""
@@ -232,6 +234,9 @@ def updating():
     allyData = allyDataFrame
     accessTokVal = accessToken
 
+    # t1 = Thread(target=doUpdate, args=(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTokVal, email))
+    # t1.start()
+
     result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTokVal, email)
     if result == None or result.startswith("Exception"):
         return prepResponse({"updateStatus": "Incomplete (error)", "result": result}), 500
@@ -239,27 +244,33 @@ def updating():
 
 
 def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok, email):
+    print("doing the update")
     try:
+        print("getting box data")
         courseReportData = getDataFromBox(crBoxId, 'excel', accessTok)
     except Exception as e:
-        print(e)
+        print(f"Exception getting box data. {e}")
         return f"Exception getting box data. {e}"
 
     try:
+        print("combining reports")
         completeReport = combineReports(courseReportData, allyData)
     except Exception as e:
-        print(e)
+        print(f"Exception combining reports. {e}")
         return f"Exception combining reports. {e}"
 
     try:
+        print("doing the long update")
+        # doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email)
         return doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email)
     except Exception as e:
-        print(e)
+        print(f"Exception updating monday. {e}")
         return f"Exception updating monday. {e}"
 
 
 def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email):
     # string = completeReport.to_string()
+    print("adding dataframe to s3")
     string = completeReport.to_json(orient='index')
     encoded_string = string.encode("utf-8")
 
@@ -279,12 +290,13 @@ def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email):
         "completeReportName": key,
         "boardId": boardId,
         "mondayAPIKey": mondayAPIKey,
-        "recipient": DEV_EMAIL,  # email,
+        "recipient": email,  # DEV_EMAIL,
         "numNew": 0,
         "numUpdated": 0,
         "lambdaCycles": 0,
     }
 
+    print("invoking other function- bye!")
     response = botoClient.invoke(
         FunctionName='arn:aws:lambda:us-east-2:218287806266:function:QAAutomationBackendContinued',
         InvocationType='Event',
@@ -294,6 +306,7 @@ def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email):
     # responseFromChild = json.load(response['Payload'])
 
     toReturn = f"Uploaded data has been blended and the monday update has been successfully initiated."
+
     return toReturn
 
 

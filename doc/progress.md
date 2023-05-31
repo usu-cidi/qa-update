@@ -752,18 +752,24 @@ which is sus... but I don't think we have a runaway lambda which is good
   * Which is fine- but now I don't have time for the full test again.... sooo I guess that's moving to tomorrow
 * Started writing some more docs
 
+### 5.31.23
+* Started test of full update at 9:24am - Summer, around 500 courses
+  * Complete at 9:32am
+  * Everything seems to have functioned correctly
+* Tried to test with a full update from Spring of 2023
+  * Running into more gateway timeout problems, it takes too long to combine the reports and do all that...
+  * Since it works for the terms we are using right now, I think I might continue with deployment so Jenn can use it for Summer and continue working to fix it before Fall gets too big.
+* Finished writing usage docs
+* Changed the email field back so that it uses the input email
+* Re-enabled email forwarding on my dev email
+* Doing one more test and then I'll be ready to push the version to production and merge this branch back into master
+  * Test was successful. Merging back into master branch.
+
 ### TODO:
-* Deploy
-  * Test running things at the same time
-  * Test full update
-  * Re-enable email forwarding
-  * Change email field to use the input field
-  * Finish writing docs
-  * Update `cidi-docs`
-  * Show Jenn
 
 
 ### Next Version:
+* Support larger terms/files!!!
 * Stop update button
 * Always need more security
 * Decide about adding Ally time stamp back
@@ -772,6 +778,10 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Report courses that failed to add
 * Authentication
 * Combine steps two and three
+* Make get ally link response better
+* Make API more RESTful
+* Support running multiple updates at a time
+* Get rid of globals/unnecessary statefulness
 
 
 ## Dependencies:

@@ -1,5 +1,5 @@
 <template>
-  <div class="heading-box">
+  <div className="heading-box">
     <h1>QA Update Automation</h1>
     <p>Center for Instructional Design and Innovation - USU</p>
     <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
@@ -8,11 +8,12 @@
 
   <br>
 
-  <div class="feature-box blue">
+  <div className="feature-box blue">
     <br>
     <div v-if="updateInProgress">
       <h2>Update in progress...</h2>
-      <p>The Monday Board will be updated automatically using the API. Each row will be given the "Updated" status when the row has been updated.</p>
+      <p>The Monday Board will be updated automatically using the API. Each row will be given the "Updated" status when
+        the row has been updated.</p>
 
       <BigLoading/>
     </div>
@@ -22,20 +23,20 @@
       <p>You will recieve an email when the update is complete.</p>
     </div>
 
-    <h2 v-if="error" class="error-message">Error completing update.</h2>
+    <h2 v-if="error" className="error-message">Error completing update.</h2>
 
-    <p v-if="responseMessage">{{responseMessage}}</p>
+    <p v-if="responseMessage">{{ re sponseMessage }}</p>
 
   </div>
 
   <br>
 
-  <a class="btn btn-dark button" href="/">Back &lt;</a>
+  <a className="btn btn-dark button" href="/">Back &lt;</a>
   <p v-if="updateInProgress">(Update process will continue if incomplete!)</p>
 
   <br>
   <p>Something not working right?</p>
-  <a class="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
+  <a className="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
 </template>
 
 <script>
@@ -47,7 +48,7 @@ export default {
   components: {
     BigLoading
   },
-  data () {
+  data() {
     return {
       updateInProgress: true,
       updateComplete: false,
@@ -66,9 +67,23 @@ export default {
     let crBoxId = this.$route.query.crBoxId;
     let email = this.$route.query.email;
 
-    let inputData = {'trigger-type': updateType, 'board-id': monBoardId, 'cr-box-id': crBoxId, 'mon-api-key': monAPIKey, 'email': email};
+    let inputData = {
+      'trigger-type': updateType,
+      'board-id': monBoardId,
+      'cr-box-id': crBoxId,
+      'mon-api-key': monAPIKey,
+      'email': email
+    };
     this.postData(this.SERVER_URL + "update", inputData)
         .then((response) => {
+          if (response === undefined) {
+            console.log("504 Gateway Timeout - update probably still initiated though")
+            this.updateInProgress = false;
+            this.error = true;
+            this.responseMessage = "Please contact your developer by filling out a bug report form below. " +
+                "Include the following message: 504 Gateway Timeout";
+            return;
+          }
           response = response.body;
           console.log(response);
           this.updateInProgress = false;
@@ -89,12 +104,13 @@ export default {
           }
         }).catch(err => {
       console.log(err);
+      this.updateInProgress = false;
       this.responseMessage = "Error, please contact your developer by filling out a bug report form below. " +
           "Include the following message: " + err;
     });
   },
-  methods:{
-    postData(url, data, contentType="application/json", stringify=true) {
+  methods: {
+    postData(url, data, contentType = "application/json", stringify = true) {
       let theBody;
       if (stringify) {
         theBody = JSON.stringify(data);

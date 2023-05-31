@@ -89,10 +89,13 @@ def lambda_handler(event, context):
                 print("We should not be here....")
 
             # completeReport = simulateUpdate(completeReport)
-            result = doOneUpdate(completeReport, boardId, mondayAPIKey, currBoard)
-            completeReport = result[0]
-            numUpdated += result[1]
-            numNew += result[2]
+            try:
+                result = doOneUpdate(completeReport, boardId, mondayAPIKey, currBoard)
+                completeReport = result[0]
+                numUpdated += result[1]
+                numNew += result[2]
+            except Exception as e:
+                print(f"A row failed to add :( ({e})")
 
         composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles)
     except Exception as e:
