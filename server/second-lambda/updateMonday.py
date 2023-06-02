@@ -34,7 +34,7 @@ COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", 
 # "status_15": trigger column - DEV, "status_12": Summer 2023, "status_13": Fall 2023
 # "date": last updated column - DEV - same in Summer 2023 & Fall 2023
 
-BOARD_IDS = {"3692723016": "Dev", "4330918867": "Summer 2023", "4330926569": "Fall 2023"}
+BOARD_IDS = {"3692723016": "Dev", "4330918867": "Summer 2023", "4330926569": "Fall 2023", "4565600141": "Dev"}
 
 SMALL_COL_IDS = [
     # "status_15", "date"

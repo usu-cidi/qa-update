@@ -66,6 +66,15 @@ When a new QA Board has been created and needs to be populated with data, follow
 * Let the developer in charge of maintenance on this tool (currently Emma Lynn - a02391851@usu.edu) that a new term needs to be opened.
 * When you are notified that support for the new board has been added, select `Fill in new board` when updating the board using the tool.
 
+## Change Log
+
+### 1.1.0
+
+
+### 1.0.0
+5.31.23
+* Initial release as web application
+
 ## Bug Reports
 If something behaves unexpectedly, or you run into a problem with the program, please let me know.
 

@@ -21,7 +21,6 @@ import pandas as pd
 import smtplib, ssl
 from email.message import EmailMessage
 from datetime import datetime
-# from threading import Thread
 
 from io import BytesIO
 
@@ -50,12 +49,13 @@ boxCSRF = ""
 activeUser = ""
 
 COOKIE = os.environ.get("COOKIE")
+EXTENSION_FUNC = os.environ.get("EXTENSION_FUNC")
 
 FRONT_URL = "http://localhost:8000"
-CLIENT_URL = "https://master.d3kepc58nvsh8n.amplifyapp.com/"
-CLIENT_URL_CORS = "https://master.d3kepc58nvsh8n.amplifyapp.com"
+CLIENT_URL = "https://master.d1m71ela3noy6u.amplifyapp.com/"
+CLIENT_URL_CORS = "https://master.d1m71ela3noy6u.amplifyapp.com"
 ALLOWED_EXTENSIONS = {'csv'}
-REDIRECT_URL = 'https://master.d3kepc58nvsh8n.amplifyapp.com/oauth/callback'
+REDIRECT_URL = 'https://master.d1m71ela3noy6u.amplifyapp.com/oauth/callback'
 
 BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
 BOX_SECRET = os.environ.get("BOX_SECRET")
@@ -63,7 +63,10 @@ BOX_SECRET = os.environ.get("BOX_SECRET")
 DEV_EMAIL = os.environ.get("DEV_EMAIL")
 EMAIL_PASS = os.environ.get("EMAIL_PASS")
 
-AUTH_USERS = os.environ.get('AUTH_USERS')
+BOARD_IDS = {"3692723016": "Dev", "4330918867": "Summer 2023", "4330926569": "Fall 2023", "4565600141": "Dev"}
+
+bucket_name = "dev-qa-update-data-bucket"
+file_name = "qa-update-data.txt"
 
 
 def prepResponse(body, code=200, isBase64Encoded="false"):
@@ -217,14 +220,17 @@ def updating():
             errorMessage += 'Invalid update type (stop messing with my dev tools!) '
             error = True
         if not boardId.isdigit() or int(boardId) <= 0:
-            errorMessage += 'Invalid monday board ID '
+            errorMessage += 'Invalid monday board ID, '
             error = True
         if not crBoxId.isdigit() or int(crBoxId) <= 0:
-            errorMessage += 'Invalid course report ID'
+            errorMessage += 'Invalid course report ID, '
+            error = True
+        if not boardId in BOARD_IDS:
+            errorMessage += 'Unsupported monday board - please check for accuracy and then contact your developer to add support for the new board '
             error = True
 
     if not accessToken:
-        errorMessage += 'Box authorization incomplete. '
+        errorMessage += 'Box authorization incomplete, '
 
     if error:
         return prepResponse({"updateStatus": "The following error(s) occurred: " + errorMessage}), 400
@@ -261,7 +267,6 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok, e
 
     try:
         print("doing the long update")
-        # doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email)
         return doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email)
     except Exception as e:
         print(f"Exception updating monday. {e}")
@@ -274,8 +279,6 @@ def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email):
     string = completeReport.to_json(orient='index')
     encoded_string = string.encode("utf-8")
 
-    bucket_name = "qa-update-data-bucket"
-    file_name = "qa-update-data.txt"
     s3_path = "" + file_name
 
     s3 = boto3.resource("s3")
@@ -294,11 +297,12 @@ def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email):
         "numNew": 0,
         "numUpdated": 0,
         "lambdaCycles": 0,
+        "failedCourses": []
     }
 
     print("invoking other function- bye!")
     response = botoClient.invoke(
-        FunctionName='arn:aws:lambda:us-east-2:218287806266:function:QAAutomationBackendContinued',
+        FunctionName=EXTENSION_FUNC,
         InvocationType='Event',
         Payload=json.dumps(inputParams)
     )

@@ -1,4 +1,11 @@
 <template>
+  <h1 className="error-message">IN DEVELOPMENT - version in active dev: 1.1.0 </h1>
+  <div className="heading-box">
+    <h1>QA Update Automation</h1>
+    <p>Center for Instructional Design and Innovation - USU</p>
+    <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
+    <a href="https://github.com/emmalynnnn/cidi-monday-QA-automation">[Source]</a>
+  </div>
   <div className="heading-box">
     <h1>QA Update Automation</h1>
     <p>Center for Instructional Design and Innovation - USU</p>
@@ -21,6 +28,7 @@
 
 <script>
 /* eslint-disable */
+import Heading from './HeadingComponent.vue';
 
 export default {
   name: 'LoadingBoxComponent',
@@ -28,7 +36,7 @@ export default {
     return {
       errorText: "",
       //SERVER_URL: "http://localhost:8000/",
-      SERVER_URL: "https://8mdwy25ju2.execute-api.us-east-2.amazonaws.com/prod/",
+      SERVER_URL: "https://oue0h093bk.execute-api.us-east-2.amazonaws.com/dev/",
     }
   },
   methods: {

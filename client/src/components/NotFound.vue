@@ -6,20 +6,13 @@
     <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
     <a href="https://github.com/emmalynnnn/cidi-monday-QA-automation">[Source]</a>
   </div>
-  <div class="heading-box">
-    <h1>Bug Reports</h1>
-    <p>Center for Instructional Design and Innovation - USU</p>
-    <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
-    <a href="https://github.com/emmalynnnn/">[Source]</a>
-  </div>
 
   <br>
 
 
   <div class="feature-box blue">
     <br>
-    <h2>Thank you for submitting a bug report!</h2>
-    <p>I will get back to you promptly with an update if you included your contact information.</p>
+    <h2>Error 404: Not Found</h2>
     <br>
 
     <!-----------------------
@@ -49,6 +42,6 @@
 /* eslint-disable */
 import Heading from './HeadingComponent.vue';
 export default {
-  name: 'SubmittedComponent',
+  name: 'NotFound',
 }
 </script>

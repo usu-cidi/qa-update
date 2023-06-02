@@ -11,8 +11,9 @@ from updateMonday import simulateUpdate, doOneUpdate
 
 DEV_EMAIL = os.environ.get("DEV_EMAIL")
 EMAIL_PASS = os.environ.get("EMAIL_PASS")
+MY_NAME = os.environ.get("MY_NAME")
 API_URL = "https://api.monday.com/v2"
-S3_BUCKET = 'qa-update-data-bucket'
+S3_BUCKET = 'dev-qa-update-data-bucket'
 FILE_NAME = "qa-update-data.txt"
 
 TIMEOUT = 30000  # <- 30 seconds
@@ -28,6 +29,7 @@ def lambda_handler(event, context):
         numNew = event["numNew"]
         numUpdated = event["numUpdated"]
         lambdaCycles = event["lambdaCycles"]
+        failedCourses = event["failedCourses"]
 
         lambdaCycles += 1;
 
@@ -52,9 +54,9 @@ def lambda_handler(event, context):
             for theRow in jsonObj["data"]["boards"][0]["items"]:
                 currBoard[theRow["name"]] = theRow["id"]
 
-        failsafe = 0
+        # failsafe = 0
         while not completeReport.empty:
-            # if failsafe >= 10:
+            # if failsafe >= 15:
             #    return
             # check if we're almost out of time, if we are and we're not done, pass stuff to next one
             if context.get_remaining_time_in_millis() <= TIMEOUT:
@@ -82,7 +84,8 @@ def lambda_handler(event, context):
                     "recipient": recipient,
                     "numNew": numNew,
                     "numUpdated": numUpdated,
-                    "lambdaCycles": lambdaCycles
+                    "lambdaCycles": lambdaCycles,
+                    "failedCourses": failedCourses
                 }
                 make_recursive_call(event, context, dataToPass)
                 return
@@ -95,9 +98,13 @@ def lambda_handler(event, context):
                 numUpdated += result[1]
                 numNew += result[2]
             except Exception as e:
-                print(f"A row failed to add :( ({e})")
+                # failsafe += 1;
+                rowData = completeReport.iloc[0].values.tolist()
+                completeReport = completeReport.tail(-1)
+                print(f"{rowData[0]} failed to add :( ({e})")
+                failedCourses.append(rowData[0])
 
-        composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles)
+        composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, failedCourses)
     except Exception as e:
         print(e)
         composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, e)
@@ -107,13 +114,13 @@ def make_recursive_call(event, context, theData):
     print("Making a recursive call...")
     botoClient = boto3.client('lambda')
     botoClient.invoke(
-        FunctionName='arn:aws:lambda:us-east-2:218287806266:function:QAAutomationBackendContinued',
+        FunctionName=MY_NAME,
         InvocationType='Event',
         Payload=json.dumps(theData)
     )
 
 
-def composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles):
+def composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, failedCourses):
     print("Time to send an email")
     sub = f"QA Update Completion {datetime.now()}"
 
@@ -122,10 +129,17 @@ def composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycl
     msg += f"The update is now complete after {lambdaCycles} lambda cycles.\n\n"
     msg += f"As a result of the update:\n {numNew} new rows were added"
     msg += f"\n {numUpdated} existing rows were audited and updated if needed\n\n"
-    msg += "Thanks for updating the QA board!\n\n"
+
+    msg += f"The following rows failed to add or update:\n"
+    for course in failedCourses:
+        msg += f"{course}\n"
+
+    msg += "\nThanks for updating the QA board!\n\n"
     msg += "(Something not working as expected? Fill out a bug report here: https://master.d3kepc58nvsh8n.amplifyapp.com/bug-report)"
 
     sendEmail(msg, sub, recipient)
+    msg += f"\n\n Initiated by {recipient}"
+    sendEmail(msg, f"QA Performance Report {datetime.now()}", DEV_EMAIL)
 
 
 def composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, err):

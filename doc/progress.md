@@ -765,23 +765,60 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Doing one more test and then I'll be ready to push the version to production and merge this branch back into master
   * Test was successful. Merging back into master branch.
 
+### 6.2.23
+* Starting work on 1.1.0
+* New features:
+  * Support larger terms/files!!!
+  * Send performance report
+  * Report courses that failed to add
+  * Immediate failure if board is not recognized
+  * Change order of getting Box and getting Ally file
+* Stretch goals:
+  * Combine steps two and three
+  * Make API more RESTful
+  * Support running multiple updates at a time
+  * Get rid of globals/unnecessary statefulness
+* Created duplicates on AWS for development
+* Added development banner
+* Moved getting the Ally file before getting box auth to try to prevent timeouts
+* Added 404 not found page
+* Add immediate failure if board id is not recognized
+* Added courses that failed to add/update to the completion report
+* Added sending performance report email
+* I don't think there's time to get started much on supporting larger terms/files today so I'll do that on Monday
+* 
+
 ### TODO:
+* Support larger terms/files
+* Clean up
+* Update docs
+* Stretch goals:
+  * Remove `package-lock.json`?
+  * Combine steps two and three
+  * Make API more RESTful
+  * Support running multiple updates at a time
+  * Get rid of globals/unnecessary statefulness
 
-
-### Next Version:
+### Next Version: 1.1.0
 * Support larger terms/files!!!
-* Stop update button
-* Always need more security
-* Decide about adding Ally time stamp back
-* Add back fun Ally waiting things
 * Send performance report
 * Report courses that failed to add
+* Immediate failure if board is not recognized
+* Change order of getting Box and getting Ally file
+* Stretch goals:
+  * Remove `package-lock.json`?
+  * 404 page
+  * Combine steps two and three
+  * Make API more RESTful
+  * Support running multiple updates at a time
+  * Get rid of globals/unnecessary statefulness
+
+### Future Versions:
+* Stop update button
+* Always need more security
+* Add back fun Ally waiting things
 * Authentication
-* Combine steps two and three
 * Make get ally link response better
-* Make API more RESTful
-* Support running multiple updates at a time
-* Get rid of globals/unnecessary statefulness
 
 
 ## Dependencies:

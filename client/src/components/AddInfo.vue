@@ -1,5 +1,6 @@
 <template>
-  <div class="heading-box">
+  <h1 className="error-message">IN DEVELOPMENT - version in active dev: 1.1.0 </h1>
+  <div className="heading-box">
     <h1>QA Update Automation</h1>
     <p>Center for Instructional Design and Innovation - USU</p>
     <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
@@ -10,120 +11,85 @@
 
   <h2>Update the QA Board</h2>
 
-  <div id="ally-box" class="feature-box blue">
-    <br>
-    <h3>1. Get the Ally Download Link</h3>
+  <div className="feature-box blue">
     <br>
 
-    <form @submit.prevent="getAllyLink" >
-      <h4>Ally Client ID</h4>
-      <input type="text" id="ally-client-id" name="ally-client-id" class="form-control">
-      <br>
-
-      <h4>Ally Consumer Key</h4>
-      <input type="text" id="ally-consum-key" name="ally-consum-key" class="form-control">
-      <input name="check" class="visually-hidden" tabindex="-1" autocomplete="off">
-      <br>
-
-      <h4>Ally Consumer Secret</h4>
-      <input type="text" id="ally-consum-sec" name="ally-consum-sec" class="form-control">
-      <br>
-
-      <h4>Term Code</h4>
-      <input type="text" id="term-code" name="term-code" class="form-control">
-      <br>
-
-      <button type="submit" class="btn btn-light button">Get Link</button>
-    </form>
-    <br>
-    <p>Note: it may take a few minutes for the link to be generated.</p>
-
-    <p v-if="error1" class="error-message">{{ error1 }}</p>
-
-    <a v-if="link" :href="link">Click here to download the Ally Accessibility report</a>
-    <div v-if="linkLoading">
-      <p>Loading...</p>
-      <LoadingBar/>
-    </div>
-
-  </div>
-  <div class="feature-box blue">
-    <br>
-
-    <h3>2. Upload the Ally File</h3>
+    <h3>Upload the Ally File</h3>
 
     <p>Unzip the Ally folder you just downloaded and upload the file called courses.csv here for processing.</p>
     <!--<form @submit.prevent="processAllyFile" enctype="multipart/form-data">-->
     <!--<form @submit.prevent="processAllyFile">-->
     <form id="upload-form">
-      <input name="check" class="visually-hidden" tabindex="-1" autocomplete="off">
+      <input name="check" className="visually-hidden" tabIndex="-1" autoComplete="off">
       <input type="file" id="file-field" ref="file" name="files"/>
       <br><br>
 
-      <button v-on:click="processAllyFile" class="btn btn-light button">Upload</button>
+      <button v-on:click="processAllyFile" className="btn btn-light button">Upload</button>
       <!--</form>-->
     </form>
 
     <br>
 
-    <p v-if="error2" class="error-message">{{ error2 }}</p>
+    <p v-if="error2" className="error-message">{{ error2 }}</p>
     <p v-if="uploadMessage">{{ uploadMessage }}</p>
 
   </div>
 
-  <div class="feature-box blue">
+  <div className="feature-box blue">
     <br>
-    <h3>3. Run the Update</h3>
+    <h3>Run the Update</h3>
 
     <form @submit.prevent="runUpdate">
-      <div class="form-group">
+      <div className="form-group">
         <br><h4>Monday API Key</h4>
-        <input type="text" id="mon-api-key" name="mon-api-key" class="form-control">
+        <input type="text" id="mon-api-key" name="mon-api-key" className="form-control">
         <br>
 
         <h4>Update Type</h4>
         <p>Select 'Update existing board' if you are updating a board that already exists (mid-semester).
           Select 'Fill in new board' if you are filling in a completely blank board at the beginning of a semester. </p>
-        <select name="trigger-type" id="trigger-type" class="form-select">
+        <select name="trigger-type" id="trigger-type" className="form-select">
           <option value=""></option>
           <option value="update">Update existing board</option>
           <option value="new">Fill in new board</option>
         </select>
 
-        <input name="check" class="visually-hidden" tabindex="-1" autocomplete="off">
+        <input name="check" className="visually-hidden" tabIndex="-1" autoComplete="off">
 
         <br>
         <h4>Monday Board ID</h4>
-        <p>Enter the <a href="https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s">
+        <p>Enter the <a
+            href="https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s">
           board id</a> for the monday.com board you're updating (found in the url).</p>
-        <img class="url-ex" src="../assets/mon-ex.png" />
+        <img className="url-ex" src="../assets/mon-ex.png"/>
         <br>
-        <input type="text" name="board-id" id="board-id" class="form-control">
+        <input type="text" name="board-id" id="board-id" className="form-control">
 
 
         <br>
         <h4>Course Report File Box ID</h4>
-        <p>Enter the <a href="https://developer.box.com/reference/get-files-id/#:~:text=The%20ID%20for%20any%20file,123%20the%20file_id%20is%20123%20.">
+        <p>Enter the <a
+            href="https://developer.box.com/reference/get-files-id/#:~:text=The%20ID%20for%20any%20file,123%20the%20file_id%20is%20123%20.">
           Box file ID</a> for the most recent Course Summary file from the Canvas Data Reports (found in the url).</p>
-        <img class="url-ex" src="../assets/box-ex.png" />
+        <img className="url-ex" src="../assets/box-ex.png"/>
         <br>
-        <input type="text" name="cr-box-id" id="cr-box-id" class="form-control">
+        <input type="text" name="cr-box-id" id="cr-box-id" className="form-control">
 
         <br>
         <h4>Your Email</h4>
         <p>A report will be sent to this email once the update is complete.</p>
-        <input type="text" name="email" id="email" class="form-control">
+        <input type="text" name="email" id="email" className="form-control">
       </div>
 
       <br>
 
-      <p class="feature-box error-message">WARNING: Update process cannot be stopped once began!!</p>
+      <p className="feature-box error-message">WARNING: Update process cannot be stopped once began!!</p>
 
-      <div class="form-group">
-        <button type="submit" class="btn btn-light button">Submit</button>
+      <div className="form-group">
+        <button type="submit" className="btn btn-light button">Submit</button>
       </div>
 
-      <p v-if="error3" class="error-message">{{ error3 }}</p>
+      <p v-if="error3" className="error-message">{{ error3 }}</p>
 
       <br>
     </form>
@@ -132,12 +98,14 @@
 
   <br>
   <p>Something not working right?</p>
-  <a class="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
+  <a className="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
 </template>
 
 <script>
 /* eslint-disable */
 import LoadingBar from "./LoadingBar.vue";
+import Heading from './HeadingComponent.vue';
+
 export default {
   name: 'AddInfoComponent',
   emits: ["form-submitted"],
@@ -153,7 +121,7 @@ export default {
       error3: "",
       file: "",
       //SERVER_URL: "http://localhost:8000/",
-      SERVER_URL: "https://8mdwy25ju2.execute-api.us-east-2.amazonaws.com/prod/",
+      SERVER_URL: "https://oue0h093bk.execute-api.us-east-2.amazonaws.com/dev/",
       uploadMessage: "",
       form: {
         method: '',
@@ -165,7 +133,7 @@ export default {
 
   },
   methods: {
-    processAllyFile: function(e) {
+    processAllyFile: function (e) {
       console.log("Processing file")
       this.error2 = "";
 
@@ -223,76 +191,17 @@ export default {
       }
 
       console.log(monAPIKey, updateType, monBoardId, crBoxId);
-      let params = {monAPIKey: monAPIKey, updateType: updateType, monBoardId: monBoardId, crBoxId: crBoxId, email: email}
-
-      this.$router.push({ path: '/updating', query: params })
-    },
-    getAllyLink(){
-      this.error1 = "";
-
-      let clientId = document.getElementById("ally-client-id").value;
-      let consumKey = document.getElementById("ally-consum-key").value;
-      let consumSec = document.getElementById("ally-consum-sec").value;
-      let termCode = document.getElementById("term-code").value;
-
-      if (!clientId || !consumKey || !consumSec || !termCode) {
-        this.error1 = "All fields are required";
-        return;
-      }
-      if (isNaN(clientId) || isNaN(termCode)) {
-        this.error1 = "Invalid input";
-        return;
+      let params = {
+        monAPIKey: monAPIKey,
+        updateType: updateType,
+        monBoardId: monBoardId,
+        crBoxId: crBoxId,
+        email: email
       }
 
-      console.log(clientId, consumSec, consumKey, termCode);
-
-      this.linkLoading = true;
-
-      let inputData = {clientId: clientId, consumKey: consumKey, consumSec: consumSec, termCode: termCode};
-      this.postData(this.SERVER_URL + "get-ally-link", inputData)
-          .then((data) => {
-            console.log(data);
-            data = data.body;
-            console.log(data);
-            if (data.error !== undefined) {
-              this.error1 = "Operation failed. Please check your authentication and other inputs and try again. " +
-                  "If the issue persists, contact your system admin.";
-              this.linkLoading = false;
-            } else {
-              this.linkLoading = false;
-              this.link = data.link;
-            }
-          }).catch(err => {
-        console.log(err);
-        this.tryLinkAgain(inputData, 0);
-      });
+      this.$router.push({path: '/updating', query: params})
     },
-    tryLinkAgain(inputData, invocationCount) {
-      this.postData(this.SERVER_URL + "get-ally-link", inputData)
-          .then((data) => {
-            console.log(data);
-            data = data.body;
-            console.log(data);
-            if (data.error !== undefined) {
-              this.error1 = "Operation failed. Please check your authentication and other inputs and try again. " +
-                  "If the issue persists, contact your system admin.";
-              this.linkLoading = false;
-            } else {
-              this.linkLoading = false;
-              this.link = data.link;
-            }
-          }).catch(err => {
-        console.log(err);
-        if (invocationCount > 10) {
-          this.linkLoading = false;
-          this.error1 = "Operation failed. Please check your authentication and other inputs and try again. " +
-              "If the issue persists, contact your system admin.";
-        } else {
-          this.tryLinkAgain(inputData, invocationCount + 1);
-        }
-      });
-    },
-    postData(url, data, contentType="application/json", stringify=true) {
+    postData(url, data, contentType = "application/json", stringify = true) {
       let theBody;
       if (stringify) {
         theBody = JSON.stringify(data);
