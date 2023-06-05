@@ -1,4 +1,4 @@
-# Monday QA Board Automation Project
+# Monday QA Board Update Tool
 Center for Instructional Design and Innovation - Utah State University
 * Created by Emma Lynn (a02391851@usu.edu)
 * Supervised by Neal Legler, CIDI Director (neal.legler@usu.edu)
@@ -10,25 +10,27 @@ This repository contains code that will:
 * Use that data to automatically update USU's QA board on monday.com
 
 This tool is currently hosted at: https://master.d3kepc58nvsh8n.amplifyapp.com/
+Active version: 1.1.0
 
 To use this tool on the command line, switch to the branch `archive/cli`.
 * Note: the command line version of the tool has been deprecated. Usage is discouraged, please use the new web application.
 
 ## Usage
 * Navigate to https://master.d3kepc58nvsh8n.amplifyapp.com/.
-* Wait if directed. When the `Authorize this app on Box.com` button appears, click on it to
-authorize access to your Box account.
-  * Click Use Single Sign On (SSO) and then enter your usu@edu email to sign in to Box.
-  * Note that you must have a USU Box account to use this application, and you must have access
-  to the Course Report file you want to use the update the QA board.
-* To get the most recent Ally Accessibility report, enter your Ally credentials and the term code.
+* To download the most recent Ally Accessibility report, enter your Ally credentials and the term code.
 If you do not have the institutional Ally credentials, reach out to Christopher Phillips.
   * Current term codes:
     * Summer 2023: 888
     * Fall 2023: 889
 * Wait until a link appears, and then click on it to download the Ally report. This may take several minutes.
 * You will download a `zip` file. Unzip the file, and you will have a folder with two files, `courses.csv`
-and `terms.csv`. Upload `courses.csv` in step 2 and click the `Upload` button. You will receive a completion message when the upload it completes.
+and `terms.csv`. You will upload `courses.csv` in a moment. Click the `Next` button.
+* Wait if directed. When the `Authorize this app on Box.com` button appears, click on it to
+authorize access to your Box account.
+  * Click Use Single Sign On (SSO) and then enter your @usu.edu email to sign in to Box.
+  * Note that you must have a USU Box account to use this application, and you must have access
+  to the Course Report file you want to use the update the QA board.
+* Upload `courses.csv` and click the `Upload` button. You will receive a completion message when the upload is finished. It may take a moment for the message to appear. If it takes longer than around 3 minutes, try uploading it again.
 * Enter your [API key for monday.com](https://support.monday.com/hc/en-us/articles/360005144659-Does-monday-com-have-an-API-#h_01EZ9M2KTTMA4ZJERGFQDYM4WR).
 * Select `Update existing board` if you are updating a board that already exists (mid-semester). Select `Fill in new board` if you are filling in a completely blank board at the beginning of a semester.
 * Enter the [board id](https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s) for the monday.com board you're updating (found in the url).
@@ -69,7 +71,13 @@ When a new QA Board has been created and needs to be populated with data, follow
 ## Change Log
 
 ### 1.1.0
-
+* Added support for larger terms like Fall & Spring
+* Added a report courses that failed to add to the completion email
+* Added immediate failure and response to client if board ID is not recognized
+* Changed order of user flow to prevent Box Authentication timeouts
+* Added a 404: Not Found page
+* Added a condition to change rows with `College` listed as unsupported `Disability Resource Center` to `University`
+* Changed the monday completion status from `Updated` to `Done` to conform better with the rest of the boards
 
 ### 1.0.0
 5.31.23

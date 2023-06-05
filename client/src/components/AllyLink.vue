@@ -1,6 +1,6 @@
 <template>
-  <h1 class="error-message">IN DEVELOPMENT - version in active dev: 1.1.0 </h1>
-  <div class="heading-box">
+  <h1 className="error-message">IN DEVELOPMENT - version in active dev: 1.1.0 </h1>
+  <div className="heading-box">
     <h1>QA Update Automation</h1>
     <p>Center for Instructional Design and Innovation - USU</p>
     <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
@@ -11,33 +11,33 @@
 
   <h2>Get the Ally Download Link</h2>
 
-  <div id="ally-box" class="feature-box blue">
+  <div id="ally-box" className="feature-box blue">
     <br>
 
-    <form @submit.prevent="getAllyLink" >
+    <form @submit.prevent="getAllyLink">
       <h4>Ally Client ID</h4>
-      <input type="text" id="ally-client-id" name="ally-client-id" class="form-control">
+      <input type="text" id="ally-client-id" name="ally-client-id" className="form-control">
       <br>
 
       <h4>Ally Consumer Key</h4>
-      <input type="text" id="ally-consum-key" name="ally-consum-key" class="form-control">
-      <input name="check" class="visually-hidden" tabindex="-1" autocomplete="off">
+      <input type="text" id="ally-consum-key" name="ally-consum-key" className="form-control">
+      <input name="check" className="visually-hidden" tabIndex="-1" autoComplete="off">
       <br>
 
       <h4>Ally Consumer Secret</h4>
-      <input type="text" id="ally-consum-sec" name="ally-consum-sec" class="form-control">
+      <input type="text" id="ally-consum-sec" name="ally-consum-sec" className="form-control">
       <br>
 
       <h4>Term Code</h4>
-      <input type="text" id="term-code" name="term-code" class="form-control">
+      <input type="text" id="term-code" name="term-code" className="form-control">
       <br>
 
-      <button type="submit" class="btn btn-light button">Get Link</button>
+      <button type="submit" className="btn btn-light button">Get Link</button>
     </form>
     <br>
     <p>Note: it may take a few minutes for the link to be generated.</p>
 
-    <p v-if="error1" class="error-message">{{ error1 }}</p>
+    <p v-if="error1" className="error-message">{{ error1 }}</p>
 
     <a v-if="link" :href="link">Click here to download the Ally Accessibility report</a>
     <div v-if="linkLoading">
@@ -46,17 +46,18 @@
     </div>
 
   </div>
-  <a class="btn btn-dark button" href="/box-login">Next</a>
+  <a className="btn btn-dark button" href="/box-login">Next</a>
   <br>
   <br>
   <p>Something not working right?</p>
-  <a class="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
+  <a className="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
 </template>
 
 <script>
 /* eslint-disable */
 import LoadingBar from "./LoadingBar.vue";
 import Heading from './HeadingComponent.vue';
+
 export default {
   name: 'AllyLinkComponent',
   emits: ["form-submitted"],
@@ -80,7 +81,7 @@ export default {
 
   },
   methods: {
-    getAllyLink(){
+    getAllyLink() {
       this.error1 = "";
 
       let clientId = document.getElementById("ally-client-id").value;
@@ -145,7 +146,7 @@ export default {
         }
       });
     },
-    postData(url, data, contentType="application/json", stringify=true) {
+    postData(url, data, contentType = "application/json", stringify = true) {
       let theBody;
       if (stringify) {
         theBody = JSON.stringify(data);

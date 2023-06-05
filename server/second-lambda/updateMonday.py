@@ -107,7 +107,7 @@ def createNewItem(rowInfo, boardId, HEADERS):
             f'{{ create_item (board_id:{boardId}, group_id:{groupID}, ' \
             f'item_name:$myItemName, column_values:$columnVals) {{ id }} }}'
 
-    rowInfo.append("Updated")
+    rowInfo.append("Done")
     rowInfo.append(date.today())
 
     colVals = dict(zip(COL_IDS, rowInfo[1:]))
@@ -132,7 +132,7 @@ def createNewItem(rowInfo, boardId, HEADERS):
 def updateRow(itemID, rowInfo, boardId, HEADERS):
     query = f'mutation ($columnVals: JSON!) {{ change_multiple_column_values (board_id:{boardId}, item_id: {itemID}, column_values:$columnVals) {{ name id }} }}'
 
-    rowInfo.append("Updated")
+    rowInfo.append("Done")
     rowInfo.append(date.today())
 
     colVals = dict(zip(COL_IDS, rowInfo[1:]))
@@ -214,6 +214,9 @@ def doOneUpdate(courseDF, boardId, mondayAPIKey, currBoard):
     if "Study Abroad" in rowData:
         print("Replacing 'Study Abroad' with 'Supervised'.")
         rowData[rowData.index("Study Abroad")] = "Supervised"
+    if "Disability Resource Center" in rowData:
+        print("Replacing 'Disability Resource Center' with 'University'.")
+        rowData[rowData.index("Disability Resource Center")] = "University"
     print(str(rowData))
 
     HEADERS = {"Authorization": mondayAPIKey}
@@ -274,6 +277,9 @@ def updateExistingBoard(courseDF, boardId, mondayAPIKey):
         if "Study Abroad" in rowData:
             print("Replacing 'Study Abroad' with 'Supervised'.")
             rowData[rowData.index("Study Abroad")] = "Supervised"
+        if "Disability Resource Center" in rowData:
+            print("Replacing 'Disability Resource Center' with 'University'.")
+            rowData[rowData.index("Disability Resource Center")] = "University"
 
         # just for update ---
         if courseDF["Course"][i] in currBoard:

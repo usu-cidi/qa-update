@@ -186,7 +186,7 @@ export default {
       }
 
       if (!this.uploadMessage) {
-        this.error3 = "Please return to step 2 and upload the Ally Course Accessibility file."
+        this.error3 = "Please return to the top of the page and upload the Ally Course Accessibility file (courses.csv)."
         return;
       }
 

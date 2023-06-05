@@ -1,6 +1,6 @@
 <template>
-  <h1 className="error-message">IN DEVELOPMENT - version in active dev: 1.1.0 </h1>
-  <div className="heading-box">
+  <h1 class="error-message">IN DEVELOPMENT - version in active dev: 1.1.0 </h1>
+  <div class="heading-box">
     <h1>QA Update Automation</h1>
     <p>Center for Instructional Design and Innovation - USU</p>
     <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
@@ -9,12 +9,11 @@
 
   <br>
 
-  <div className="feature-box blue">
+  <div class="feature-box blue">
     <br>
     <div v-if="updateInProgress">
       <h2>Update in progress...</h2>
-      <p>The Monday Board will be updated automatically using the API. Each row will be given the "Updated" status when
-        the row has been updated.</p>
+      <p>The Monday Board will be updated automatically using the API. Each row will be given the "Updated" status when the row has been updated.</p>
 
       <BigLoading/>
     </div>
@@ -24,33 +23,32 @@
       <p>You will recieve an email when the update is complete.</p>
     </div>
 
-    <h2 v-if="error" className="error-message">Error completing update.</h2>
+    <h2 v-if="error" class="error-message">Error completing update.</h2>
 
-    <p v-if="responseMessage">{{ re sponseMessage }}</p>
+    <p v-if="responseMessage">{{responseMessage}}</p>
 
   </div>
 
   <br>
 
-  <a className="btn btn-dark button" href="/">Back &lt;</a>
+  <a class="btn btn-dark button" href="/">Back &lt;</a>
   <p v-if="updateInProgress">(Update process will continue if incomplete!)</p>
 
   <br>
   <p>Something not working right?</p>
-  <a className="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
+  <a class="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
 </template>
 
 <script>
 /* eslint-disable */
 import BigLoading from "./BigLoading.vue";
 import Heading from './HeadingComponent.vue';
-
 export default {
   name: 'InProgressComponent',
   components: {
     BigLoading
   },
-  data() {
+  data () {
     return {
       updateInProgress: true,
       updateComplete: false,
@@ -69,13 +67,7 @@ export default {
     let crBoxId = this.$route.query.crBoxId;
     let email = this.$route.query.email;
 
-    let inputData = {
-      'trigger-type': updateType,
-      'board-id': monBoardId,
-      'cr-box-id': crBoxId,
-      'mon-api-key': monAPIKey,
-      'email': email
-    };
+    let inputData = {'trigger-type': updateType, 'board-id': monBoardId, 'cr-box-id': crBoxId, 'mon-api-key': monAPIKey, 'email': email};
     this.postData(this.SERVER_URL + "update", inputData)
         .then((response) => {
           if (response === undefined) {
@@ -111,8 +103,8 @@ export default {
           "Include the following message: " + err;
     });
   },
-  methods: {
-    postData(url, data, contentType = "application/json", stringify = true) {
+  methods:{
+    postData(url, data, contentType="application/json", stringify=true) {
       let theBody;
       if (stringify) {
         theBody = JSON.stringify(data);

@@ -786,32 +786,23 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Added courses that failed to add/update to the completion report
 * Added sending performance report email
 * I don't think there's time to get started much on supporting larger terms/files today so I'll do that on Monday
-* 
+
+### 6.5.23
+* Moving file combination to the second lambda to support larger terms/files
+  * That seems to be working fine
+* But now it seems like even getting to box file takes too long
+  * So it looks like I need to move that to the second lambda too :/
+* Moved getting the box file to the second lambda also
+* Now I'm going to test the update from last spring
+* Had to increase the memory to 256 MB for both functions
+* Started Spring test, everything seems to be going well
+  * Test was successful!!
+  * It did send a duplicate email.... I wonder if with the extra uploading to S3 it needs more time, I think I'll increase the timeout buffer
+* Changed courses with `Disability Resource Center` to `University`
+* Changed completion status from `Updated` to `Done`
 
 ### TODO:
-* Support larger terms/files
 * Clean up
-* Update docs
-* Stretch goals:
-  * Remove `package-lock.json`?
-  * Combine steps two and three
-  * Make API more RESTful
-  * Support running multiple updates at a time
-  * Get rid of globals/unnecessary statefulness
-
-### Next Version: 1.1.0
-* Support larger terms/files!!!
-* Send performance report
-* Report courses that failed to add
-* Immediate failure if board is not recognized
-* Change order of getting Box and getting Ally file
-* Stretch goals:
-  * Remove `package-lock.json`?
-  * 404 page
-  * Combine steps two and three
-  * Make API more RESTful
-  * Support running multiple updates at a time
-  * Get rid of globals/unnecessary statefulness
 
 ### Future Versions:
 * Stop update button
@@ -819,7 +810,13 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Add back fun Ally waiting things
 * Authentication
 * Make get ally link response better
-
+* Remove `package-lock.json`?
+* Combine steps two and three
+  * Or hide the other fields until the Ally file is uploaded
+* Make API more RESTful
+* Support running multiple updates at a time
+* Get rid of globals/unnecessary statefulness
+* Remove unnecessary/duplicate code
 
 ## Dependencies:
 * pandas: `pip3 install pandas`

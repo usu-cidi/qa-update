@@ -12,6 +12,9 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import pandas as pd
+from time import time
+import sys
 
 def combineReports(courseDataFrame, allyDataFrame):
 
