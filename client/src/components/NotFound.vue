@@ -1,13 +1,5 @@
 <template>
-  <h1 class="error-message">IN DEVELOPMENT - version in active dev: 1.1.0 </h1>
-  <div class="heading-box">
-    <h1>QA Update Automation</h1>
-    <p>Center for Instructional Design and Innovation - USU</p>
-    <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
-    <a href="https://github.com/emmalynnnn/cidi-monday-QA-automation">[Source]</a>
-  </div>
-
-  <br>
+  <MainHeader/>
 
 
   <div class="feature-box blue">
@@ -40,8 +32,11 @@
 
 <script>
 /* eslint-disable */
-import Heading from './HeadingComponent.vue';
+import MainHeader from "./MainHeader.vue";
 export default {
   name: 'NotFound',
+  components: {
+    MainHeader,
+  },
 }
 </script>

@@ -24,10 +24,10 @@ from datetime import datetime
 
 from io import BytesIO
 
-import awsgi
-import boto3
+# import awsgi #for production
+# import boto3 #for production
 
-botoClient = boto3.client('lambda')
+# botoClient = boto3.client('lambda') #for production
 
 from talkToBox import getDataFromBox
 from combineData import combineReports
@@ -51,11 +51,11 @@ activeUser = ""
 COOKIE = os.environ.get("COOKIE")
 EXTENSION_FUNC = os.environ.get("EXTENSION_FUNC")
 
-FRONT_URL = "http://localhost:8000"
-CLIENT_URL = "https://master.d1m71ela3noy6u.amplifyapp.com/"
-CLIENT_URL_CORS = "https://master.d1m71ela3noy6u.amplifyapp.com"
+# CLIENT_URL_CORS = "https://master.d3kepc58nvsh8n.amplifyapp.com"
+CLIENT_URL_CORS = "http://localhost:8080"
+CLIENT_URL = f"{CLIENT_URL_CORS}/"
 ALLOWED_EXTENSIONS = {'csv'}
-REDIRECT_URL = 'https://master.d1m71ela3noy6u.amplifyapp.com/oauth/callback'
+REDIRECT_URL = f"{CLIENT_URL}oauth/callback"
 
 BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
 BOX_SECRET = os.environ.get("BOX_SECRET")
@@ -65,8 +65,10 @@ EMAIL_PASS = os.environ.get("EMAIL_PASS")
 
 BOARD_IDS = {"3692723016": "Dev", "4330918867": "Summer 2023", "4330926569": "Fall 2023", "4565600141": "Dev"}
 
-bucket_name = "dev-qa-update-data-bucket"
-file_name = "qa-update-data.txt"
+bucket_name = "qa-update-data-bucket"
+
+
+# file_name = "qa-update-data.txt"
 
 
 def prepResponse(body, code=200, isBase64Encoded="false"):
@@ -226,7 +228,8 @@ def updating():
             errorMessage += 'Invalid course report ID, '
             error = True
         if not boardId in BOARD_IDS:
-            errorMessage += 'Unsupported monday board - please check for accuracy and then contact your developer to add support for the new board '
+            errorMessage += 'Unsupported monday board - please check for accuracy and then contact your developer to ' \
+                            'add support for the new board'
             error = True
 
     if not accessToken:
@@ -251,61 +254,45 @@ def updating():
 
 def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok, email):
     print("doing the update")
-    try:
-        print("getting box data")
-        courseReportData = getDataFromBox(crBoxId, 'excel', accessTok)
-    except Exception as e:
-        print(f"Exception getting box data. {e}")
-        return f"Exception getting box data. {e}"
-
-    try:
-        print("combining reports")
-        completeReport = combineReports(courseReportData, allyData)
-    except Exception as e:
-        print(f"Exception combining reports. {e}")
-        return f"Exception combining reports. {e}"
+    boxInfo = {"id": crBoxId, "type": "excel", "accessTok": accessTok}
 
     try:
         print("doing the long update")
-        return doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email)
+        return doLongUpdate(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email)
     except Exception as e:
-        print(f"Exception updating monday. {e}")
-        return f"Exception updating monday. {e}"
+        print(f"Exception doing update. {e}")
+        return f"Exception doing update. {e}"
 
 
-def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email):
-    # string = completeReport.to_string()
-    print("adding dataframe to s3")
-    string = completeReport.to_json(orient='index')
-    encoded_string = string.encode("utf-8")
+def doLongUpdate(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email):
+    print("adding dataframes to s3")
 
-    s3_path = "" + file_name
+    # allyKey = uploadToS3(allyData, "ally-data.txt") # for production
+    print("Uploading ally file to S3")  # for dev
+    allyKey = 0  # for dev
 
-    s3 = boto3.resource("s3")
-    s3Response = s3.Bucket(bucket_name).put_object(Key=s3_path, Body=encoded_string)
-    print(s3Response)
-    print(s3Response.key)
-    key = s3Response.key
-
-    # reportToSend = completeReport.to_json(orient='index')
     inputParams = {
         "triggerType": triggerType,
-        "completeReportName": key,
+        "completeReportName": "",
         "boardId": boardId,
         "mondayAPIKey": mondayAPIKey,
         "recipient": email,  # DEV_EMAIL,
         "numNew": 0,
         "numUpdated": 0,
         "lambdaCycles": 0,
-        "failedCourses": []
+        "failedCourses": [],
+
+        "needToCombineAndGetBox": True,
+        "allyKey": allyKey,
+        "boxInfo": boxInfo
     }
 
     print("invoking other function- bye!")
-    response = botoClient.invoke(
-        FunctionName=EXTENSION_FUNC,
-        InvocationType='Event',
-        Payload=json.dumps(inputParams)
-    )
+    # response = botoClient.invoke(
+    #    FunctionName=EXTENSION_FUNC,
+    #    InvocationType='Event',
+    #    Payload=json.dumps(inputParams)
+    # )
 
     # responseFromChild = json.load(response['Payload'])
 
@@ -315,6 +302,19 @@ def doLongUpdate(triggerType, completeReport, boardId, mondayAPIKey, email):
 
 
 # --------------------------
+
+def uploadToS3(dataframe, fileName):
+    string = dataframe.to_json(orient='index')
+    encoded_string = string.encode("utf-8")
+
+    s3_path = fileName
+
+    s3 = boto3.resource("s3")
+    s3Response = s3.Bucket(bucket_name).put_object(Key=s3_path, Body=encoded_string)
+    print(s3Response)
+    print(s3Response.key)
+    key = s3Response.key
+    return key
 
 
 @app.route('/send-bug-email', methods=['POST'])
@@ -385,5 +385,5 @@ if __name__ == '__main__':
     app.run(port=8000, debug=True, host="localhost")
 
 
-def lambda_handler(event, context):
-    return awsgi.response(app, event, context)
+#def lambda_handler(event, context):  # for production
+#    return awsgi.response(app, event, context)

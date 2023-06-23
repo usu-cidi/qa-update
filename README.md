@@ -10,7 +10,8 @@ This repository contains code that will:
 * Use that data to automatically update USU's QA board on monday.com
 
 This tool is currently hosted at: https://master.d3kepc58nvsh8n.amplifyapp.com/
-Active version: 1.1.0
+
+Active version: **1.1.0**
 
 To use this tool on the command line, switch to the branch `archive/cli`.
 * Note: the command line version of the tool has been deprecated. Usage is discouraged, please use the new web application.

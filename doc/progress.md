@@ -801,22 +801,34 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Changed courses with `Disability Resource Center` to `University`
 * Changed completion status from `Updated` to `Done`
 
+### 6.23.23
+* Starting work on `1.1.1`
+* Changed the header to a single component
+* Fixed the styling of the bug report page
+* Started making a plan for the development of this new version
+
 ### TODO:
-* Clean up
+
+
+### 1.1.1
+* Add back fun Ally waiting things
+* Big refactor
+  * Get rid of globals/unnecessary statefulness
+  * Make API more RESTful
+  * Remove unnecessary/duplicate code
+  * Remove `package-lock.json`?
+  * Make get ally link response better
+* Add a better way to add a new term
+* Combine steps two and three
+  * Or hide the other fields until the Ally file is uploaded
+* Support running multiple updates at a time
+* Fix bug reports
 
 ### Future Versions:
 * Stop update button
 * Always need more security
-* Add back fun Ally waiting things
 * Authentication
-* Make get ally link response better
-* Remove `package-lock.json`?
-* Combine steps two and three
-  * Or hide the other fields until the Ally file is uploaded
-* Make API more RESTful
-* Support running multiple updates at a time
-* Get rid of globals/unnecessary statefulness
-* Remove unnecessary/duplicate code
+
 
 ## Dependencies:
 * pandas: `pip3 install pandas`
@@ -923,6 +935,7 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Router: https://pasankamburugamuwa1.medium.com/vue-router-building-multi-page-single-applications-26b52cc6125e
   * https://router.vuejs.org/guide/essentials/navigation.html
 * Fetch: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+* Sharing constants between components: https://stackoverflow.com/questions/54108402/share-constants-between-vue-components
 
 ### AWS
 * Using Box with Lambda: https://aws.amazon.com/blogs/apn/how-an-aws-lambda-function-can-be-integrated-with-box-webhooks/

@@ -1,22 +1,7 @@
 <template>
-  <h1 class="error-message">IN DEVELOPMENT - version in active dev: 1.1.0 </h1>
-  <div class="heading-box">
-    <h1>QA Update Automation</h1>
-    <p>Center for Instructional Design and Innovation - USU</p>
-    <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
-    <a href="https://github.com/emmalynnnn/cidi-monday-QA-automation">[Source]</a>
-  </div>
-  <div class="heading-box">
-    <h1>Bug Reports</h1>
-    <p>Center for Instructional Design and Innovation - USU</p>
-    <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
-    <a href="https://github.com/emmalynnnn/">[Source]</a>
-  </div>
+  <BugHeader/>
 
-  <br>
-
-
-  <div class="feature-box blue">
+  <div class="feature-box orange">
     <br>
     <h2>Thank you for submitting a bug report!</h2>
     <p>I will get back to you promptly with an update if you included your contact information.</p>
@@ -47,8 +32,19 @@
 
 <script>
 /* eslint-disable */
-import Heading from './HeadingComponent.vue';
+import BugHeader from "./BugHeader.vue";
 export default {
   name: 'SubmittedComponent',
+  components: {
+    BugHeader,
+  },
 }
 </script>
+
+
+<style>
+.orange {
+  border-color: #fa8520;
+  background: #FEA559;
+}
+</style>

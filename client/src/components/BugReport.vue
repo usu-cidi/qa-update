@@ -1,75 +1,62 @@
 <template>
-  <h1 className="error-message">IN DEVELOPMENT - version in active dev: 1.1.0 </h1>
-  <div className="heading-box">
-    <h1>QA Update Automation</h1>
-    <p>Center for Instructional Design and Innovation - USU</p>
-    <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
-    <a href="https://github.com/emmalynnnn/cidi-monday-QA-automation">[Source]</a>
-  </div>
-  <div className="heading-box">
-    <h1>Bug Reports</h1>
-    <p>Center for Instructional Design and Innovation - USU</p>
-    <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
-    <a href="https://github.com/emmalynnnn/">[Source]</a>
-  </div>
+  <BugHeader/>
 
-  <br>
-
-  <div className="feature-box blue">
+  <div class="feature-box orange">
     <br>
     <h3>Report an Error</h3>
     <br>
 
     <form @submit.prevent="submitTheForm">
-      <div className="form-group">
-        <label htmlFor="app-name">Application</label>
-        <select name="app-name" className="form-select" v-model.lazy.trim="appName">
+      <div class="form-group">
+        <label for="app-name">Application</label>
+        <select name="app-name" class="form-select" v-model.lazy.trim="appName">
           <option value=""></option>
           <option value="QA Update">QA Update</option>
+          <option value="QA Update">YCCT</option>
         </select>
 
-        <input name="check" className="visually-hidden" tabIndex="-1" autoComplete="off">
+        <input name="check" class="visually-hidden" tabIndex="-1" autoComplete="off">
 
         <br>
-        <label htmlFor="date-time">Date and approximate time the error occurred</label>
-        <input type="text" name="date-time" className="form-control" v-model.lazy.trim="date">
+        <label for="date-time">Date and approximate time the error occurred</label>
+        <input type="text" name="date-time" class="form-control" v-model.lazy.trim="date">
 
         <br>
-        <label htmlFor="expected-behavior">What did you expect to happen?</label>
-        <input type="text" name="expected-behavior" className="form-control" v-model.lazy.trim="expected">
+        <label for="expected-behavior">What did you expect to happen?</label>
+        <input type="text" name="expected-behavior" class="form-control" v-model.lazy.trim="expected">
 
         <br>
-        <label htmlFor="actual-behavior">What actually happened?</label>
-        <input type="text" name="actual-behavior" className="form-control" v-model.lazy.trim="actual">
+        <label for="actual-behavior">What actually happened?</label>
+        <input type="text" name="actual-behavior" class="form-control" v-model.lazy.trim="actual">
 
         <br>
-        <label htmlFor="errors">Did you receive any error messages? When did they appear and what did they say?</label>
-        <input type="text" name="errors" className="form-control" v-model.lazy.trim="errors">
+        <label for="errors">Did you receive any error messages? When did they appear and what did they say?</label>
+        <input type="text" name="errors" class="form-control" v-model.lazy.trim="errors">
 
         <br>
-        <label htmlFor="browser">Web browser used</label>
-        <input type="text" name="browser" className="form-control" v-model.lazy.trim="browser">
+        <label for="browser">Web browser used</label>
+        <input type="text" name="browser" class="form-control" v-model.lazy.trim="browser">
 
         <br>
-        <label htmlFor="other-info">Any other relevant information</label>
-        <input type="text" name="other-info" className="form-control" v-model.lazy.trim="otherInfo">
+        <label for="other-info">Any other relevant information</label>
+        <input type="text" name="other-info" class="form-control" v-model.lazy.trim="otherInfo">
 
         <br>
-        <label htmlFor="name">Your name (Optional, include if you would like me to get back to you with an
+        <label for="name">Your name (Optional, include if you would like me to get back to you with an
           update)</label>
-        <input type="text" name="name" className="form-control" v-model.lazy.trim="submitterName">
+        <input type="text" name="name" class="form-control" v-model.lazy.trim="submitterName">
 
         <br>
-        <label htmlFor="email">Your email (Optional, include if you would like me to get back to you with an
+        <label for="email">Your email (Optional, include if you would like me to get back to you with an
           update)</label>
-        <input type="email" name="email" className="form-control" v-model.lazy.trim="email">
+        <input type="email" name="email" class="form-control" v-model.lazy.trim="email">
 
         <br>
         <p>Thank you for your feedback.</p>
 
-        <button type="submit" className="btn btn-light button">Submit</button>
+        <button type="submit" class="btn btn-light button">Submit</button><br>
         <br>
-        <p v-if="submissionMessage">{{ su bmissionMessage }}</p>
+        <p v-if="submissionMessage">{{ submissionMessage }}</p>
       </div>
 
     </form>
@@ -79,8 +66,8 @@
 
 <script>
 /* eslint-disable */
-import Heading from './HeadingComponent.vue';
-
+import BugHeader from "@/components/BugHeader.vue";
+import {SERVER_URL} from '../assets/constants.js';
 export default {
   name: 'BugReportComponent',
   data() {
@@ -94,9 +81,12 @@ export default {
       otherInfo: "",
       submitterName: "",
       email: "",
-      SERVER_URL: "https://oue0h093bk.execute-api.us-east-2.amazonaws.com/dev/",
+      SERVER_URL: SERVER_URL,
       submissionMessage: "",
     }
+  },
+  components: {
+    BugHeader,
   },
   methods: {
     submitTheForm() {
@@ -145,3 +135,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.orange {
+  border-color: #fa8520;
+  background: #FEA559;
+}
+</style>

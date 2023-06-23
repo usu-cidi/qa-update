@@ -37,5 +37,3 @@ def combineReports(courseDataFrame, allyDataFrame):
             print(f"Error in {courseNames[i]}: {e}")
 
     return courseDataFrame
-
-

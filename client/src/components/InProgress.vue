@@ -1,13 +1,5 @@
 <template>
-  <h1 class="error-message">IN DEVELOPMENT - version in active dev: 1.1.0 </h1>
-  <div class="heading-box">
-    <h1>QA Update Automation</h1>
-    <p>Center for Instructional Design and Innovation - USU</p>
-    <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
-    <a href="https://github.com/emmalynnnn/cidi-monday-QA-automation">[Source]</a>
-  </div>
-
-  <br>
+  <MainHeader/>
 
   <div class="feature-box blue">
     <br>
@@ -42,18 +34,20 @@
 <script>
 /* eslint-disable */
 import BigLoading from "./BigLoading.vue";
-import Heading from './HeadingComponent.vue';
+import MainHeader from "./MainHeader.vue";
+import {SERVER_URL} from "@/assets/constants";
 export default {
   name: 'InProgressComponent',
   components: {
-    BigLoading
+    BigLoading,
+    MainHeader,
   },
   data () {
     return {
       updateInProgress: true,
       updateComplete: false,
       //SERVER_URL: "http://localhost:8000/",
-      SERVER_URL: "https://oue0h093bk.execute-api.us-east-2.amazonaws.com/dev/",
+      SERVER_URL: SERVER_URL,
       responseMessage: "",
       error: false,
     }

@@ -1,13 +1,5 @@
 <template>
-  <h1 className="error-message">IN DEVELOPMENT - version in active dev: 1.1.0 </h1>
-  <div className="heading-box">
-    <h1>QA Update Automation</h1>
-    <p>Center for Instructional Design and Innovation - USU</p>
-    <p>Created and maintained by Emma Lynn (a02391851@usu.edu)</p>
-    <a href="https://github.com/emmalynnnn/cidi-monday-QA-automation">[Source]</a>
-  </div>
-
-  <br>
+  <MainHeader/>
 
   <h2>Update the QA Board</h2>
 
@@ -104,13 +96,15 @@
 <script>
 /* eslint-disable */
 import LoadingBar from "./LoadingBar.vue";
-import Heading from './HeadingComponent.vue';
+import MainHeader from "./MainHeader.vue";
+import {SERVER_URL} from '../assets/constants.js';
 
 export default {
   name: 'AddInfoComponent',
   emits: ["form-submitted"],
   components: {
-    LoadingBar
+    LoadingBar,
+    MainHeader,
   },
   data() {
     return {
@@ -121,7 +115,7 @@ export default {
       error3: "",
       file: "",
       //SERVER_URL: "http://localhost:8000/",
-      SERVER_URL: "https://oue0h093bk.execute-api.us-east-2.amazonaws.com/dev/",
+      SERVER_URL: SERVER_URL,
       uploadMessage: "",
       form: {
         method: '',
