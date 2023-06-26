@@ -29,7 +29,7 @@ from io import BytesIO
 
 # botoClient = boto3.client('lambda') #for production
 
-from getAllyData import getURL
+from getAllyData import startGettingUrl
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -37,8 +37,6 @@ CORS(app, supports_credentials=True)
 app.config['SECRET_KEY'] = os.environ.get('CSRF')
 
 allyDataFrame = None
-
-accessToken = ""
 
 COOKIE = os.environ.get("COOKIE")
 EXTENSION_FUNC = os.environ.get("EXTENSION_FUNC")
@@ -92,39 +90,7 @@ def getBoxUrl():
 
 
 def store_tokens(access_token: str, refresh_token: str) -> bool:
-    """
-    Store the access and refresh tokens for the current user
-    """
-
-    global accessToken
-    accessToken = access_token
-
-    print(f"Here is the access token!! {accessToken}")
-
     return True
-
-
-@app.route('/finish-oauth', methods=['POST'])
-def oauth_callback():
-    code = json.loads(request.data)["code"]
-    state = json.loads(request.data)["state"]
-
-    print(f"code: {code}")
-
-    try:
-        oauth = OAuth2(
-            client_id=BOX_CLIENT_ID,
-            client_secret=BOX_SECRET,
-            store_tokens=store_tokens
-        )
-
-        access_token, refresh_token = oauth.authenticate(code)
-        print(access_token)
-
-        return prepResponse({'access_token': access_token, 'result': "Success"}), 200
-    except Exception as e:
-        return prepResponse({'access_token': "", 'result': f"Failed: {e}"}), 200
-
 
 # --------------------------
 
@@ -132,8 +98,7 @@ def oauth_callback():
 @app.route('/get-ally-link', methods=['POST'])
 def getAllyLink():
     requestInfo = json.loads(request.data)
-    print(requestInfo)
-    print("The request info is " + str(requestInfo))
+    #print("The request info is " + str(requestInfo))
 
     allyClientId = requestInfo["clientId"]
     allyConsumKey = requestInfo["consumKey"]
@@ -143,13 +108,18 @@ def getAllyLink():
     if not allyClientId or not allyConsumKey or not allyConsumSec or not termCode:
         return prepResponse({"error": "invalid input"}), 400
 
-    url = getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode)
-    if url == -1:
+    resp = startGettingUrl(allyClientId, allyConsumKey, allyConsumSec, termCode)
+    if resp == -1:
         print("Getting ally url failed")
         return prepResponse({"error": "getting ally link failed"}), 500
+    print(f"The end: {resp[-3:]}")
+    if resp[-3:] == "...":
+        done = "false"
+    else:
+        done = "true"
 
-    response = prepResponse({"link": url})
-    print(response)
+    response = prepResponse({"link": resp, "done": done})
+    #print(response)
     return response
 
 
@@ -185,6 +155,7 @@ def processAllyFile():
 def updating():
     requestInfo = json.loads(request.data)
 
+    boxAccess = requestInfo['box-access']
     triggerType = requestInfo['trigger-type']
     boardId = requestInfo['board-id']
     crBoxId = requestInfo['cr-box-id']
@@ -218,7 +189,7 @@ def updating():
                             'add support for the new board'
             error = True
 
-    if not accessToken:
+    if not boxAccess:
         errorMessage += 'Box authorization incomplete, '
 
     if error:
@@ -227,24 +198,23 @@ def updating():
     print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
 
     allyData = allyDataFrame
-    accessTokVal = accessToken
 
-    result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTokVal, email)
+    result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess)
     if result is None or result.startswith("Exception"):
         return prepResponse({"updateStatus": "Incomplete (error)", "result": result}), 500
     return prepResponse({"updateStatus": "Successfully initiated", "result": result}), 200
 
 
-def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok, email):
-    boxInfo = {"id": crBoxId, "type": "excel", "accessTok": accessTok}
+def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess):
+    boxInfo = {"id": crBoxId, "type": "excel", "accessTok": boxAccess}
     print(f"simulating the update")
     print(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email)
     return "Update successfully simulated"
 
 
-def doUpdateActually(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok, email):
+def doUpdateActually(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess):
     print("doing the update")
-    boxInfo = {"id": crBoxId, "type": "excel", "accessTok": accessTok}
+    boxInfo = {"id": crBoxId, "type": "excel", "accessTok": boxAccess}
 
     try:
         print("doing the long update")
@@ -339,7 +309,6 @@ def bugReport():
     message += "\n------Runtime Info------\n"
 
     message += f"allyDataframe: {allyDataFrame}\n"
-    message += f"accessTok: {accessToken}\n"
 
     sendEmail(message, f"Bug Report - {requestInfo['app-name']}")
     return prepResponse({"result": "Email sent"}), 200

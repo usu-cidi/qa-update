@@ -60,12 +60,14 @@ export default {
     let monBoardId = this.$route.query.monBoardId;
     let crBoxId = this.$route.query.crBoxId;
     let email = this.$route.query.email;
+    let boxAccess = this.$route.query.boxAccess;
 
-    let inputData = {'trigger-type': updateType, 'board-id': monBoardId, 'cr-box-id': crBoxId, 'mon-api-key': monAPIKey, 'email': email};
+    let inputData = {'trigger-type': updateType, 'board-id': monBoardId,
+      'cr-box-id': crBoxId, 'mon-api-key': monAPIKey, 'email': email, 'box-access': boxAccess};
     this.postData(this.SERVER_URL + "update", inputData)
         .then((response) => {
           if (response === undefined) {
-            console.log("504 Gateway Timeout - update probably still initiated though")
+            console.log("504 Gateway Timeout... :(")
             this.updateInProgress = false;
             this.error = true;
             this.responseMessage = "Please contact your developer by filling out a bug report form below. " +

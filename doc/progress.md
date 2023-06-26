@@ -811,15 +811,25 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Working on refactor
 * Created flowchart design
 * Moved Ally file upload to earlier
+* Removed global box access token
+* Added fun Ally messages back
+* Fixed Ally link waiting problem
 
 ### TODO:
-
+* Big refactor
+  * Get rid of globals
+  * Get rid of statefulness
+  * Remove unnecessary/duplicate code
+* Add a better way to add a new term
+* Support running multiple updates at a time
+  * Should be fixed by making API stateless and figuring out better bucket obj names
+* Fix bug reports
 
 ### 1.1.1
 * Add back fun Ally waiting things
 * Big refactor
-  * Get rid of globals/unnecessary statefulness
-  * Make API more RESTful
+  * Get rid of globals
+  * Get rid of statefulness
   * Remove unnecessary/duplicate code
   * Remove `package-lock.json`?
   * Make get ally link response better
@@ -827,6 +837,7 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Combine steps two and three
   * Or hide the other fields until the Ally file is uploaded
 * Support running multiple updates at a time
+  * Should be fixed by making API stateless and figuring out better bucket obj names
 * Fix bug reports
 
 ### Future Versions:
@@ -842,7 +853,7 @@ which is sus... but I don't think we have a runaway lambda which is good
 * dotenv: `pip3 install python-dotenv --user`
 * flask==1.1.4
 * flask-cors: 3.0.10
-* 
+* promise-ratelimit
 
 ## Sources & References:
 

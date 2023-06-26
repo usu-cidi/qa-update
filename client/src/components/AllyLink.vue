@@ -34,8 +34,8 @@
     <div v-if="link">
       <a :href="link">Click here to download the Ally Accessibility report</a><br><br>
     </div>
+    <p v-if="message">{{message}}</p>
     <div v-if="linkLoading">
-      <p>Loading...</p>
       <LoadingBar/>
     </div>
   </div>
@@ -68,6 +68,8 @@ import LoadingBar from "./LoadingBar.vue";
 import MainHeader from "./MainHeader.vue";
 import {SERVER_URL} from '@/assets/constants.js';
 
+var throttle = require('promise-ratelimit')(7000);
+
 export default {
   name: 'AllyLinkComponent',
   emits: ["form-submitted"],
@@ -87,6 +89,7 @@ export default {
         icon: ''
       },
       error2: '',
+      message: '',
     }
   },
   created() {
@@ -150,7 +153,6 @@ export default {
       let inputData = {clientId: clientId, consumKey: consumKey, consumSec: consumSec, termCode: termCode};
       this.postData(this.SERVER_URL + "get-ally-link", inputData)
           .then((data) => {
-            console.log(data);
             data = data.body;
             console.log(data);
             if (data.error !== undefined) {
@@ -158,18 +160,28 @@ export default {
                   "If the issue persists, contact your system admin.";
               this.linkLoading = false;
             } else {
-              this.linkLoading = false;
-              this.link = data.link;
+              if (data.done === 'true') {
+                this.linkLoading = false;
+                this.link = data.link;
+                this.message= "";
+                console.log(`Got it!! ${this.link}`);
+              } else {
+                this.message = data.link;
+                throttle()
+                    .then(hmm => {
+                      console.log("Trying again")
+                      this.tryLinkAgain(inputData, 0);
+                    });
+              }
             }
-          }).catch(err => {
-        console.log(err);
-        this.tryLinkAgain(inputData, 0);
-      });
+          })
+          .catch(err => {
+            console.log(err);
+          });
     },
     tryLinkAgain(inputData, invocationCount) {
       this.postData(this.SERVER_URL + "get-ally-link", inputData)
           .then((data) => {
-            console.log(data);
             data = data.body;
             console.log(data);
             if (data.error !== undefined) {
@@ -177,18 +189,30 @@ export default {
                   "If the issue persists, contact your system admin.";
               this.linkLoading = false;
             } else {
-              this.linkLoading = false;
-              this.link = data.link;
+              if (data.done === 'true') {
+                this.linkLoading = false;
+                this.link = data.link;
+                this.message= "";
+                console.log(`Got it!! ${this.link}`);
+              } else {
+                this.message = data.link;
+                throttle()
+                    .then(hmm => {
+                      console.log("Trying again")
+
+                      if (invocationCount > 80) {
+                        this.linkLoading = false;
+                        this.error1 = "Operation failed. Please check your authentication and other inputs and try again. " +
+                            "If the issue persists, contact your system admin.";
+                      } else {
+                        this.tryLinkAgain(inputData, invocationCount + 1);
+                      }
+                    });
+              }
             }
-          }).catch(err => {
-        console.log(err);
-        if (invocationCount > 10) {
-          this.linkLoading = false;
-          this.error1 = "Operation failed. Please check your authentication and other inputs and try again. " +
-              "If the issue persists, contact your system admin.";
-        } else {
-          this.tryLinkAgain(inputData, invocationCount + 1);
-        }
+          })
+          .catch(err => {
+            console.log(err);
       });
     },
     postData(url, data, contentType = "application/json", stringify = true) {

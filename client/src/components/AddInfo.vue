@@ -121,6 +121,7 @@ export default {
     runUpdate() {
       this.error3 = "";
 
+      let boxAccess = this.$route.query.box;
       let monAPIKey = document.getElementById("mon-api-key").value;
       let updateType = document.getElementById("trigger-type").value;
       let monBoardId = document.getElementById("board-id").value;
@@ -147,7 +148,8 @@ export default {
         updateType: updateType,
         monBoardId: monBoardId,
         crBoxId: crBoxId,
-        email: email
+        email: email,
+        boxAccess: boxAccess,
       }
 
       this.$router.push({path: '/updating', query: params})

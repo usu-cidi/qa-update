@@ -5408,6 +5408,11 @@
   "resolved" "https://registry.npmjs.org/promise-queue/-/promise-queue-2.2.5.tgz"
   "version" "2.2.5"
 
+"promise-ratelimit@^0.0.3":
+  "integrity" "sha512-acs37vZV+ZVb2rT0X7+Z1p8amV7kETs+91ENV5UgQeCYr8Ln0yy93SmW+HVY8+Vve3W1aIPwxYf8tzpv0U1+dw=="
+  "resolved" "https://registry.npmjs.org/promise-ratelimit/-/promise-ratelimit-0.0.3.tgz"
+  "version" "0.0.3"
+
 "proxy-addr@~2.0.7":
   "integrity" "sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg=="
   "resolved" "https://registry.npmjs.org/proxy-addr/-/proxy-addr-2.0.7.tgz"

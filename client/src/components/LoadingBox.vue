@@ -61,8 +61,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route.query.state);
-    console.log(this.$route.query.code);
 
     let code = this.$route.query.code;
     let state = this.$route.query.state;
@@ -75,17 +73,7 @@ export default {
     } else if (error) {
       this.errorText = error + ": " + error_description
     } else {
-      this.postData(this.SERVER_URL + "finish-oauth", {code: code, state: state})
-          .then((data) => {
-            console.log(data);
-            data = data.body;
-            console.log(data);
-            if (data.result === "Success") {
-              this.$router.replace({path: '/add-info'})
-            } else {
-              this.errorText = "Box authorization failed: " + data.result;
-            }
-          });
+      this.$router.replace({path: `/add-info`, query: { box: code }});
     }
 
   },

@@ -13,55 +13,51 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from requests_oauthlib import OAuth1Session
-import sys
 import json
 import time
 import random
 
-def getURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
+LOADING_MESSAGES = ["Pulling data from Ally API...", "Loading...", "Going to space...", "Locating data...",
+                       "Organizing spreadsheets...", "Connecting to Canvas...",
+                       "Taking a coffee break (being a web server is hard work!)...", "Loading...", "Loading...",
+                       "Loading...", "Loading...", "Loading...", "Loading...",
+                       "Rearranging solar panels...", "Hacking government computers...", "Preparing data...",
+                       "Preparing data...", "API response pending...", "Waiting for response...",
+                       "Preparing file...", "Solving the WORDLE...", "Loading...", "Reading files...",
+                       "Convincing reCAPTCHA I'm not a robot...", "Preparing data...", "Flirting with ChatGPT..."]
 
+
+def startGettingUrl(allyClientId, allyConsumKey, allyConsumSec, termCode):
     CONSUMER_KEY = allyConsumKey
     CONSUMER_SECRET = allyConsumSec
     CLIENT_ID = allyClientId
     TERM_CODE = termCode
 
-    t = time.localtime()
-    #currentTime = time.strftime("%Y-%m-%d-%H-%M", t)
-    beginTime = time.time()
-
     test = OAuth1Session(CONSUMER_KEY, client_secret=CONSUMER_SECRET)
-    url = f'https://prod.ally.ac/api/v1/{CLIENT_ID}/reports/terms/{TERM_CODE}/csv?role=administrator&userId=1' #&token={currentTime}'
+    url = f'https://prod.ally.ac/api/v1/{CLIENT_ID}/reports/terms/{TERM_CODE}/csv?role=administrator&userId=1'
     r = test.get(url)
 
-    if (r.content == b'The supplied authentication is invalid'):
+    if r.content == b'The supplied authentication is invalid':
         print(r.content)
         print(r)
         return -1
 
-    parsedOutput = json.loads(r.content)
-
     print("Pulling data from Ally API")
     print("Loading...\n")
 
-    time.sleep(5)
-
     try:
-        while not "url" in parsedOutput:
-            r = test.get(url)
-            parsedOutput = json.loads(r.content)
-            if "status" in parsedOutput:
-                print(f"Request ID: {parsedOutput['processId']}")
-                print(f"Status: {parsedOutput['status']}\n")
-                time.sleep(7)
-            else:
-                break
+        r = test.get(url)
+        parsedOutput = json.loads(r.content)
+        if "status" in parsedOutput:
+            print(f"Request ID: {parsedOutput['processId']}")
+            print(f"Status: {parsedOutput['status']}\n")
 
-        print(f"\nDone in {time.time() - beginTime:.3f} seconds!")
+            return random.choice(LOADING_MESSAGES)
+        else:
+            zipURL = str(r.content[8:-2])
+            return zipURL[1:]
 
-        zipURL = str(r.content[8:-2])
-        return zipURL[1:]
     except Exception as e:
         print(e)
         return -1
-
 
