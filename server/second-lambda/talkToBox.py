@@ -1,3 +1,4 @@
+
 # Copyright (C) 2023  Emma Lynn
 #
 #     This program is free software: you can redistribute it and/or modify
@@ -19,6 +20,7 @@ import io
 
 BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
 BOX_SECRET = os.environ.get("BOX_SECRET")
+
 
 def getDataFromBox(fileId, fileType, accessToken):
 

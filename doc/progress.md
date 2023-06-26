@@ -815,6 +815,7 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Added fun Ally messages back
 * Fixed Ally link waiting problem
 * Big client side refactor
+* Big server side refactor (as far as possible locally)
 
 ### TODO:
 * Big refactor
@@ -837,9 +838,7 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Fix bug reports
 
 ### Future Versions:
-* Stop update button
-* Always need more security
-* Authentication
+* Stop update button?
 
 
 ## Dependencies:

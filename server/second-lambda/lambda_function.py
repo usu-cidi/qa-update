@@ -7,7 +7,7 @@ import pandas as pd
 import requests
 import boto3
 
-from updateMonday import simulateUpdate, doOneUpdate
+from updateMonday import doOneUpdate
 from combineData import combineReports
 from talkToBox import getDataFromBox
 

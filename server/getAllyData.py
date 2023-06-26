@@ -14,17 +14,16 @@
 
 from requests_oauthlib import OAuth1Session
 import json
-import time
 import random
 
 LOADING_MESSAGES = ["Pulling data from Ally API...", "Loading...", "Going to space...", "Locating data...",
-                       "Organizing spreadsheets...", "Connecting to Canvas...",
-                       "Taking a coffee break (being a web server is hard work!)...", "Loading...", "Loading...",
-                       "Loading...", "Loading...", "Loading...", "Loading...",
-                       "Rearranging solar panels...", "Hacking government computers...", "Preparing data...",
-                       "Preparing data...", "API response pending...", "Waiting for response...",
-                       "Preparing file...", "Solving the WORDLE...", "Loading...", "Reading files...",
-                       "Convincing reCAPTCHA I'm not a robot...", "Preparing data...", "Flirting with ChatGPT..."]
+                    "Organizing spreadsheets...", "Connecting to Canvas...",
+                    "Taking a coffee break (being a web server is hard work!)...", "Loading...", "Loading...",
+                    "Loading...", "Loading...", "Loading...", "Loading...",
+                    "Rearranging solar panels...", "Hacking government computers...", "Preparing data...",
+                    "Preparing data...", "API response pending...", "Waiting for response...",
+                    "Preparing file...", "Solving the WORDLE...", "Loading...", "Reading files...",
+                    "Convincing reCAPTCHA I'm not a robot...", "Preparing data...", "Flirting with ChatGPT..."]
 
 
 def startGettingUrl(allyClientId, allyConsumKey, allyConsumSec, termCode):
@@ -60,4 +59,3 @@ def startGettingUrl(allyClientId, allyConsumKey, allyConsumSec, termCode):
     except Exception as e:
         print(e)
         return -1
-

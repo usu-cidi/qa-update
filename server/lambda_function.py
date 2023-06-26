@@ -12,17 +12,16 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from flask import Flask, request, jsonify, render_template, flash, redirect, url_for, session
+from flask import Flask, request, redirect, url_for
 from flask_cors import CORS
 from boxsdk import Client, OAuth2
 import os
 import json
 import pandas as pd
-import smtplib, ssl
+import smtplib
+import ssl
 from email.message import EmailMessage
 from datetime import datetime
-
-from io import BytesIO
 
 # import awsgi #for production
 # import boto3 #for production
@@ -41,7 +40,6 @@ allyDataFrame = None
 COOKIE = os.environ.get("COOKIE")
 EXTENSION_FUNC = os.environ.get("EXTENSION_FUNC")
 
-# CLIENT_URL_CORS = "https://master.d3kepc58nvsh8n.amplifyapp.com"
 CLIENT_URL_CORS = "http://localhost:8080"
 CLIENT_URL = f"{CLIENT_URL_CORS}/"
 ALLOWED_EXTENSIONS = {'csv'}
@@ -89,8 +87,9 @@ def getBoxUrl():
     return prepResponse({'authUrl': auth_url, 'csrfTok': csrf_token}), 200
 
 
-def store_tokens(access_token: str, refresh_token: str) -> bool:
+def store_tokens() -> bool:
     return True
+
 
 # --------------------------
 
@@ -98,7 +97,6 @@ def store_tokens(access_token: str, refresh_token: str) -> bool:
 @app.route('/get-ally-link', methods=['POST'])
 def getAllyLink():
     requestInfo = json.loads(request.data)
-    #print("The request info is " + str(requestInfo))
 
     allyClientId = requestInfo["clientId"]
     allyConsumKey = requestInfo["consumKey"]
@@ -108,7 +106,7 @@ def getAllyLink():
     if not allyClientId or not allyConsumKey or not allyConsumSec or not termCode:
         return prepResponse({"error": "invalid input"}), 400
 
-    resp = startGettingUrl(allyClientId, allyConsumKey, allyConsumSec, termCode)
+    resp = getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode)
     if resp == -1:
         print("Getting ally url failed")
         return prepResponse({"error": "getting ally link failed"}), 500
@@ -119,12 +117,11 @@ def getAllyLink():
         done = "true"
 
     response = prepResponse({"link": resp, "done": done})
-    #print(response)
     return response
 
 
 def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
-    result = getURL(allyClientId, allyConsumKey, allyConsumSec, termCode)
+    result = startGettingUrl(allyClientId, allyConsumKey, allyConsumSec, termCode)
     if result == -1:
         return -1
     else:
@@ -184,7 +181,7 @@ def updating():
         if not crBoxId.isdigit() or int(crBoxId) <= 0:
             errorMessage += 'Invalid course report ID, '
             error = True
-        if not boardId in BOARD_IDS:
+        if boardId not in BOARD_IDS:
             errorMessage += 'Unsupported monday board - please check for accuracy and then contact your developer to ' \
                             'add support for the new board'
             error = True

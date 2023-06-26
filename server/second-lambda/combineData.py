@@ -1,3 +1,4 @@
+
 # Copyright (C) 2023  Emma Lynn
 #
 #     This program is free software: you can redistribute it and/or modify
@@ -12,9 +13,6 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import pandas as pd
-from time import time
-import sys
 
 def combineReports(courseDataFrame, allyDataFrame):
 
@@ -22,8 +20,11 @@ def combineReports(courseDataFrame, allyDataFrame):
 
     allyCourses = allyDataFrame["Course name"]
     for i in range(0, len(allyCourses)):  # through Ally data
-        courseInfo = [allyDataFrame["Overall score"][i], allyDataFrame["Files score"][i], allyDataFrame["WYSIWYG score"][i],
-                      allyDataFrame["Scanned:1"][i], allyDataFrame["ImageDescription:2"][i]]
+        courseInfo = [allyDataFrame["Overall score"][i],
+                      allyDataFrame["Files score"][i],
+                      allyDataFrame["WYSIWYG score"][i],
+                      allyDataFrame["Scanned:1"][i],
+                      allyDataFrame["ImageDescription:2"][i]]
         allyDict[allyCourses[i]] = courseInfo
 
     courseNames = courseDataFrame["Course"]
@@ -31,14 +32,11 @@ def combineReports(courseDataFrame, allyDataFrame):
     for i in range(0, len(courseNames)):  # through Meghan's data
         try:
             allyInfo = allyDict[courseNames[i]]
-            courseDataFrame.loc[i, ["Overall Ally", "Files Ally", "WYSIWYG Ally", "PDF no OCR", "Images no Alt"]] = allyInfo
-            # print(f"Successfully matched {courseNames[i]}")
-            #writeToReport("Successfully matched", courseNames[i])
+            courseDataFrame.loc[i, ["Overall Ally", "Files Ally", "WYSIWYG Ally",
+                                    "PDF no OCR", "Images no Alt"]] = allyInfo
         except KeyError:
             print(f"{courseNames[i]} could not be matched in the ally file.")
         except Exception as e:
             print(f"Error in {courseNames[i]}: {e}")
 
     return courseDataFrame
-
-

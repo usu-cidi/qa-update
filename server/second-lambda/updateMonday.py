@@ -16,7 +16,7 @@ import requests
 import json
 import pandas as pd
 from datetime import date
-import time
+
 
 API_URL = "https://api.monday.com/v2"
 NUM_STU_INDEX = 9
@@ -28,17 +28,13 @@ COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", 
            "kaltura_vids", "youtube", "flash_content", "broken_links", "navigation_items", "status48",
            "overall_a11y_score",
            "files_ally_score", "wysiwyg_ally_score", "__of_pdf_files", "pdf_files_in_use", "pdf_scanned_not_ocr_d",
-           "images", "images_wo_alt_text", "numbers"
-           # , "status_15", "date"
-           ]
+           "images", "images_wo_alt_text", "numbers"]
 # "status_15": trigger column - DEV, "status_12": Summer 2023, "status_13": Fall 2023
 # "date": last updated column - DEV - same in Summer 2023 & Fall 2023
 
 BOARD_IDS = {"3692723016": "Dev", "4330918867": "Summer 2023", "4330926569": "Fall 2023", "4565600141": "Dev"}
 
-SMALL_COL_IDS = [
-    # "status_15", "date"
-]
+SMALL_COL_IDS = []
 # "status_15": trigger column - DEV, "status_12": Summer 2023, "status_13": Fall 2023
 # "date": last updated column - DEV - same in Summer 2023 & Fall 2023
 
@@ -67,32 +63,6 @@ def updateColIds(boardId):
     SMALL_COL_IDS.append("date")
 
 
-def splitLine(line):
-    newLine = line.replace("Animal, Dairy & Vet Sciences", "Animal Dairy & Vet Sciences")
-    newLine = newLine.replace("Plants, Soils and Climate", "Plants Soils and Climate")
-    newLine = newLine.replace("Nutrition, Dietetics &Food Sci", "Nutrition Dietetics &Food Sci")
-    newLine = newLine.replace("Humanities, Arts & Social Scie", "Humanities Arts & Social Scie")
-    newLine = newLine.replace("Technology, Design & Technical", "Technology Design & Technical")
-
-    newLine = newLine.replace("Study Abroad", "Supervised")
-    newLine = newLine.replace("Disability Resource Center", "CPD")
-
-    splitData = newLine.split(",")
-
-    if (splitData[NUM_STU_INDEX - 2] == '"Animal Dairy & Vet Sciences"'):
-        splitData[NUM_STU_INDEX - 2] = "Animal, Dairy & Vet Sciences"
-    elif (splitData[NUM_STU_INDEX - 2] == '"Plants Soils and Climate"'):
-        splitData[NUM_STU_INDEX - 2] = 'Plants, Soils and Climate'
-    elif (splitData[NUM_STU_INDEX - 2] == '"Nutrition Dietetics &Food Sci"'):
-        splitData[NUM_STU_INDEX - 2] = "Nutrition, Dietetics &Food Sci"
-    elif (splitData[NUM_STU_INDEX - 3] == '"Humanities Arts & Social Scie"'):
-        splitData[NUM_STU_INDEX - 3] = "Humanities, Arts & Social Scie"
-    elif (splitData[NUM_STU_INDEX - 3] == '"Technology Design & Technical"'):
-        splitData[NUM_STU_INDEX - 3] = "Technology, Design & Technical"
-
-    return splitData
-
-
 def findGroupID(numStu):
     for lowerLimit in GROUP_IDS:
         if int(numStu) >= lowerLimit:
@@ -101,7 +71,6 @@ def findGroupID(numStu):
 
 
 def createNewItem(rowInfo, boardId, HEADERS):
-    # print(f"Looking at {rowInfo[NUM_STU_INDEX]}")
     groupID = findGroupID(rowInfo[NUM_STU_INDEX])
     query = f'mutation ($myItemName: String!, $columnVals: JSON!) ' \
             f'{{ create_item (board_id:{boardId}, group_id:{groupID}, ' \
@@ -111,14 +80,12 @@ def createNewItem(rowInfo, boardId, HEADERS):
     rowInfo.append(date.today())
 
     colVals = dict(zip(COL_IDS, rowInfo[1:]))
-    vars = {
+    theVars = {
         'myItemName': rowInfo[0],
         'columnVals': json.dumps(colVals, default=str)
     }
 
-    # print(vars)
-
-    data = {'query': query, 'variables': vars}
+    data = {'query': query, 'variables': theVars}
     r = requests.post(url=API_URL, json=data, headers=HEADERS)  # make request
 
     try:
@@ -130,17 +97,18 @@ def createNewItem(rowInfo, boardId, HEADERS):
 
 
 def updateRow(itemID, rowInfo, boardId, HEADERS):
-    query = f'mutation ($columnVals: JSON!) {{ change_multiple_column_values (board_id:{boardId}, item_id: {itemID}, column_values:$columnVals) {{ name id }} }}'
+    query = f'mutation ($columnVals: JSON!) {{ change_multiple_column_values (board_id:{boardId}, ' \
+            f'item_id: {itemID}, column_values:$columnVals) {{ name id }} }}'
 
     rowInfo.append("Done")
     rowInfo.append(date.today())
 
     colVals = dict(zip(COL_IDS, rowInfo[1:]))
-    vars = {
+    theVars = {
         'columnVals': json.dumps(colVals, default=str)
     }
 
-    data = {'query': query, 'variables': vars}
+    data = {'query': query, 'variables': theVars}
 
     r = requests.post(url=API_URL, json=data, headers=HEADERS)  # make request
     try:
@@ -164,11 +132,7 @@ def fillNewBoard(courseDF, boardId, mondayAPIKey):
     HEADERS = {"Authorization": mondayAPIKey}
     numNew = 0
 
-    # courseDF.replace("Study Abroad", "Supervised")
-
     for i in courseDF.index:  # through courseDF
-
-        newNumStudents = courseDF["Students"][i]
 
         rowData = courseDF.iloc[i].values.tolist()
         rowData = removeNaN(rowData)
@@ -180,27 +144,11 @@ def fillNewBoard(courseDF, boardId, mondayAPIKey):
         itemID = createNewItem(rowData, boardId, HEADERS)
         if itemID is None:
             print("Failed")
-            # break
             continue
         numNew += 1
         print(f"{courseDF['Course'][i]} added as new row")
 
     return numNew
-
-
-def simulateUpdate(courseDF):
-    i = 0
-    rowData = courseDF.iloc[i].values.tolist()
-    rowData = removeNaN(rowData)
-    if "Study Abroad" in rowData:
-        print("Replacing 'Study Abroad' with 'Supervised'.")
-        rowData[rowData.index("Study Abroad")] = "Supervised"
-    print(str(rowData))
-
-    time.sleep(2)
-
-    newDF = courseDF.tail(-1)
-    return newDF
 
 
 def doOneUpdate(courseDF, boardId, mondayAPIKey, currBoard):
@@ -221,16 +169,15 @@ def doOneUpdate(courseDF, boardId, mondayAPIKey, currBoard):
 
     HEADERS = {"Authorization": mondayAPIKey}
 
-    # if courseDF["Course"][i] in currBoard:
+    newDF = courseDF.tail(-1)
+
     if rowData[0] in currBoard:
-        # itemID = currBoard[courseDF["Course"][i]]
         itemID = currBoard[rowData[0]]
 
         if updateRow(itemID, rowData, boardId, HEADERS) is None:
             return [newDF, 0, 0]
 
         numUpdated = 1
-        # print(f"{courseDF['Course'][i]} matched and updated if needed")
         print(f"{rowData[0]} matched and updated if needed")
     else:
         itemID = createNewItem(rowData, boardId, HEADERS)
@@ -238,68 +185,6 @@ def doOneUpdate(courseDF, boardId, mondayAPIKey, currBoard):
             print("Failed")
             return [newDF, 0, 0]
         numNew = 1
-        # print(f"{courseDF['Course'][i]} added as new row")
         print(f"{rowData[0]} added as new row")
 
-    newDF = courseDF.tail(-1)
     return [newDF, numUpdated, numNew]
-
-
-def updateExistingBoard(courseDF, boardId, mondayAPIKey):
-    updateColIds(boardId)
-
-    HEADERS = {"Authorization": mondayAPIKey}
-
-    # Just for update ---
-
-    getIdsQuery = f'{{ boards(ids:{boardId}) {{ name items {{ name id }} }} }}'
-    data = {'query': getIdsQuery}
-
-    r = requests.post(url=API_URL, json=data, headers=HEADERS)
-    jsonObj = json.loads(r.content)
-
-    currBoard = {}
-    for theRow in jsonObj["data"]["boards"][0]["items"]:
-        currBoard[theRow["name"]] = theRow["id"]
-
-    # ---
-
-    numNew = 0
-    numUpdated = 0  # just for update
-
-    courseDF.replace("Study Abroad", "Supervised")
-
-    for i in courseDF.index:  # through courseDF
-
-        rowData = courseDF.iloc[i].values.tolist()
-        rowData = removeNaN(rowData)
-
-        if "Study Abroad" in rowData:
-            print("Replacing 'Study Abroad' with 'Supervised'.")
-            rowData[rowData.index("Study Abroad")] = "Supervised"
-        if "Disability Resource Center" in rowData:
-            print("Replacing 'Disability Resource Center' with 'University'.")
-            rowData[rowData.index("Disability Resource Center")] = "University"
-
-        # just for update ---
-        if courseDF["Course"][i] in currBoard:
-            itemID = currBoard[courseDF["Course"][i]]
-
-            if updateRow(currBoard[courseDF["Course"][i]], rowData, boardId, HEADERS) is None:
-                continue
-
-            numUpdated += 1
-            print(f"{courseDF['Course'][i]} matched and updated if needed")
-            # ---
-        else:
-            itemID = createNewItem(rowData, boardId, HEADERS)
-            if itemID is None:
-                print("Failed")
-                # break
-                continue
-            numNew += 1
-            print(f"{courseDF['Course'][i]} added as new row")
-
-    return [numNew, numUpdated]
-
-
