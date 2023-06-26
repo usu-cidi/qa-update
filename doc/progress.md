@@ -814,6 +814,7 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Removed global box access token
 * Added fun Ally messages back
 * Fixed Ally link waiting problem
+* Big client side refactor
 
 ### TODO:
 * Big refactor
@@ -828,11 +829,6 @@ which is sus... but I don't think we have a runaway lambda which is good
 ### 1.1.1
 * Add back fun Ally waiting things
 * Big refactor
-  * Get rid of globals
-  * Get rid of statefulness
-  * Remove unnecessary/duplicate code
-  * Remove `package-lock.json`?
-  * Make get ally link response better
 * Add a better way to add a new term
 * Combine steps two and three
   * Or hide the other fields until the Ally file is uploaded

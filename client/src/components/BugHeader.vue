@@ -5,16 +5,5 @@
     <p>Center for Instructional Design and Innovation - USU</p>
     <p>Created and maintained by Emma Lynn (e.lynn@usu.edu)</p>
   </div>
-
   <br>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-
-    }
-  },
-}
-</script>

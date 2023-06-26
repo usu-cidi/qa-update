@@ -1,7 +1,6 @@
 <template>
   <MainHeader/>
 
-
   <div class="feature-box blue">
     <br>
     <h2>Error 404: Not Found</h2>

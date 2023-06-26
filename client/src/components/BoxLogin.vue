@@ -8,7 +8,6 @@
       <div v-if="url" class="card">
         <div class="card-body text-center">
           <div class="mb-4">
-            <!-- <i class="feather icon-unlock auth-icon"></i> -->
             <svg width='300' viewBox='0 0 300 29'>
               <path fill='#fff'
                     d='M70.87,7.4a8.82,8.82,0,0,0-7.79,4.69A8.83,8.83,0,0,0,50,9.16V1.73a1.76,1.76,0,0,0-3.52,0V16.36a8.82,8.82,0,0,0,16.61,4A8.82,8.82,0,1,0,70.87,7.4ZM55.29,21.51a5.29,5.29,0,1,1,5.29-5.29A5.3,5.3,0,0,1,55.29,21.51Zm15.58,0a5.29,5.29,0,1,1,5.29-5.29A5.29,5.29,0,0,1,70.87,21.51ZM93,22.09a1.67,1.67,0,0,1-.4,2.44,2,2,0,0,1-2.67-.32l-4.12-5.06L81.64,24.2a2,2,0,0,1-2.66.32,1.67,1.67,0,0,1-.4-2.44l4.79-5.88-4.79-5.89A1.67,1.67,0,0,1,79,7.87a2,2,0,0,1,2.66.32l4.12,5.06L89.9,8.19a2,2,0,0,1,2.66-.32A1.67,1.67,0,0,1,93,10.31l-4.8,5.89Z' />
@@ -39,7 +38,7 @@
 <script>
 /* eslint-disable */
 import MainHeader from "./MainHeader.vue";
-import {SERVER_URL} from '../assets/constants.js';
+import {SERVER_URL} from '@/assets/constants.js';
 
 export default {
   name: 'BoxLoginComponent',
@@ -47,14 +46,11 @@ export default {
     MainHeader,
   },
   created() {
-    fetch(this.SERVER_URL + "get-box-url", {credentials: "include"})
+    fetch(SERVER_URL + "get-box-url", {credentials: "include"})
         .then(r => r.json())
         .then(response => {
-          console.log(response)
           response = response.body
           console.log(response)
-          console.log(response.authUrl);
-          //return response.authUrl;
           this.url = response.authUrl;
         })
         .catch(err => {
@@ -64,18 +60,8 @@ export default {
           }
         })
   },
-  computed: {
-
-  },
-  methods: {
-
-  },
   data() {
     return {
-      accessToken: "",
-      refreshToken: "",
-      //SERVER_URL: "http://localhost:8000/",
-      SERVER_URL: SERVER_URL,
       url: "",
     }
   }

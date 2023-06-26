@@ -15,14 +15,11 @@
 <script>
 /* eslint-disable */
 import MainHeader from "./MainHeader.vue";
-import {SERVER_URL} from "@/assets/constants";
 export default {
   name: 'LoadingBoxComponent',
   data() {
     return {
       errorText: "",
-      //SERVER_URL: "http://localhost:8000/",
-      SERVER_URL: SERVER_URL,
     }
   },
   components: {
@@ -39,7 +36,6 @@ export default {
 
       return fetch(url, {
         method: "POST",
-        /*mode: "no-cors",*/
         cache: "no-cache",
         credentials: "same-origin",
         connection: "keep-alive",
@@ -63,7 +59,6 @@ export default {
   mounted() {
 
     let code = this.$route.query.code;
-    let state = this.$route.query.state;
     let error = this.$route.query.error;
     let error_description = this.$route.query.error_description;
 

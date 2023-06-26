@@ -34,7 +34,7 @@
     <div v-if="link">
       <a :href="link">Click here to download the Ally Accessibility report</a><br><br>
     </div>
-    <p v-if="message">{{message}}</p>
+    <p v-if="message">{{ message }}</p>
     <div v-if="linkLoading">
       <LoadingBar/>
     </div>
@@ -68,7 +68,7 @@ import LoadingBar from "./LoadingBar.vue";
 import MainHeader from "./MainHeader.vue";
 import {SERVER_URL} from '@/assets/constants.js';
 
-var throttle = require('promise-ratelimit')(7000);
+let throttle = require('promise-ratelimit')(7000);
 
 export default {
   name: 'AllyLinkComponent',
@@ -82,7 +82,6 @@ export default {
       link: "",
       linkLoading: false,
       error1: "",
-      SERVER_URL: SERVER_URL,
       uploadMessage: "",
       form: {
         method: '',
@@ -99,10 +98,9 @@ export default {
       console.log("Processing file")
       this.error2 = "";
 
-      var formElement = document.querySelector('#upload-form'),
-          fileElement = document.querySelector('#file-field'),
-          request = new XMLHttpRequest(),
-          data = new FormData(formElement);
+      let formElement = document.querySelector('#upload-form');
+      let request = new XMLHttpRequest();
+      let data = new FormData(formElement);
 
       request.onreadystatechange = () => {
         if (request.readyState === 4) {
@@ -110,7 +108,7 @@ export default {
         }
       };
 
-      request.open('POST', this.SERVER_URL + 'process-ally-file', true);
+      request.open('POST', SERVER_URL + 'process-ally-file', true);
       request.withCredentials = true;
       request.send(data);
       e.preventDefault();
@@ -151,36 +149,15 @@ export default {
       this.linkLoading = true;
 
       let inputData = {clientId: clientId, consumKey: consumKey, consumSec: consumSec, termCode: termCode};
-      this.postData(this.SERVER_URL + "get-ally-link", inputData)
-          .then((data) => {
-            data = data.body;
-            console.log(data);
-            if (data.error !== undefined) {
-              this.error1 = "Operation failed. Please check your authentication and other inputs and try again. " +
-                  "If the issue persists, contact your system admin.";
-              this.linkLoading = false;
-            } else {
-              if (data.done === 'true') {
-                this.linkLoading = false;
-                this.link = data.link;
-                this.message= "";
-                console.log(`Got it!! ${this.link}`);
-              } else {
-                this.message = data.link;
-                throttle()
-                    .then(hmm => {
-                      console.log("Trying again")
-                      this.tryLinkAgain(inputData, 0);
-                    });
-              }
-            }
+      let invocationCount = 0;
+
+      this.doRecursiveLink(inputData, invocationCount)
+          .then(resp => {
+            console.log("done with this");
           })
-          .catch(err => {
-            console.log(err);
-          });
     },
-    tryLinkAgain(inputData, invocationCount) {
-      this.postData(this.SERVER_URL + "get-ally-link", inputData)
+    async doRecursiveLink(inputData, invocationCount) {
+      this.postData(SERVER_URL + "get-ally-link", inputData)
           .then((data) => {
             data = data.body;
             console.log(data);
@@ -197,7 +174,7 @@ export default {
               } else {
                 this.message = data.link;
                 throttle()
-                    .then(hmm => {
+                    .then(resp => {
                       console.log("Trying again")
 
                       if (invocationCount > 80) {
@@ -205,7 +182,7 @@ export default {
                         this.error1 = "Operation failed. Please check your authentication and other inputs and try again. " +
                             "If the issue persists, contact your system admin.";
                       } else {
-                        this.tryLinkAgain(inputData, invocationCount + 1);
+                        this.doRecursiveLink(inputData, invocationCount + 1);
                       }
                     });
               }
@@ -225,7 +202,6 @@ export default {
 
       return fetch(url, {
         method: "POST",
-        /*mode: "no-cors",*/
         cache: "no-cache",
         credentials: "same-origin",
         connection: "keep-alive",

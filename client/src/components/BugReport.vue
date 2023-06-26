@@ -67,7 +67,7 @@
 <script>
 /* eslint-disable */
 import BugHeader from "@/components/BugHeader.vue";
-import {SERVER_URL} from '../assets/constants.js';
+import {SERVER_URL} from '@/assets/constants.js';
 export default {
   name: 'BugReportComponent',
   data() {
@@ -81,7 +81,6 @@ export default {
       otherInfo: "",
       submitterName: "",
       email: "",
-      SERVER_URL: SERVER_URL,
       submissionMessage: "",
     }
   },
@@ -96,7 +95,7 @@ export default {
         "actual-behavior": this.actual, "errors": this.errors, "browser": this.browser,
         "other-info": this.otherInfo, "name": this.submitterName, "email": this.email
       };
-      this.postData(this.SERVER_URL + "send-bug-email", inputData)
+      this.postData(SERVER_URL + "send-bug-email", inputData)
           .then((data) => {
             console.log(data);
             this.$router.push({path: '/submitted'});
@@ -112,7 +111,6 @@ export default {
 
       return fetch(url, {
         method: "POST",
-        /*mode: "no-cors",*/
         cache: "no-cache",
         credentials: "same-origin",
         connection: "keep-alive",

@@ -23,11 +23,11 @@ function positionOnCircle(radius, angle, center) {
     x: center.x + (radius * Math.cos(toRadians(angle))),
     y: center.y + (radius * Math.sin(toRadians(angle)))
   };
-};
+}
 
 function toRadians(angle) {
   return angle * Math.PI / 180;
-};
+}
 
 function calculatePositions(component) {
   let angleIncrement = 360 / component.circles.length;
@@ -46,15 +46,6 @@ export default {
   data() {
     return {
       circles: [
-        /*{color: '#E0F2F1', radius: 0},
-        {color: '#B2DFDB', radius: 0},
-        {color: '#80CBC4', radius: 0},
-        {color: '#4DB6AC', radius: 0},
-        {color: '#26A69A', radius: 0},
-        {color: '#00897B', radius: 0},
-        {color: '#00796B', radius: 0},
-        {color: '#00695C', radius: 0},
-        {color: '#004D40', radius: 0},*/
         {color: '#E0F2F1', radius: 0},
         {color: '#BAD7E9', radius: 0},
         {color: '#93BFCF', radius: 0},
@@ -79,7 +70,7 @@ export default {
         ...item,
         radius: (this.counter + index) % 8
       }));
-    }, /*70*/100);
+    },100);
   },
   destroyed() {
     clearInterval(this.interval);

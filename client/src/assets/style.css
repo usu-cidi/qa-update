@@ -40,7 +40,6 @@ img {
 .blue {
     border-color: #BDCDD6;
     background: #BAD7E9;
-    /*box-shadow: 1px 1px 2px #00337C;*/
 }
 
 a {
@@ -131,7 +130,7 @@ a {
 }
 
 .content_img:hover div{
-    width: 400px;
+    width: 600px;
     padding: 8px 15px;
     visibility: visible;
     opacity: 0.7;

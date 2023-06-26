@@ -46,8 +46,6 @@ export default {
     return {
       updateInProgress: true,
       updateComplete: false,
-      //SERVER_URL: "http://localhost:8000/",
-      SERVER_URL: SERVER_URL,
       responseMessage: "",
       error: false,
     }
@@ -64,7 +62,7 @@ export default {
 
     let inputData = {'trigger-type': updateType, 'board-id': monBoardId,
       'cr-box-id': crBoxId, 'mon-api-key': monAPIKey, 'email': email, 'box-access': boxAccess};
-    this.postData(this.SERVER_URL + "update", inputData)
+    this.postData(SERVER_URL + "update", inputData)
         .then((response) => {
           if (response === undefined) {
             console.log("504 Gateway Timeout... :(")
