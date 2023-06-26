@@ -12,7 +12,7 @@
         <select name="app-name" class="form-select" v-model.lazy.trim="appName">
           <option value=""></option>
           <option value="QA Update">QA Update</option>
-          <option value="QA Update">YCCT</option>
+          <option value="YCCT">YCCT</option>
         </select>
 
         <input name="check" class="visually-hidden" tabIndex="-1" autoComplete="off">

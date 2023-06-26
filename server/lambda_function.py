@@ -276,9 +276,9 @@ def uploadToS3(dataframe, fileName):
 
 @app.route('/send-bug-email', methods=['POST'])
 def bugReport():
-    print("We are supposed to send an email now!!")
+    print("Sending an email now")
 
-    supportedTools = ["QA Update"]
+    supportedTools = ["QA Update", "YCCT"]
 
     requestInfo = json.loads(request.data)
 
@@ -302,10 +302,6 @@ def bugReport():
 
     for info in reportInfo:
         message += f"{info}: {reportInfo[info]}\n"
-
-    message += "\n------Runtime Info------\n"
-
-    message += f"allyDataframe: {allyDataFrame}\n"
 
     sendEmail(message, f"Bug Report - {requestInfo['app-name']}")
     return prepResponse({"result": "Email sent"}), 200

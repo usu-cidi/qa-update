@@ -816,15 +816,18 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Fixed Ally link waiting problem
 * Big client side refactor
 * Big server side refactor (as far as possible locally)
+* Removed unnecessary or duplicate code
 
 ### TODO:
 * Big refactor
   * Get rid of globals
+    * Planned for move back to AWS
   * Get rid of statefulness
-  * Remove unnecessary/duplicate code
+    * Planned for move back to AWS
 * Add a better way to add a new term
 * Support running multiple updates at a time
   * Should be fixed by making API stateless and figuring out better bucket obj names
+  * Planned for move back to AWS
 * Fix bug reports
 
 ### 1.1.1
