@@ -29,9 +29,6 @@ from io import BytesIO
 
 # botoClient = boto3.client('lambda') #for production
 
-from talkToBox import getDataFromBox
-from combineData import combineReports
-from updateMonday import fillNewBoard, updateExistingBoard
 from getAllyData import getURL
 
 app = Flask(__name__)
@@ -39,14 +36,9 @@ CORS(app, supports_credentials=True)
 
 app.config['SECRET_KEY'] = os.environ.get('CSRF')
 
-link = "inactive"
-status = "inactive"
 allyDataFrame = None
-updateStarted = False
 
 accessToken = ""
-boxCSRF = ""
-activeUser = ""
 
 COOKIE = os.environ.get("COOKIE")
 EXTENSION_FUNC = os.environ.get("EXTENSION_FUNC")
@@ -65,16 +57,13 @@ EMAIL_PASS = os.environ.get("EMAIL_PASS")
 
 BOARD_IDS = {"3692723016": "Dev", "4330918867": "Summer 2023", "4330926569": "Fall 2023", "4565600141": "Dev"}
 
-bucket_name = "qa-update-data-bucket"
-
-
-# file_name = "qa-update-data.txt"
+BUCKET_NAME = "qa-update-data-bucket"
 
 
 def prepResponse(body, code=200, isBase64Encoded="false"):
     response = {
         "isBase64Encoded": isBase64Encoded,
-        "statusCode": 200,
+        "statusCode": code,
         "headers": {"Access-Control-Allow-Origin": CLIENT_URL_CORS, 'Access-Control-Allow-Credentials': "true"},
         "body": body
     }
@@ -98,8 +87,6 @@ def getBoxUrl():
     )
 
     auth_url, csrf_token = oauth.get_authorization_url(REDIRECT_URL)
-    global boxCSRF
-    boxCSRF = csrf_token
 
     return prepResponse({'authUrl': auth_url, 'csrfTok': csrf_token}), 200
 
@@ -194,7 +181,6 @@ def processAllyFile():
 
 # --------------------------
 
-
 @app.route('/update', methods=['POST'])
 def updating():
     requestInfo = json.loads(request.data)
@@ -243,16 +229,20 @@ def updating():
     allyData = allyDataFrame
     accessTokVal = accessToken
 
-    # t1 = Thread(target=doUpdate, args=(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTokVal, email))
-    # t1.start()
-
     result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTokVal, email)
-    if result == None or result.startswith("Exception"):
+    if result is None or result.startswith("Exception"):
         return prepResponse({"updateStatus": "Incomplete (error)", "result": result}), 500
     return prepResponse({"updateStatus": "Successfully initiated", "result": result}), 200
 
 
 def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok, email):
+    boxInfo = {"id": crBoxId, "type": "excel", "accessTok": accessTok}
+    print(f"simulating the update")
+    print(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email)
+    return "Update successfully simulated"
+
+
+def doUpdateActually(triggerType, boardId, crBoxId, mondayAPIKey, allyData, accessTok, email):
     print("doing the update")
     boxInfo = {"id": crBoxId, "type": "excel", "accessTok": accessTok}
 
@@ -296,7 +286,7 @@ def doLongUpdate(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email):
 
     # responseFromChild = json.load(response['Payload'])
 
-    toReturn = f"Uploaded data has been blended and the monday update has been successfully initiated."
+    toReturn = "Uploaded data has been blended and the monday update has been successfully initiated."
 
     return toReturn
 
@@ -310,7 +300,7 @@ def uploadToS3(dataframe, fileName):
     s3_path = fileName
 
     s3 = boto3.resource("s3")
-    s3Response = s3.Bucket(bucket_name).put_object(Key=s3_path, Body=encoded_string)
+    s3Response = s3.Bucket(BUCKET_NAME).put_object(Key=s3_path, Body=encoded_string)
     print(s3Response)
     print(s3Response.key)
     key = s3Response.key
@@ -348,12 +338,8 @@ def bugReport():
 
     message += "\n------Runtime Info------\n"
 
-    message += f"status: {status}\n"
-    message += f"link: {link}\n"
     message += f"allyDataframe: {allyDataFrame}\n"
     message += f"accessTok: {accessToken}\n"
-    message += f"csrf: {boxCSRF}\n"
-    message += f"active user: {activeUser}\n"
 
     sendEmail(message, f"Bug Report - {requestInfo['app-name']}")
     return prepResponse({"result": "Email sent"}), 200
@@ -384,6 +370,5 @@ def sendEmail(message, subject):
 if __name__ == '__main__':
     app.run(port=8000, debug=True, host="localhost")
 
-
-#def lambda_handler(event, context):  # for production
+# def lambda_handler(event, context):  # for production
 #    return awsgi.response(app, event, context)

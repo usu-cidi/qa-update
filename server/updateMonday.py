@@ -14,7 +14,6 @@
 
 import requests
 import json
-from combineData import combineReports
 import pandas as pd
 from datetime import date
 

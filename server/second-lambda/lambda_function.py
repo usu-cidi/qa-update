@@ -15,7 +15,7 @@ DEV_EMAIL = os.environ.get("DEV_EMAIL")
 EMAIL_PASS = os.environ.get("EMAIL_PASS")
 MY_NAME = os.environ.get("MY_NAME")
 API_URL = "https://api.monday.com/v2"
-S3_BUCKET = 'dev-qa-update-data-bucket'
+S3_BUCKET = 'qa-update-data-bucket'
 FILE_NAME = "qa-update-data.txt"
 
 TIMEOUT = 45000  # <- 45 seconds
@@ -54,7 +54,7 @@ def lambda_handler(event, context):
 
             objKey = uploadToS3(completeReport, FILE_NAME)
 
-        lambdaCycles += 1;
+        lambdaCycles += 1
 
         completeReport = getFromS3(objKey)
 
@@ -135,6 +135,7 @@ def uploadToS3(dataframe, fileName):
     encoded_string = string.encode("utf-8")
 
     s3_path = fileName
+    print(s3_path)
 
     s3 = boto3.resource("s3")
     s3Response = s3.Bucket(S3_BUCKET).put_object(Key=s3_path, Body=encoded_string)

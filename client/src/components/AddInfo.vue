@@ -3,59 +3,55 @@
 
   <h2>Update the QA Board</h2>
 
-  <div className="feature-box blue">
+  <div class="feature-box blue">
     <br>
 
-    <h3>Upload the Ally File</h3>
+    <!--<h3>Upload the Ally File</h3>-->
+    <!--<h4>Ally Accessibility File</h4>
 
     <p>Unzip the Ally folder you just downloaded and upload the file called courses.csv here for processing.</p>
-    <!--<form @submit.prevent="processAllyFile" enctype="multipart/form-data">-->
-    <!--<form @submit.prevent="processAllyFile">-->
     <form id="upload-form">
-      <input name="check" className="visually-hidden" tabIndex="-1" autoComplete="off">
+      <input name="check" class="visually-hidden" tabIndex="-1" autoComplete="off">
       <input type="file" id="file-field" ref="file" name="files"/>
-      <br><br>
+      <br>
 
-      <button v-on:click="processAllyFile" className="btn btn-light button">Upload</button>
-      <!--</form>-->
+      <button v-on:click="processAllyFile" class="btn btn-light button">Upload</button>
     </form>
 
-    <br>
+    <p v-if="error2" class="error-message">{{ error2 }}</p>
+    <p v-if="uploadMessage">{{ uploadMessage }}</p>-->
 
-    <p v-if="error2" className="error-message">{{ error2 }}</p>
-    <p v-if="uploadMessage">{{ uploadMessage }}</p>
+  <!--</div>
 
-  </div>
-
-  <div className="feature-box blue">
-    <br>
-    <h3>Run the Update</h3>
+  <div class="feature-box blue">-->
+    <!--<h3>Run the Update</h3>-->
 
     <form @submit.prevent="runUpdate">
-      <div className="form-group">
-        <br><h4>Monday API Key</h4>
-        <input type="text" id="mon-api-key" name="mon-api-key" className="form-control">
+      <div class="form-group">
+        <h4>monday.com API Key</h4>
+        <p>Enter your <a href="https://support.monday.com/hc/en-us/articles/360005144659-Does-monday-com-have-an-API-">API key for monday.com</a>.</p>
+        <input type="text" id="mon-api-key" name="mon-api-key" class="form-control">
         <br>
 
         <h4>Update Type</h4>
         <p>Select 'Update existing board' if you are updating a board that already exists (mid-semester).
           Select 'Fill in new board' if you are filling in a completely blank board at the beginning of a semester. </p>
-        <select name="trigger-type" id="trigger-type" className="form-select">
+        <select name="trigger-type" id="trigger-type" class="form-select">
           <option value=""></option>
           <option value="update">Update existing board</option>
           <option value="new">Fill in new board</option>
         </select>
 
-        <input name="check" className="visually-hidden" tabIndex="-1" autoComplete="off">
+        <input name="check" class="visually-hidden" tabIndex="-1" autoComplete="off">
 
         <br>
-        <h4>Monday Board ID</h4>
+        <h4>monday.com Board ID</h4>
         <p>Enter the <a
             href="https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s">
           board id</a> for the monday.com board you're updating (found in the url).</p>
-        <img className="url-ex" src="../assets/mon-ex.png"/>
+        <img class="url-ex" src="../assets/mon-ex.png"/>
         <br>
-        <input type="text" name="board-id" id="board-id" className="form-control">
+        <input type="text" name="board-id" id="board-id" class="form-control">
 
 
         <br>
@@ -63,25 +59,25 @@
         <p>Enter the <a
             href="https://developer.box.com/reference/get-files-id/#:~:text=The%20ID%20for%20any%20file,123%20the%20file_id%20is%20123%20.">
           Box file ID</a> for the most recent Course Summary file from the Canvas Data Reports (found in the url).</p>
-        <img className="url-ex" src="../assets/box-ex.png"/>
+        <img class="url-ex" src="../assets/box-ex.png"/>
         <br>
-        <input type="text" name="cr-box-id" id="cr-box-id" className="form-control">
+        <input type="text" name="cr-box-id" id="cr-box-id" class="form-control">
 
         <br>
         <h4>Your Email</h4>
         <p>A report will be sent to this email once the update is complete.</p>
-        <input type="text" name="email" id="email" className="form-control">
+        <input type="text" name="email" id="email" class="form-control">
       </div>
 
       <br>
 
-      <p className="feature-box error-message">WARNING: Update process cannot be stopped once began!!</p>
+      <p class="feature-box error-message">WARNING: Update process cannot be stopped once began!!</p>
 
-      <div className="form-group">
-        <button type="submit" className="btn btn-light button">Submit</button>
+      <div class="form-group">
+        <button type="submit" class="btn btn-light button">Submit</button>
       </div>
 
-      <p v-if="error3" className="error-message">{{ error3 }}</p>
+      <p v-if="error3" class="error-message">{{ error3 }}</p>
 
       <br>
     </form>
@@ -90,14 +86,14 @@
 
   <br>
   <p>Something not working right?</p>
-  <a className="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
+  <a class="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
 </template>
 
 <script>
 /* eslint-disable */
 import LoadingBar from "./LoadingBar.vue";
 import MainHeader from "./MainHeader.vue";
-import {SERVER_URL} from '../assets/constants.js';
+import {SERVER_URL} from '@/assets/constants.js';
 
 export default {
   name: 'AddInfoComponent',
@@ -111,56 +107,17 @@ export default {
       link: "",
       linkLoading: false,
       error1: "",
-      error2: "",
       error3: "",
       file: "",
       //SERVER_URL: "http://localhost:8000/",
       SERVER_URL: SERVER_URL,
-      uploadMessage: "",
-      form: {
-        method: '',
-        icon: ''
-      },
     }
   },
   created() {
 
   },
   methods: {
-    processAllyFile: function (e) {
-      console.log("Processing file")
-      this.error2 = "";
 
-      var formElement = document.querySelector('#upload-form'),
-          fileElement = document.querySelector('#file-field'),
-          request = new XMLHttpRequest(),
-          data = new FormData(formElement);
-
-      request.onreadystatechange = () => {
-        if (request.readyState === 4) {
-          this.callback(request.response);
-        }
-      };
-
-      request.open('POST', this.SERVER_URL + 'process-ally-file', true);
-      request.withCredentials = true;
-      request.send(data);
-      e.preventDefault();
-      e.stopPropagation();
-
-    },
-    callback(res) {
-      let response = JSON.parse(res);
-      console.log(response);
-      response = response.body;
-      console.log(response);
-      console.log(response.message);
-      if (response.message !== 'Upload successful') {
-        this.uploadMessage = "Error: " + response.message;
-      } else {
-        this.uploadMessage = "Upload successful.";
-      }
-    },
     runUpdate() {
       this.error3 = "";
 
@@ -179,10 +136,10 @@ export default {
         return;
       }
 
-      if (!this.uploadMessage) {
+      /*if (!this.uploadMessage) {
         this.error3 = "Please return to the top of the page and upload the Ally Course Accessibility file (courses.csv)."
         return;
-      }
+      }*/
 
       console.log(monAPIKey, updateType, monBoardId, crBoxId);
       let params = {

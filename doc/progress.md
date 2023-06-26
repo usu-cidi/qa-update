@@ -807,6 +807,11 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Fixed the styling of the bug report page
 * Started making a plan for the development of this new version
 
+### 6.26.23
+* Working on refactor
+* Created flowchart design
+* Moved Ally file upload to earlier
+
 ### TODO:
 
 

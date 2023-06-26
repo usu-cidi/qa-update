@@ -12,7 +12,7 @@
 
     <div v-if="updateComplete">
       <h2>Update successfully initiated!</h2>
-      <p>You will recieve an email when the update is complete.</p>
+      <p>You will receive an email when the update is complete.</p>
     </div>
 
     <h2 v-if="error" class="error-message">Error completing update.</h2>

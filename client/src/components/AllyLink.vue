@@ -3,53 +3,70 @@
 
   <h2>Get the Ally Download Link</h2>
 
-  <div id="ally-box" className="feature-box blue">
+  <div id="ally-box" class="feature-box blue">
     <br>
 
     <form @submit.prevent="getAllyLink">
       <h4>Ally Client ID</h4>
-      <input type="text" id="ally-client-id" name="ally-client-id" className="form-control">
+      <input type="text" id="ally-client-id" name="ally-client-id" class="form-control">
       <br>
 
       <h4>Ally Consumer Key</h4>
-      <input type="text" id="ally-consum-key" name="ally-consum-key" className="form-control">
-      <input name="check" className="visually-hidden" tabIndex="-1" autoComplete="off">
+      <input type="text" id="ally-consum-key" name="ally-consum-key" class="form-control">
+      <input name="check" class="visually-hidden" tabIndex="-1" autoComplete="off">
       <br>
 
       <h4>Ally Consumer Secret</h4>
-      <input type="text" id="ally-consum-sec" name="ally-consum-sec" className="form-control">
+      <input type="text" id="ally-consum-sec" name="ally-consum-sec" class="form-control">
       <br>
 
       <h4>Term Code</h4>
-      <input type="text" id="term-code" name="term-code" className="form-control">
+      <input type="text" id="term-code" name="term-code" class="form-control">
       <br>
 
-      <button type="submit" className="btn btn-light button">Get Link</button>
+      <button type="submit" class="btn btn-light button">Get Link</button>
     </form>
     <br>
     <p>Note: it may take a few minutes for the link to be generated.</p>
 
-    <p v-if="error1" className="error-message">{{ error1 }}</p>
+    <p v-if="error1" class="error-message">{{ error1 }}</p>
 
-    <a v-if="link" :href="link">Click here to download the Ally Accessibility report</a>
+    <div v-if="link">
+      <a :href="link">Click here to download the Ally Accessibility report</a><br><br>
+    </div>
     <div v-if="linkLoading">
       <p>Loading...</p>
       <LoadingBar/>
     </div>
+  </div>
+
+  <br><h2>Upload the Ally File</h2>
+  <div id="ally-box" class="feature-box blue">
+    <br><p>Unzip the Ally folder you just downloaded and upload the file called courses.csv here for processing.</p>
+    <form id="upload-form">
+      <input name="check" class="visually-hidden" tabIndex="-1" autoComplete="off">
+      <input type="file" id="file-field" ref="file" name="files"/>
+      <br><br>
+
+      <button v-on:click="processAllyFile" class="btn btn-light button">Upload</button><br><br>
+
+      <p v-if="error2" class="error-message">{{ error2 }}</p>
+      <p v-if="uploadMessage">{{ uploadMessage }}</p>
+    </form>
 
   </div>
-  <a className="btn btn-dark button" href="/box-login">Next</a>
+  <a v-if="uploadMessage" class="btn btn-dark button" href="/box-login">Next</a>
   <br>
   <br>
   <p>Something not working right?</p>
-  <a className="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
+  <a class="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
 </template>
 
 <script>
 /* eslint-disable */
 import LoadingBar from "./LoadingBar.vue";
 import MainHeader from "./MainHeader.vue";
-import {SERVER_URL} from '../assets/constants.js';
+import {SERVER_URL} from '@/assets/constants.js';
 
 export default {
   name: 'AllyLinkComponent',
@@ -69,11 +86,46 @@ export default {
         method: '',
         icon: ''
       },
+      error2: '',
     }
   },
   created() {
   },
   methods: {
+    processAllyFile: function (e) {
+      console.log("Processing file")
+      this.error2 = "";
+
+      var formElement = document.querySelector('#upload-form'),
+          fileElement = document.querySelector('#file-field'),
+          request = new XMLHttpRequest(),
+          data = new FormData(formElement);
+
+      request.onreadystatechange = () => {
+        if (request.readyState === 4) {
+          this.callback(request.response);
+        }
+      };
+
+      request.open('POST', this.SERVER_URL + 'process-ally-file', true);
+      request.withCredentials = true;
+      request.send(data);
+      e.preventDefault();
+      e.stopPropagation();
+
+    },
+    callback(res) {
+      let response = JSON.parse(res);
+      console.log(response);
+      response = response.body;
+      console.log(response);
+      console.log(response.message);
+      if (response.message !== 'Upload successful') {
+        this.uploadMessage = "Error: " + response.message;
+      } else {
+        this.uploadMessage = "Upload successful.";
+      }
+    },
     getAllyLink() {
       this.error1 = "";
 
