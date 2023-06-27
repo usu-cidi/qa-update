@@ -820,18 +820,17 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Fixed bug reports
 
 ### 6.27.23
-* 
+* Added common nav bar
+* Started adding a way to add a new term
+  * Will finish when we're back on AWS
+* Moving to AWS
 
 ### TODO:
-* Big refactor
-  * Get rid of globals
-    * Planned for move back to AWS
-  * Get rid of statefulness
-    * Planned for move back to AWS
-* Add a better way to add a new term
-* Support running multiple updates at a time
-  * Should be fixed by making API stateless and figuring out better bucket obj names
-  * Planned for move back to AWS
+* Fix adding a new term documentation
+* Send ally data frame to S3
+* Get set up terms from database
+* Better bucket names - allow running more than one update at a time
+* Testing
 
 ### 1.1.1
 * Add back fun Ally waiting things
@@ -848,13 +847,16 @@ which is sus... but I don't think we have a runaway lambda which is good
 
 
 ## Dependencies:
+### Server
 * pandas: `pip3 install pandas`
 * openpyxl: `pip3 install openpyxl`
 * Requests-OAuthlib: `pip3 install requests-oauthlib`
 * dotenv: `pip3 install python-dotenv --user`
 * flask==1.1.4
 * flask-cors: 3.0.10
+### Client
 * promise-ratelimit
+* Vue
 
 ## Sources & References:
 
