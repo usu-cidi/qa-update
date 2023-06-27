@@ -2,7 +2,6 @@
   <BugHeader/>
 
   <div class="feature-box orange">
-    <br>
     <h3>Report an Error</h3>
     <br>
 
@@ -137,6 +136,6 @@ export default {
 <style>
 .orange {
   border-color: #fa8520;
-  background: #FEA559;
+  background: #EA906C;
 }
 </style>

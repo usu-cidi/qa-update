@@ -45,6 +45,6 @@ export default {
 <style>
 .orange {
   border-color: #fa8520;
-  background: #FEA559;
+  background: #EA906C;
 }
 </style>

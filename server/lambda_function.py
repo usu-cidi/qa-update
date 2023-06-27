@@ -71,9 +71,6 @@ def test():
     return prepResponse("{'response': 'hello world!!!'}")
 
 
-# --------------------------
-
-
 @app.route('/get-box-url', methods=['GET'])
 def getBoxUrl():
     oauth = OAuth2(
@@ -89,9 +86,6 @@ def getBoxUrl():
 
 def store_tokens() -> bool:
     return True
-
-
-# --------------------------
 
 
 @app.route('/get-ally-link', methods=['POST'])
@@ -145,8 +139,6 @@ def processAllyFile():
         print(e)
         return prepResponse({"message": "File is invalid or failed to upload. Please try again."}), 400
 
-
-# --------------------------
 
 @app.route('/update', methods=['POST'])
 def updating():
@@ -258,8 +250,6 @@ def doLongUpdate(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email):
     return toReturn
 
 
-# --------------------------
-
 def uploadToS3(dataframe, fileName):
     string = dataframe.to_json(orient='index')
     encoded_string = string.encode("utf-8")
@@ -326,7 +316,30 @@ def sendEmail(message, subject):
         server.send_message(msg, from_addr=sender_email, to_addrs=receiver_email)
 
 
-# --------------------------
+@app.route('/add-new-term', methods=['POST'])
+def addNewTerm():
+    requestInfo = json.loads(request.data)
+
+    boardId = requestInfo["boardId"]
+    termName = requestInfo["termName"]
+
+    print(f"Got {boardId} and {termName}")
+
+    response = prepResponse({"status": "success"})
+    return response
+
+
+@app.route('/current-terms', methods=['GET'])
+def listCurrentTerms():
+    boards = [
+        {'id': "3692723016", 'name': "Dev"},
+        {'id': "4330918867", 'name': "Summer 2023"},
+        {'id': "4330926569", 'name': "Fall 2023"},
+        {'id': "4565600141", 'name': "Dev"}
+    ]
+
+    response = prepResponse({"boards": boards})
+    return response
 
 
 if __name__ == '__main__':

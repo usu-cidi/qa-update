@@ -817,6 +817,10 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Big client side refactor
 * Big server side refactor (as far as possible locally)
 * Removed unnecessary or duplicate code
+* Fixed bug reports
+
+### 6.27.23
+* 
 
 ### TODO:
 * Big refactor
@@ -828,7 +832,6 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Support running multiple updates at a time
   * Should be fixed by making API stateless and figuring out better bucket obj names
   * Planned for move back to AWS
-* Fix bug reports
 
 ### 1.1.1
 * Add back fun Ally waiting things

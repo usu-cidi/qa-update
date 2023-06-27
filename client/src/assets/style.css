@@ -25,6 +25,8 @@ img {
 
 .heading-box {
     line-height: 1em;
+    padding-top: 3mm;
+    padding-bottom: 3mm;
 }
 
 .feature-box {
@@ -83,6 +85,10 @@ a {
     border-style: solid;
     border-width: 2px;
     border-color: black;
+}
+
+.nav-button:hover {
+    background: #DDE6ED;
 }
 
 .url-ex {
