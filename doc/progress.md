@@ -825,8 +825,14 @@ which is sus... but I don't think we have a runaway lambda which is good
   * Will finish when we're back on AWS
 * Moving to AWS
 
+### 6.29.23
+* Working on pushing update to AWS
+  * Stuck on some box auth stuff
+
 ### TODO:
 * Fix adding a new term documentation
+* Add loading component for uploading file
+* Fix started message
 * Send ally data frame to S3
 * Get set up terms from database
 * Better bucket names - allow running more than one update at a time

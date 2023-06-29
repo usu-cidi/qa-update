@@ -23,10 +23,10 @@ import ssl
 from email.message import EmailMessage
 from datetime import datetime
 
-# import awsgi #for production
-# import boto3 #for production
+import awsgi  # for production
+import boto3  # for production
 
-# botoClient = boto3.client('lambda') #for production
+botoClient = boto3.client('lambda')  # for production
 
 from getAllyData import startGettingUrl
 
@@ -40,7 +40,8 @@ allyDataFrame = None
 COOKIE = os.environ.get("COOKIE")
 EXTENSION_FUNC = os.environ.get("EXTENSION_FUNC")
 
-CLIENT_URL_CORS = "http://localhost:8080"
+# CLIENT_URL_CORS = "http://localhost:8080"
+CLIENT_URL_CORS = "https://master.d1m71ela3noy6u.amplifyapp.com"
 CLIENT_URL = f"{CLIENT_URL_CORS}/"
 ALLOWED_EXTENSIONS = {'csv'}
 REDIRECT_URL = f"{CLIENT_URL}oauth/callback"
@@ -53,7 +54,7 @@ EMAIL_PASS = os.environ.get("EMAIL_PASS")
 
 BOARD_IDS = {"3692723016": "Dev", "4330918867": "Summer 2023", "4330926569": "Fall 2023", "4565600141": "Dev"}
 
-BUCKET_NAME = "qa-update-data-bucket"
+BUCKET_NAME = "dev-qa-update-data-bucket"
 
 
 def prepResponse(body, code=200, isBase64Encoded="false"):
@@ -118,8 +119,10 @@ def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
     result = startGettingUrl(allyClientId, allyConsumKey, allyConsumSec, termCode)
     if result == -1:
         return -1
-    else:
+    elif result[-3:] != "...":
         return f"http{result[5:-1]}"
+    else:
+        return result
 
 
 @app.route('/process-ally-file', methods=['POST'])
@@ -145,6 +148,7 @@ def updating():
     requestInfo = json.loads(request.data)
 
     boxAccess = requestInfo['box-access']
+    boxRefresh = requestInfo['box-refresh']
     triggerType = requestInfo['trigger-type']
     boardId = requestInfo['board-id']
     crBoxId = requestInfo['cr-box-id']
@@ -188,22 +192,22 @@ def updating():
 
     allyData = allyDataFrame
 
-    result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess)
+    result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess, boxRefresh)
     if result is None or result.startswith("Exception"):
         return prepResponse({"updateStatus": "Incomplete (error)", "result": result}), 500
     return prepResponse({"updateStatus": "Successfully initiated", "result": result}), 200
 
 
-def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess):
+def doUpdateTest(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess):
     boxInfo = {"id": crBoxId, "type": "excel", "accessTok": boxAccess}
     print(f"simulating the update")
     print(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email)
     return "Update successfully simulated"
 
 
-def doUpdateActually(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess):
+def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess, boxRefresh):
     print("doing the update")
-    boxInfo = {"id": crBoxId, "type": "excel", "accessTok": boxAccess}
+    boxInfo = {"id": crBoxId, "type": "excel", "accessTok": boxAccess, "refreshTok": refreshTok}
 
     try:
         print("doing the long update")
@@ -216,9 +220,11 @@ def doUpdateActually(triggerType, boardId, crBoxId, mondayAPIKey, allyData, emai
 def doLongUpdate(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email):
     print("adding dataframes to s3")
 
-    # allyKey = uploadToS3(allyData, "ally-data.txt") # for production
+    allyKey = uploadToS3(allyData, "ally-data.txt")  # for production
     print("Uploading ally file to S3")  # for dev
     allyKey = 0  # for dev
+
+    # print(boxInfo)
 
     inputParams = {
         "triggerType": triggerType,
@@ -237,11 +243,11 @@ def doLongUpdate(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email):
     }
 
     print("invoking other function- bye!")
-    # response = botoClient.invoke(
-    #    FunctionName=EXTENSION_FUNC,
-    #    InvocationType='Event',
-    #    Payload=json.dumps(inputParams)
-    # )
+    response = botoClient.invoke(
+        FunctionName=EXTENSION_FUNC,
+        InvocationType='Event',
+        Payload=json.dumps(inputParams)
+    )
 
     # responseFromChild = json.load(response['Payload'])
 
@@ -345,5 +351,6 @@ def listCurrentTerms():
 if __name__ == '__main__':
     app.run(port=8000, debug=True, host="localhost")
 
-# def lambda_handler(event, context):  # for production
-#    return awsgi.response(app, event, context)
+
+def lambda_handler(event, context):  # for production
+    return awsgi.response(app, event, context)

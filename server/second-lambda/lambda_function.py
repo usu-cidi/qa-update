@@ -15,7 +15,7 @@ DEV_EMAIL = os.environ.get("DEV_EMAIL")
 EMAIL_PASS = os.environ.get("EMAIL_PASS")
 MY_NAME = os.environ.get("MY_NAME")
 API_URL = "https://api.monday.com/v2"
-S3_BUCKET = 'qa-update-data-bucket'
+S3_BUCKET = 'dev-qa-update-data-bucket'
 FILE_NAME = "qa-update-data.txt"
 
 TIMEOUT = 45000  # <- 45 seconds
@@ -43,7 +43,9 @@ def lambda_handler(event, context):
         if needToStart:
             print("this is the first one! we need the box data")
             boxInfo = event["boxInfo"]
-            courseReportData = getDataFromBox(boxInfo["id"], boxInfo["type"], boxInfo["accessTok"])
+            print(boxInfo)
+            print(f"Box access token: {boxInfo['accessTok']}")
+            courseReportData = getDataFromBox(boxInfo["id"], boxInfo["type"], boxInfo["accessTok"], boxInfo["refreshTok"])
 
             print("and now we need to combine the data")
             allyKey = event["allyKey"]
@@ -184,8 +186,8 @@ def composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambd
     msg = f"You initiated an update (type: {triggerType}) of "
     msg += f"the QA board with the following id: {boardId}. "
 
-    msg += f"The update failed for the following reason: {err}.\n"
-    msg += f"Please fill out a bug report form and include the text of this message: https://master.d3kepc58nvsh8n.amplifyapp.com/bug-report\n"
+    msg += f"The update failed for the following reason: {err}.\n\n"
+    msg += f"Please fill out a bug report form here: https://master.d3kepc58nvsh8n.amplifyapp.com/bug-report (include the text of this message in your report)\n"
 
     msg += f"{lambdaCycles} lambda cycles; {numNew} attempted new rows; {numUpdated} attempted updated rows;\n\n"
 

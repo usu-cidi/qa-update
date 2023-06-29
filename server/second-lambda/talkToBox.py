@@ -22,12 +22,13 @@ BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
 BOX_SECRET = os.environ.get("BOX_SECRET")
 
 
-def getDataFromBox(fileId, fileType, accessToken):
+def getDataFromBox(fileId, fileType, accessToken, refreshToken):
 
     auth = OAuth2(
         client_id=BOX_CLIENT_ID,
         client_secret=BOX_SECRET,
-        access_token=accessToken
+        access_token=accessToken,
+        refresh_token=refreshToken
     )
     client = Client(auth)
 

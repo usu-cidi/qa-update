@@ -48,11 +48,15 @@ def startGettingUrl(allyClientId, allyConsumKey, allyConsumSec, termCode):
         r = test.get(url)
         parsedOutput = json.loads(r.content)
         if "status" in parsedOutput:
+            print("Still waiting....")
             print(f"Request ID: {parsedOutput['processId']}")
             print(f"Status: {parsedOutput['status']}\n")
 
-            return random.choice(LOADING_MESSAGES)
+            theMessage = random.choice(LOADING_MESSAGES)
+            print(theMessage)
+            return theMessage
         else:
+            print("We have the link!")
             zipURL = str(r.content[8:-2])
             return zipURL[1:]
 
