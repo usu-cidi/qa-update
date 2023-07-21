@@ -20,6 +20,9 @@ import json
 import pandas as pd
 import smtplib
 import ssl
+
+import random
+
 from email.message import EmailMessage
 from datetime import datetime
 
@@ -40,7 +43,6 @@ allyDataFrame = None
 COOKIE = os.environ.get("COOKIE")
 EXTENSION_FUNC = os.environ.get("EXTENSION_FUNC")
 
-# CLIENT_URL_CORS = "http://localhost:8080"
 CLIENT_URL_CORS = "https://master.d1m71ela3noy6u.amplifyapp.com"
 CLIENT_URL = f"{CLIENT_URL_CORS}/"
 ALLOWED_EXTENSIONS = {'csv'}
@@ -69,7 +71,48 @@ def prepResponse(body, code=200, isBase64Encoded="false"):
 
 @app.route('/test')
 def test():
+    id = genInterID()
+    print(id)
+
+    return prepResponse("{'response': '" + id + "'}")
+
+    response = client.query(
+        TableName='QA_Interactions',
+        Select='ALL_ATTRIBUTES',
+        ScanIndexForward=True,
+        # FilterExpression='string',
+        ExpressionAttributeValues={
+            ":v1": {
+                "S": "*"
+            },
+        },
+        ExpressionAttributeNames={
+            "#interactionId": "InterID",
+        },
+        KeyConditionExpression="#interactionId = :v1"
+    )
+
     return prepResponse("{'response': 'hello world!!!'}")
+
+
+def genInterID():
+    client = boto3.client('dynamodb')
+    resource = boto3.resource('dynamodb', region_name="us-east-2")
+
+    table = resource.Table('QA_Interactions')
+    response = table.scan()
+    print(response["Items"])
+    existingCodes = response["Items"]
+
+    code = str(random.randint(100, 999))
+    while True:
+        for item in existingCodes:
+            if code == item["InterID"]:
+                print("Already existing, trying a new one")
+                code = str(random.randint(100, 999))
+                continue
+        break
+    return code
 
 
 @app.route('/get-box-url', methods=['GET'])
@@ -85,7 +128,8 @@ def getBoxUrl():
     return prepResponse({'authUrl': auth_url, 'csrfTok': csrf_token}), 200
 
 
-def store_tokens() -> bool:
+def store_tokens(access_token: str, refresh_token: str) -> bool:
+    # TODO: add access_token and refresh_token to database
     return True
 
 
@@ -135,9 +179,11 @@ def processAllyFile():
                 allyDataFrame = pd.read_csv(file)
                 print(allyDataFrame)
             else:
-                return prepResponse({"message": "File type is invalid. The file should be named courses.csv."}), 400
+                return prepResponse({"message": "File type is invalid. The file will be called courses.csv."}), 400
 
-        return prepResponse({"message": "Upload successful"}), 200
+        interID = genInterID();
+
+        return prepResponse({"message": "Upload successful", "interactionID": interID}), 200
     except Exception as e:
         print(e)
         return prepResponse({"message": "File is invalid or failed to upload. Please try again."}), 400
@@ -207,7 +253,7 @@ def doUpdateTest(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, b
 
 def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess, boxRefresh):
     print("doing the update")
-    boxInfo = {"id": crBoxId, "type": "excel", "accessTok": boxAccess, "refreshTok": refreshTok}
+    boxInfo = {"id": crBoxId, "type": "excel", "accessTok": boxAccess, "refreshTok": boxRefresh}
 
     try:
         print("doing the long update")

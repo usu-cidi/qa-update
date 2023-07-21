@@ -829,6 +829,13 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Working on pushing update to AWS
   * Stuck on some box auth stuff
 
+### 7.21.23
+* Dev password: mypassword
+* Working on setting up database to store interaction information
+* DynamoDB with boto3: https://dynobase.dev/dynamodb-python-with-boto3/
+  * https://docs.aws.amazon.com/code-library/latest/ug/python_3_dynamodb_code_examples.html
+* Wrote code to generate a unique interaction id
+
 ### TODO:
 * Fix adding a new term documentation
 * Add loading component for uploading file

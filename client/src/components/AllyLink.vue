@@ -55,7 +55,7 @@
     </form>
 
   </div>
-  <a v-if="uploadMessage" class="btn btn-dark button" href="/box-login">Next</a>
+  <a v-if="interactionID" class="btn btn-dark button" :href="nextPageLink">Next</a>
   <br>
   <br>
   <p>Something not working right?</p>
@@ -89,13 +89,17 @@ export default {
       },
       error2: '',
       message: '',
+      interactionID: undefined,
     }
   },
-  created() {
+  computed: {
+    nextPageLink() {
+      return "/box-login?interID=" + this.interactionID;
+    }
   },
   methods: {
     processAllyFile: function (e) {
-      console.log("Processing file")
+      console.log("Processing file");
       this.error2 = "";
 
       let formElement = document.querySelector('#upload-form');
@@ -117,7 +121,6 @@ export default {
     },
     callback(res) {
       let response = JSON.parse(res);
-      console.log(response);
       response = response.body;
       console.log(response);
       console.log(response.message);
@@ -125,6 +128,7 @@ export default {
         this.uploadMessage = "Error: " + response.message;
       } else {
         this.uploadMessage = "Upload successful.";
+        this.interactionID = response.interactionID;
       }
     },
     getAllyLink() {
@@ -190,7 +194,7 @@ export default {
           })
           .catch(err => {
             console.log(err);
-      });
+          });
     },
     postData(url, data, contentType = "application/json", stringify = true) {
       let theBody;
