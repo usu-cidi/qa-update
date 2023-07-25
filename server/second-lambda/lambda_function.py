@@ -11,6 +11,7 @@ from updateMonday import doOneUpdate
 from combineData import combineReports
 from talkToBox import getDataFromBox
 
+
 DEV_EMAIL = os.environ.get("DEV_EMAIL")
 EMAIL_PASS = os.environ.get("EMAIL_PASS")
 MY_NAME = os.environ.get("MY_NAME")

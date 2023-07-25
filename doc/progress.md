@@ -836,6 +836,10 @@ which is sus... but I don't think we have a runaway lambda which is good
   * https://docs.aws.amazon.com/code-library/latest/ug/python_3_dynamodb_code_examples.html
 * Wrote code to generate a unique interaction id
 
+### 7.25.23
+* Added code to add and update a row to the database
+* Wrote (but haven't added in) code that checks to see if a row exists in the database (to use for the terms)
+
 ### TODO:
 * Fix adding a new term documentation
 * Add loading component for uploading file

@@ -32,6 +32,7 @@ import boto3  # for production
 botoClient = boto3.client('lambda')  # for production
 
 from getAllyData import startGettingUrl
+from databaseInteraction import getAllDatabaseItems, addRowToDatabase, updateDatabaseRow, getItem
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -58,6 +59,9 @@ BOARD_IDS = {"3692723016": "Dev", "4330918867": "Summer 2023", "4330926569": "Fa
 
 BUCKET_NAME = "dev-qa-update-data-bucket"
 
+INTERACTION_TABLE_NAME = 'QA_Interactions'
+TERM_TABLE_NAME = 'QA_Terms'
+
 
 def prepResponse(body, code=200, isBase64Encoded="false"):
     response = {
@@ -71,38 +75,19 @@ def prepResponse(body, code=200, isBase64Encoded="false"):
 
 @app.route('/test')
 def test():
-    id = genInterID()
-    print(id)
+    # id = genInterID()
+    # print(id)
 
-    return prepResponse("{'response': '" + id + "'}")
+    # return prepResponse("{'response': '" + id + "'}")
 
-    response = client.query(
-        TableName='QA_Interactions',
-        Select='ALL_ATTRIBUTES',
-        ScanIndexForward=True,
-        # FilterExpression='string',
-        ExpressionAttributeValues={
-            ":v1": {
-                "S": "*"
-            },
-        },
-        ExpressionAttributeNames={
-            "#interactionId": "InterID",
-        },
-        KeyConditionExpression="#interactionId = :v1"
-    )
+    # addRowToDatabase(id, INTERACTION_TABLE_NAME)
+    # updateDatabaseRow('310', INTERACTION_TABLE_NAME)
 
     return prepResponse("{'response': 'hello world!!!'}")
 
 
 def genInterID():
-    client = boto3.client('dynamodb')
-    resource = boto3.resource('dynamodb', region_name="us-east-2")
-
-    table = resource.Table('QA_Interactions')
-    response = table.scan()
-    print(response["Items"])
-    existingCodes = response["Items"]
+    existingCodes = getAllDatabaseItems(INTERACTION_TABLE_NAME)
 
     code = str(random.randint(100, 999))
     while True:

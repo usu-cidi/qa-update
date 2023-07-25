@@ -16,7 +16,7 @@ import requests
 import json
 import pandas as pd
 from datetime import date
-
+from databaseInteraction import getAllDatabaseItems, addRowToDatabase, updateDatabaseRow
 
 API_URL = "https://api.monday.com/v2"
 NUM_STU_INDEX = 9
@@ -49,13 +49,13 @@ def updateColIds(boardId):
     boardName = BOARD_IDS[boardId]
     if boardName == "Dev":
         COL_IDS.append("status_15")
-        SMALL_COL_IDS.append("status_15")
+        # SMALL_COL_IDS.append("status_15")
     elif boardName == "Summer 2023":
         COL_IDS.append("status_12")
-        SMALL_COL_IDS.append("status_15")
+        # SMALL_COL_IDS.append("status_15")
     elif boardName == "Fall 2023":
         COL_IDS.append("status_13")
-        SMALL_COL_IDS.append("status_15")
+        # SMALL_COL_IDS.append("status_15")
     else:
         raise Exception(f"{boardId} is not a recognized board ID. "
                         f"The boards currently registered are Summer 2023 and Fall 2023.")
