@@ -66,8 +66,19 @@ When a new QA Board has been created and needs to be populated with data, follow
 <img src="./doc/automations.png">
 
 * If the columns `Update status` and `Last updated` do not already exist, add them to the end of the columns of the main board and hide them from the `QA View`.
-* Let the developer in charge of maintenance on this tool (currently Emma Lynn - a02391851@usu.edu) that a new term needs to be opened.
-* When you are notified that support for the new board has been added, select `Fill in new board` when updating the board using the tool.
+* Navigate to the `Add a New Term` page on the `QA Update` application
+* Fill in the board ID, Term Name, and Trigger Column ID.
+  * [Board ID](https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s):
+  
+  <img src="./doc/mon-ex.png">
+
+  * Term Name: ex. Summer 2023
+  * Trigger Column ID: You'll need the column id for the Update status column. This will change depending on the board, so you need to find it on Monday.
+    * You may need to enable developer mode on Monday to be able to view column ids. See instructions [here](https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s).
+
+  <img src="./doc/trigger-id.png">
+
+* When finished adding the new board, select `Fill in new board` when updating the board using the tool.
 
 ## Change Log
 

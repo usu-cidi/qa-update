@@ -7,17 +7,18 @@
     <br>
 
     <p><strong>Currently supported terms/boards</strong></p>
-    <ul>
+    <ul v-if="boards">
       <li v-for="board in boards" :key="board.id">
         <a
-          target="_blank"
-          :href="'https://cidi-gang.monday.com/boards/' + board.id">{{ board.name }}</a>
+            target="_blank"
+            :href="'https://cidi-gang.monday.com/boards/' + board.id">{{ board.Name }}</a>
       </li>
-    </ul><br>
+    </ul>
+    <p v-else>Loading...</p><br>
 
   </div>
   <div class="feature-box blue">
-  <br>
+    <br>
     <form @submit.prevent="addNewBoard">
       <p><strong>Board ID</strong></p>
       <input type="text" id="board-id" name="board-id" class="form-control">
@@ -28,12 +29,16 @@
       <input name="check" class="visually-hidden" tabIndex="-1" autoComplete="off">
       <br>
 
+      <p><strong><a href="https://github.com/emmalynnnn/cidi-docs/blob/master/prep-board-for-qa.md">Trigger Column ID</a></strong></p>
+      <input type="text" id="trigger-id" name="trigger-id" class="form-control">
+      <br>
+
       <input type="checkbox" value="Checked" id="checked" name="set-up">
       <label for="set-up">&nbsp; I've read the documentation
         <a target="_blank"
-            href="https://github.com/emmalynnnn/cidi-monday-QA-automation/blob/main/README.md#prepping-a-new-qa-board">
+           href="https://github.com/emmalynnnn/cidi-monday-QA-automation/blob/main/README.md#prepping-a-new-qa-board">
           here</a>
-         and set up the board as described.</label>
+        and set up the board as described.</label>
       <br><br>
 
       <button type="submit" class="btn btn-light button">Add new term</button>
@@ -75,12 +80,13 @@ export default {
 
       let boardId = document.getElementById("board-id").value;
       let termName = document.getElementById("term-name").value;
+      let triggerId = document.getElementById("trigger-id").value;
       let checked = document.getElementById("checked").checked;
 
       if (!checked || !boardId || !termName) {
         this.error = "All fields are required."
       } else {
-        let inputData = {boardId: boardId, termName: termName};
+        let inputData = {boardId: boardId, termName: termName, triggerId: triggerId};
         console.log(`Adding ${termName}:${boardId}`);
 
         this.postData(SERVER_URL + "add-new-term", inputData)
@@ -91,6 +97,7 @@ export default {
 
                 document.getElementById("board-id").value = "";
                 document.getElementById("term-name").value = "";
+                document.getElementById("trigger-id").value = "";
                 document.getElementById("checked").checked = false;
 
                 this.refreshBoards();

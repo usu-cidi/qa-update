@@ -26,13 +26,13 @@ import random
 from email.message import EmailMessage
 from datetime import datetime
 
-import awsgi  # for production
-import boto3  # for production
+import awsgi #for production
+import boto3 #for production
 
-botoClient = boto3.client('lambda')  # for production
+botoClient = boto3.client('lambda') #for production
 
 from getAllyData import startGettingUrl
-from databaseInteraction import getAllDatabaseItems, addRowToDatabase, updateDatabaseRow, getItem
+from databaseInteraction import getAllDatabaseItems, addRowToInterDatabase, addRowToTermDatabase, updateDatabaseRow, getItem
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -55,8 +55,6 @@ BOX_SECRET = os.environ.get("BOX_SECRET")
 DEV_EMAIL = os.environ.get("DEV_EMAIL")
 EMAIL_PASS = os.environ.get("EMAIL_PASS")
 
-BOARD_IDS = {"3692723016": "Dev", "4330918867": "Summer 2023", "4330926569": "Fall 2023", "4565600141": "Dev"}
-
 BUCKET_NAME = "dev-qa-update-data-bucket"
 
 INTERACTION_TABLE_NAME = 'QA_Interactions'
@@ -75,18 +73,21 @@ def prepResponse(body, code=200, isBase64Encoded="false"):
 
 @app.route('/test')
 def test():
-    # id = genInterID()
-    # print(id)
 
-    # return prepResponse("{'response': '" + id + "'}")
+    #id = genInterID()
+    #print(id)
 
-    # addRowToDatabase(id, INTERACTION_TABLE_NAME)
-    # updateDatabaseRow('310', INTERACTION_TABLE_NAME)
+    #return prepResponse("{'response': '" + id + "'}")
+
+    #addRowToDatabase(id, INTERACTION_TABLE_NAME)
+    #updateDatabaseRow('310', INTERACTION_TABLE_NAME)
+
 
     return prepResponse("{'response': 'hello world!!!'}")
 
 
 def genInterID():
+
     existingCodes = getAllDatabaseItems(INTERACTION_TABLE_NAME)
 
     code = str(random.randint(100, 999))
@@ -114,7 +115,7 @@ def getBoxUrl():
 
 
 def store_tokens(access_token: str, refresh_token: str) -> bool:
-    # TODO: add access_token and refresh_token to database
+    #TODO: add access_token and refresh_token to database
     return True
 
 
@@ -208,9 +209,8 @@ def updating():
         if not crBoxId.isdigit() or int(crBoxId) <= 0:
             errorMessage += 'Invalid course report ID, '
             error = True
-        if boardId not in BOARD_IDS:
-            errorMessage += 'Unsupported monday board - please check for accuracy and then contact your developer to ' \
-                            'add support for the new board'
+        if checkRowExistence(TERM_TABLE_NAME, boardID, "id") is None:
+            errorMessage += 'Unsupported monday board - please check for accuracy. If correct, please add support for the new board by Adding a New Term from the navigation bar above.'
             error = True
 
     if not boxAccess:
@@ -251,11 +251,9 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAc
 def doLongUpdate(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email):
     print("adding dataframes to s3")
 
-    allyKey = uploadToS3(allyData, "ally-data.txt")  # for production
+    allyKey = uploadToS3(allyData, "ally-data.txt") # for production
     print("Uploading ally file to S3")  # for dev
     allyKey = 0  # for dev
-
-    # print(boxInfo)
 
     inputParams = {
         "triggerType": triggerType,
@@ -275,12 +273,12 @@ def doLongUpdate(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email):
 
     print("invoking other function- bye!")
     response = botoClient.invoke(
-        FunctionName=EXTENSION_FUNC,
-        InvocationType='Event',
-        Payload=json.dumps(inputParams)
+       FunctionName=EXTENSION_FUNC,
+       InvocationType='Event',
+       Payload=json.dumps(inputParams)
     )
 
-    # responseFromChild = json.load(response['Payload'])
+    #responseFromChild = json.load(response['Payload'])
 
     toReturn = "Uploaded data has been blended and the monday update has been successfully initiated."
 
@@ -359,21 +357,22 @@ def addNewTerm():
 
     boardId = requestInfo["boardId"]
     termName = requestInfo["termName"]
+    triggerCol = requestInfo["triggerId"]
 
-    print(f"Got {boardId} and {termName}")
+    print(f"Got {boardId} and {termName} and {triggerCol}")
 
-    response = prepResponse({"status": "success"})
-    return response
+    if addRowToTermDatabase(boardId, termName, triggerCol, TERM_TABLE_NAME)["ResponseMetadata"]["HTTPStatusCode"] == 200:
+        response = prepResponse({"status": "success"})
+        return response
+    else:
+        response = prepResponse({"status": "error"})
+        return response
 
 
 @app.route('/current-terms', methods=['GET'])
 def listCurrentTerms():
-    boards = [
-        {'id': "3692723016", 'name': "Dev"},
-        {'id': "4330918867", 'name': "Summer 2023"},
-        {'id': "4330926569", 'name': "Fall 2023"},
-        {'id': "4565600141", 'name': "Dev"}
-    ]
+
+    boards = getAllDatabaseItems(TERM_TABLE_NAME)
 
     response = prepResponse({"boards": boards})
     return response
@@ -382,6 +381,5 @@ def listCurrentTerms():
 if __name__ == '__main__':
     app.run(port=8000, debug=True, host="localhost")
 
-
 def lambda_handler(event, context):  # for production
-    return awsgi.response(app, event, context)
+   return awsgi.response(app, event, context)

@@ -840,13 +840,20 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Added code to add and update a row to the database
 * Wrote (but haven't added in) code that checks to see if a row exists in the database (to use for the terms)
 
+### 7.28.23
+* Added functionality to add a new term
+* Changed list of supported terms to pull from database
+* Changed to pull trigger column id from database
+* Evaluated more what needs to still be done
+
 ### TODO:
-* Fix adding a new term documentation
+* Fix adding a new term documentation - cidi docs
 * Add loading component for uploading file
 * Fix started message
-* Send ally data frame to S3
-* Get set up terms from database
+* Send ally data frame to S3 - immediately - move up
 * Better bucket names - allow running more than one update at a time
+* Refactor and clean up again
+* Fix whatever's going on with Box
 * Testing
 
 ### 1.1.1

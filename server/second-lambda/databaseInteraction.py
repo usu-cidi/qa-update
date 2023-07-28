@@ -3,14 +3,12 @@ from datetime import datetime
 
 REGION_NAME = "us-east-2"
 
-
 def checkRowExistence(tableName, id, idName):
     try:
         item = getItem(tableName, id, idName)["Item"]
         return item
     except KeyError:
         return None
-
 
 def getItem(tableName, id, keyName):
     dynamodb = boto3.resource('dynamodb', region_name=REGION_NAME)
@@ -21,7 +19,6 @@ def getItem(tableName, id, keyName):
     })
     return response
 
-
 def getAllDatabaseItems(tableName):
     resource = boto3.resource('dynamodb', region_name=REGION_NAME)
 
@@ -29,7 +26,6 @@ def getAllDatabaseItems(tableName):
     response = table.scan()
     print(response["Items"])
     return response["Items"]
-
 
 def addRowToDatabase(interID, tableName):
     dynamodb = boto3.resource('dynamodb', region_name=REGION_NAME)
@@ -45,8 +41,7 @@ def addRowToDatabase(interID, tableName):
     print(response)
     return response
 
-
-def updateDatabaseRow(id, tableName):  # TODO: add optional parameters once we have more in there
+def updateDatabaseRow(id, tableName): #TODO: add optional parameters once we have more in there
     dynamodb = boto3.resource('dynamodb', region_name=REGION_NAME)
     table = dynamodb.Table(tableName)
 

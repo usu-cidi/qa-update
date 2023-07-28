@@ -18,6 +18,7 @@ import pandas as pd
 from datetime import date
 from databaseInteraction import getAllDatabaseItems, addRowToDatabase, updateDatabaseRow
 
+
 API_URL = "https://api.monday.com/v2"
 NUM_STU_INDEX = 9
 # 9: number of students index - from Meghan's file
@@ -32,35 +33,18 @@ COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", 
 # "status_15": trigger column - DEV, "status_12": Summer 2023, "status_13": Fall 2023
 # "date": last updated column - DEV - same in Summer 2023 & Fall 2023
 
-BOARD_IDS = {"3692723016": "Dev", "4330918867": "Summer 2023", "4330926569": "Fall 2023", "4565600141": "Dev"}
-
-SMALL_COL_IDS = []
-# "status_15": trigger column - DEV, "status_12": Summer 2023, "status_13": Fall 2023
-# "date": last updated column - DEV - same in Summer 2023 & Fall 2023
 
 GROUP_IDS = {100: "new_group659", 50: "new_group84060", 20: "new_group63769", 10: "new_group69712", 1: "new_group",
              0: "new_group7956"}
 
-
 def updateColIds(boardId):
-    if boardId not in BOARD_IDS:
-        raise Exception(f"{boardId} is not a recognized board ID. "
-                        f"The boards currently registered are Summer 2023 and Fall 2023.")
-    boardName = BOARD_IDS[boardId]
-    if boardName == "Dev":
-        COL_IDS.append("status_15")
-        # SMALL_COL_IDS.append("status_15")
-    elif boardName == "Summer 2023":
-        COL_IDS.append("status_12")
-        # SMALL_COL_IDS.append("status_15")
-    elif boardName == "Fall 2023":
-        COL_IDS.append("status_13")
-        # SMALL_COL_IDS.append("status_15")
-    else:
-        raise Exception(f"{boardId} is not a recognized board ID. "
-                        f"The boards currently registered are Summer 2023 and Fall 2023.")
+
+    termData = checkRowExistence(TERM_TABLE_NAME, boardID, "id");
+    if termData is None:
+        raise Exception(f"{boardId} is not a recognized board ID. ")
+    boardName = termData["Name"]
+    COL_IDS.append(termData["TriggerColID"])
     COL_IDS.append("date")
-    SMALL_COL_IDS.append("date")
 
 
 def findGroupID(numStu):
