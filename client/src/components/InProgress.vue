@@ -24,7 +24,7 @@
   <br>
 
   <a class="btn btn-dark button" href="/">Back &lt;</a>
-  <p v-if="updateInProgress">(Update process will continue if incomplete!)</p>
+  <p v-if="updateInProgress">(Note: leaving this page will not stop an active update.)</p>
 
   <br>
   <p>Something not working right?</p>
@@ -59,9 +59,12 @@ export default {
     let crBoxId = this.$route.query.crBoxId;
     let email = this.$route.query.email;
     let boxAccess = this.$route.query.boxAccess;
+    let boxRefresh = this.$route.query.boxRefresh;
+    let interID = this.$route.query.interID;
 
     let inputData = {'trigger-type': updateType, 'board-id': monBoardId,
-      'cr-box-id': crBoxId, 'mon-api-key': monAPIKey, 'email': email, 'box-access': boxAccess};
+      'cr-box-id': crBoxId, 'mon-api-key': monAPIKey, 'email': email,
+      'box-access': boxAccess, 'box-refresh': boxRefresh, 'interID': interID};
     this.postData(SERVER_URL + "update", inputData)
         .then((response) => {
           if (response === undefined) {

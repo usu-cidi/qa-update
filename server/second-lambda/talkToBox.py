@@ -28,7 +28,7 @@ def getDataFromBox(fileId, fileType, accessToken, refreshToken):
         client_id=BOX_CLIENT_ID,
         client_secret=BOX_SECRET,
         access_token=accessToken,
-        refresh_token=refreshToken
+        refresh_token=refreshToken,
     )
     client = Client(auth)
 

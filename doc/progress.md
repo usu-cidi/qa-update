@@ -846,12 +846,15 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Changed to pull trigger column id from database
 * Evaluated more what needs to still be done
 
+### 7.31.23
+* Moved up to send ally data frame to S3 immediately
+* Added loading component while file is uploading
+* Fixed started message
+  * I think? I don't remember exactly what this means...
+* Fixed adding a new term documentation - main CIDI docs
+* Added interaction ID to bucket names
+
 ### TODO:
-* Fix adding a new term documentation - cidi docs
-* Add loading component for uploading file
-* Fix started message
-* Send ally data frame to S3 - immediately - move up
-* Better bucket names - allow running more than one update at a time
 * Refactor and clean up again
 * Fix whatever's going on with Box
 * Testing
@@ -944,6 +947,8 @@ which is sus... but I don't think we have a runaway lambda which is good
 #### OAuth
 * OAuth python library: https://pypi.org/project/oauthlib/
 * OAuthLib docs: https://oauthlib.readthedocs.io/en/latest/index.html
+* About state: https://salesforce.stackexchange.com/questions/186401/pass-parameters-through-redirect-uri-in-oauth-flow-to-know-sandbox-or-regular
+  * Box: https://medium.com/box-developer-blog/getting-started-with-box-python-sdk-and-oauth-2-0-77607441170d
 
 #### Requests
 * Requests docs: https://requests.readthedocs.io/en/latest/

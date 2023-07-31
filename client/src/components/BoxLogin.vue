@@ -46,7 +46,7 @@ export default {
     MainHeader,
   },
   created() {
-    fetch(SERVER_URL + "get-box-url", {credentials: "include"})
+    fetch(SERVER_URL + "get-box-url?interID=" + this.$route.query.interID, {credentials: "include"})
         .then(r => r.json())
         .then(response => {
           response = response.body

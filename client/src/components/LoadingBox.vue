@@ -59,8 +59,17 @@ export default {
   mounted() {
 
     let code = this.$route.query.code;
+    let interID = this.$route.query.state;
+
+    console.log(`Here is the code: ${code}; state: ${interID}`);
+
     let error = this.$route.query.error;
     let error_description = this.$route.query.error_description;
+
+
+    if (error) {
+      console.log(`Error- ${error}: ${error_description}`);
+    }
 
     if (error === 'access_denied') {
       console.log("Denied access");
@@ -68,7 +77,8 @@ export default {
     } else if (error) {
       this.errorText = error + ": " + error_description
     } else {
-      this.$router.replace({path: `/add-info`, query: { box: code }});
+      console.log("Success!");
+      this.$router.replace({path: `/add-info`, query: { boxAccess: code, boxRefresh: "", interID: interID }});
     }
 
   },

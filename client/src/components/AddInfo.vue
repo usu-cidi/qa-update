@@ -93,7 +93,9 @@ export default {
     runUpdate() {
       this.error = "";
 
-      let boxAccess = this.$route.query.box;
+      let boxAccess = this.$route.query.boxAccess;
+      let boxRefresh = this.$route.query.boxRefresh;
+      let interID = this.$route.query.interID;
       let monAPIKey = document.getElementById("mon-api-key").value;
       let updateType = document.getElementById("trigger-type").value;
       let monBoardId = document.getElementById("board-id").value;
@@ -117,6 +119,8 @@ export default {
         crBoxId: crBoxId,
         email: email,
         boxAccess: boxAccess,
+        boxRefresh: boxRefresh,
+        interID: interID,
       }
 
       this.$router.push({path: '/updating', query: params})

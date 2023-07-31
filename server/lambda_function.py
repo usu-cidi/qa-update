@@ -32,14 +32,14 @@ import boto3 #for production
 botoClient = boto3.client('lambda') #for production
 
 from getAllyData import startGettingUrl
-from databaseInteraction import getAllDatabaseItems, addRowToInterDatabase, addRowToTermDatabase, updateDatabaseRow, getItem
+from databaseInteraction import getAllDatabaseItems, addRowToInterDatabase, addRowToTermDatabase, updateDatabaseRow, getItem, checkRowExistence
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 app.config['SECRET_KEY'] = os.environ.get('CSRF')
 
-allyDataFrame = None
+#allyDataFrame = None
 
 COOKIE = os.environ.get("COOKIE")
 EXTENSION_FUNC = os.environ.get("EXTENSION_FUNC")
@@ -48,6 +48,7 @@ CLIENT_URL_CORS = "https://master.d1m71ela3noy6u.amplifyapp.com"
 CLIENT_URL = f"{CLIENT_URL_CORS}/"
 ALLOWED_EXTENSIONS = {'csv'}
 REDIRECT_URL = f"{CLIENT_URL}oauth/callback"
+PARTIAL_URL = "master.d1m71ela3noy6u.amplifyapp.com"
 
 BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
 BOX_SECRET = os.environ.get("BOX_SECRET")
@@ -59,6 +60,9 @@ BUCKET_NAME = "dev-qa-update-data-bucket"
 
 INTERACTION_TABLE_NAME = 'QA_Interactions'
 TERM_TABLE_NAME = 'QA_Terms'
+
+def getAllyFileS3Name(id):
+    return f"ally-data-{id}.txt"
 
 
 def prepResponse(body, code=200, isBase64Encoded="false"):
@@ -98,25 +102,19 @@ def genInterID():
                 code = str(random.randint(100, 999))
                 continue
         break
+    addRowToInterDatabase(code, INTERACTION_TABLE_NAME)
     return code
 
 
 @app.route('/get-box-url', methods=['GET'])
 def getBoxUrl():
-    oauth = OAuth2(
-        client_id=BOX_CLIENT_ID,
-        client_secret=BOX_SECRET,
-        store_tokens=store_tokens,
-    )
 
-    auth_url, csrf_token = oauth.get_authorization_url(REDIRECT_URL)
+    args = request.args
+    interID = args.get("interID")
 
-    return prepResponse({'authUrl': auth_url, 'csrfTok': csrf_token}), 200
+    auth_url = f'https://account.box.com/api/oauth2/authorize?state={interID}&response_type=code&client_id={BOX_CLIENT_ID}&redirect_uri=https%3A%2F%2F{PARTIAL_URL}%2Foauth%2Fcallback'
 
-
-def store_tokens(access_token: str, refresh_token: str) -> bool:
-    #TODO: add access_token and refresh_token to database
-    return True
+    return prepResponse({'authUrl': auth_url, 'csrfTok': interID}), 200
 
 
 @app.route('/get-ally-link', methods=['POST'])
@@ -158,16 +156,18 @@ def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
 @app.route('/process-ally-file', methods=['POST'])
 def processAllyFile():
     print(request.files)
+
+    interID = genInterID();
+
     try:
         for file in request.files.getlist('files'):
             if file and file.filename.split('.')[-1].lower() in ALLOWED_EXTENSIONS:
-                global allyDataFrame
                 allyDataFrame = pd.read_csv(file)
-                print(allyDataFrame)
+
+                print("Uploading ally file to S3")
+                allyKey = uploadToS3(allyDataFrame, getAllyFileS3Name(interID))
             else:
                 return prepResponse({"message": "File type is invalid. The file will be called courses.csv."}), 400
-
-        interID = genInterID();
 
         return prepResponse({"message": "Upload successful", "interactionID": interID}), 200
     except Exception as e:
@@ -186,15 +186,12 @@ def updating():
     crBoxId = requestInfo['cr-box-id']
     mondayAPIKey = requestInfo['mon-api-key']
     email = requestInfo['email']
+    interID = requestInfo['interID']
 
     error = False
     errorMessage = ""
 
-    if allyDataFrame is None:
-        errorMessage += "Ally file invalid. "
-        error = True
-
-    print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
+    print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}, interID: {interID}")
 
     if triggerType == "" or not boardId or not crBoxId or not mondayAPIKey or not email:
         errorMessage += 'All fields are required! '
@@ -209,66 +206,58 @@ def updating():
         if not crBoxId.isdigit() or int(crBoxId) <= 0:
             errorMessage += 'Invalid course report ID, '
             error = True
-        if checkRowExistence(TERM_TABLE_NAME, boardID, "id") is None:
+        if checkRowExistence(TERM_TABLE_NAME, boardId, "id") is None:
             errorMessage += 'Unsupported monday board - please check for accuracy. If correct, please add support for the new board by Adding a New Term from the navigation bar above.'
             error = True
 
-    if not boxAccess:
+    if boxAccess == "":
         errorMessage += 'Box authorization incomplete, '
+        error = True
+
+    if interID == "":
+        errorMessage += 'Interaction id missing, '
+        error = True
 
     if error:
         return prepResponse({"updateStatus": "The following error(s) occurred: " + errorMessage}), 400
 
     print(f"triggerType: {triggerType}, boardID: {boardId}, crBoxID: {crBoxId}")
 
-    allyData = allyDataFrame
-
-    result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess, boxRefresh)
+    result = doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, email, boxAccess, boxRefresh, interID)
     if result is None or result.startswith("Exception"):
         return prepResponse({"updateStatus": "Incomplete (error)", "result": result}), 500
     return prepResponse({"updateStatus": "Successfully initiated", "result": result}), 200
 
 
-def doUpdateTest(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess):
-    boxInfo = {"id": crBoxId, "type": "excel", "accessTok": boxAccess}
-    print(f"simulating the update")
-    print(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email)
-    return "Update successfully simulated"
+def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, email, boxAccess, boxRefresh, interID):
 
-
-def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, allyData, email, boxAccess, boxRefresh):
     print("doing the update")
     boxInfo = {"id": crBoxId, "type": "excel", "accessTok": boxAccess, "refreshTok": boxRefresh}
 
     try:
         print("doing the long update")
-        return doLongUpdate(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email)
+        return doLongUpdate(triggerType, boardId, boxInfo, mondayAPIKey, email, interID)
     except Exception as e:
         print(f"Exception doing update. {e}")
         return f"Exception doing update. {e}"
 
 
-def doLongUpdate(triggerType, boardId, allyData, boxInfo, mondayAPIKey, email):
-    print("adding dataframes to s3")
-
-    allyKey = uploadToS3(allyData, "ally-data.txt") # for production
-    print("Uploading ally file to S3")  # for dev
-    allyKey = 0  # for dev
+def doLongUpdate(triggerType, boardId, boxInfo, mondayAPIKey, email, interID):
 
     inputParams = {
         "triggerType": triggerType,
         "completeReportName": "",
         "boardId": boardId,
         "mondayAPIKey": mondayAPIKey,
-        "recipient": email,  # DEV_EMAIL,
+        "recipient": email,
         "numNew": 0,
         "numUpdated": 0,
         "lambdaCycles": 0,
         "failedCourses": [],
 
         "needToCombineAndGetBox": True,
-        "allyKey": allyKey,
-        "boxInfo": boxInfo
+        "boxInfo": boxInfo,
+        "interID": interID
     }
 
     print("invoking other function- bye!")

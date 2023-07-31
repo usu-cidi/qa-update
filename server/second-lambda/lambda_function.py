@@ -17,10 +17,14 @@ EMAIL_PASS = os.environ.get("EMAIL_PASS")
 MY_NAME = os.environ.get("MY_NAME")
 API_URL = "https://api.monday.com/v2"
 S3_BUCKET = 'dev-qa-update-data-bucket'
-FILE_NAME = "qa-update-data.txt"
 
 TIMEOUT = 45000  # <- 45 seconds
 
+def getAllyFileS3Name(id):
+    return f"ally-data-{id}.txt"
+
+def getCombinedFileS3Name(id):
+    return f"qa-update-data-{id}.txt"
 
 def lambda_handler(event, context):
     try:
@@ -38,6 +42,7 @@ def lambda_handler(event, context):
         numUpdated = event["numUpdated"]
         lambdaCycles = event["lambdaCycles"]
         failedCourses = event["failedCourses"]
+        interID = event["interID"]
 
         needToStart = event["needToCombineAndGetBox"]
         print(needToStart)
@@ -49,13 +54,12 @@ def lambda_handler(event, context):
             courseReportData = getDataFromBox(boxInfo["id"], boxInfo["type"], boxInfo["accessTok"], boxInfo["refreshTok"])
 
             print("and now we need to combine the data")
-            allyKey = event["allyKey"]
 
-            allyData = getFromS3(allyKey)
+            allyData = getFromS3(getAllyFileS3Name(interID))
 
             completeReport = combineReports(courseReportData, allyData)
 
-            objKey = uploadToS3(completeReport, FILE_NAME)
+            objKey = uploadToS3(completeReport, getCombinedFileS3Name(interID))
 
         lambdaCycles += 1
 
@@ -84,9 +88,9 @@ def lambda_handler(event, context):
             if context.get_remaining_time_in_millis() <= TIMEOUT:
                 if completeReport.empty:
                     break
-                    print("BAD BAD BAD BAD DELETE IT DELETE IT BAD")
+                    print("BAD BAD BAD")
 
-                key = uploadToS3(completeReport, FILE_NAME)
+                key = uploadToS3(completeReport, getCombinedFileS3Name(interID))
 
                 # reportToSend = completeReport.to_json(orient='index')
                 dataToPass = {
@@ -100,6 +104,7 @@ def lambda_handler(event, context):
                     "lambdaCycles": lambdaCycles,
                     "failedCourses": failedCourses,
                     "needToCombineAndGetBox": False,
+                    "interID": interID,
                 }
                 make_recursive_call(event, context, dataToPass)
                 return
@@ -118,11 +123,11 @@ def lambda_handler(event, context):
                 print(f"{rowData[0]} failed to add :( ({e})")
                 failedCourses.append(rowData[0])
 
-        composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, failedCourses)
+        composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, failedCourses, interID)
     except Exception as e:
         print(e)
-        composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, e)
-        composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, e, True)
+        composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, e, interID)
+        composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, e, interID, True)
 
 
 def getFromS3(fileKey):
@@ -158,12 +163,12 @@ def make_recursive_call(event, context, theData):
     )
 
 
-def composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, failedCourses):
+def composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, failedCourses, interID):
     print("Time to send an email")
     sub = f"QA Update Completion {datetime.now()}"
 
     msg = f"You initiated an update (type: {triggerType}) of "
-    msg += f"the QA board with the following id: {boardId}. "
+    msg += f"the QA board with the following id: {boardId}. Update ID: {interID}. "
     msg += f"The update is now complete after {lambdaCycles} lambda cycles.\n\n"
     msg += f"As a result of the update:\n {numNew} new rows were added"
     msg += f"\n {numUpdated} existing rows were audited and updated if needed\n\n"
@@ -180,12 +185,12 @@ def composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycl
     sendEmail(msg, f"QA Performance Report {datetime.now()}", DEV_EMAIL)
 
 
-def composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, err, toMe=False):
+def composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, err, interID, toMe=False):
     print("Time to send an error email")
     sub = f"QA Update Error {datetime.now()}"
 
     msg = f"You initiated an update (type: {triggerType}) of "
-    msg += f"the QA board with the following id: {boardId}. "
+    msg += f"the QA board with the following id: {boardId}. Update ID: {interID}. "
 
     msg += f"The update failed for the following reason: {err}.\n\n"
     msg += f"Please fill out a bug report form here: https://master.d3kepc58nvsh8n.amplifyapp.com/bug-report (include the text of this message in your report)\n"
