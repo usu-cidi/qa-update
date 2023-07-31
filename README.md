@@ -11,7 +11,7 @@ This repository contains code that will:
 
 This tool is currently hosted at: https://master.d3kepc58nvsh8n.amplifyapp.com/
 
-Active version: **1.1.0**
+Active version: **1.1.1**
 
 To use this tool on the command line, switch to the branch `archive/cli`.
 * Note: the command line version of the tool has been deprecated. Usage is discouraged, please use the new web application.
@@ -81,6 +81,14 @@ When a new QA Board has been created and needs to be populated with data, follow
 * When finished adding the new board, select `Fill in new board` when updating the board using the tool.
 
 ## Change Log
+
+### 1.1.1
+* More responsive retrieval of Ally link
+* Support for adding support for a new term
+* More intuitive flow
+* Support for running multiple updates at once
+* Improved bug reports
+* Better conformation to software development best practices
 
 ### 1.1.0
 * Added support for larger terms like Fall & Spring
