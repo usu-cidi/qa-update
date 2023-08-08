@@ -3,8 +3,8 @@ import {createRouter, createWebHistory} from 'vue-router'
 
 import BoxLoginComponent from './components/BoxLogin.vue'
 import AddInfoComponent from './components/AddInfo.vue'
-import BugReportComponent from './components/BugReport.vue'
-import SubmittedComponent from './components/Submitted.vue'
+//import BugReportComponent from './components/BugReport.vue'
+//import SubmittedComponent from './components/Submitted.vue'
 import LoadingBoxComponent from './components/LoadingBox.vue'
 import InProgressComponent from "./components/InProgress.vue";
 import AllyLinkComponent from "./components/AllyLink.vue";
@@ -21,8 +21,8 @@ const router = createRouter({
         { path: '/', component: AllyLinkComponent},
         { path: '/box-login', component: BoxLoginComponent},
         { path: '/add-info', component: AddInfoComponent},
-        { path: '/bug-report', component: BugReportComponent},
-        { path: '/submitted', component: SubmittedComponent},
+//        { path: '/bug-report', component: BugReportComponent},
+//        { path: '/submitted', component: SubmittedComponent},
         { path: '/oauth/callback', component: LoadingBoxComponent},
         { path: '/updating', component: InProgressComponent},
         { path: '/add-new-term', component: AddNewTermComponent},
@@ -30,7 +30,7 @@ const router = createRouter({
     ]
 });
 
-const app= createApp(App)
+const app = createApp(App)
 
 app.use(router)
 

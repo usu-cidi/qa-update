@@ -1,13 +1,13 @@
 <template>
   <MainHeader/>
 
-  <div class="feature-box blue">
+  <div className="feature-box blue">
     <br>
     <h3>Verifying Box authentication....</h3>
 
     <div v-if="errorText">
       <p>{{ errorText }}</p>
-      <a class="btn btn-dark button" href="/box-login">Authorize again</a>
+      <a className="btn btn-dark button" href="/box-login">Authorize again</a>
     </div>
   </div>
 </template>
@@ -15,6 +15,7 @@
 <script>
 /* eslint-disable */
 import MainHeader from "./MainHeader.vue";
+
 export default {
   name: 'LoadingBoxComponent',
   data() {
@@ -78,7 +79,7 @@ export default {
       this.errorText = error + ": " + error_description
     } else {
       console.log("Success!");
-      this.$router.replace({path: `/add-info`, query: { boxAccess: code, boxRefresh: "", interID: interID }});
+      this.$router.replace({path: `/add-info`, query: {boxAccess: code, boxRefresh: "", interID: interID}});
     }
 
   },

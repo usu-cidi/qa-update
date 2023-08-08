@@ -16,7 +16,7 @@ import requests
 import json
 import pandas as pd
 from datetime import date
-from databaseInteraction import getAllDatabaseItems, addRowToDatabase, updateDatabaseRow
+from databaseInteraction import getAllDatabaseItems, updateDatabaseRow, checkRowExistence
 
 
 API_URL = "https://api.monday.com/v2"

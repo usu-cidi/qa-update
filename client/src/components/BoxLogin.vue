@@ -30,20 +30,20 @@
     </div>
   </div>
 
-  <br>
-  <p>Something not working right?</p>
-  <a class="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
+  <BugFooter/>
 </template>
 
 <script>
 /* eslint-disable */
 import MainHeader from "./MainHeader.vue";
+import BugFooter from "./BugFooter.vue";
 import {SERVER_URL} from '@/assets/constants.js';
 
 export default {
   name: 'BoxLoginComponent',
   components: {
     MainHeader,
+    BugFooter,
   },
   created() {
     fetch(SERVER_URL + "get-box-url?interID=" + this.$route.query.interID, {credentials: "include"})

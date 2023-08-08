@@ -41,7 +41,6 @@ app.config['SECRET_KEY'] = os.environ.get('CSRF')
 
 #allyDataFrame = None
 
-COOKIE = os.environ.get("COOKIE")
 EXTENSION_FUNC = os.environ.get("EXTENSION_FUNC")
 
 CLIENT_URL_CORS = "https://master.d1m71ela3noy6u.amplifyapp.com"

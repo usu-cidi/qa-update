@@ -46,3 +46,23 @@ def getDataFromBox(fileId, fileType, accessToken, refreshToken):
         boxData = pd.read_csv(toread)
 
     return boxData
+
+if __name__ == "__main__":
+    #to test if an access token is valid
+    fileId = "1176109699393"
+    accessToken = input("Enter access token: ")
+
+    try:
+        auth = OAuth2(
+             client_id=BOX_CLIENT_ID,
+             client_secret=BOX_SECRET,
+             access_token=accessToken,
+        )
+        client = Client(auth)
+        file_info = client.file(fileId)
+        some_bytes = file_info.get().content()
+
+        print("Access token valid!!!")
+    except Exception as e:
+        print(e)
+        print("\nAccess token invalid :(")

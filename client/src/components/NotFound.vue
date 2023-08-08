@@ -24,18 +24,18 @@
 
   </div>
 
-  <br>
-  <p>Something not working right?</p>
-  <a class="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
+  <BugFooter/>
 </template>
 
 <script>
 /* eslint-disable */
 import MainHeader from "./MainHeader.vue";
+import BugFooter from "./BugFooter.vue";
 export default {
   name: 'NotFound',
   components: {
     MainHeader,
+    BugFooter,
   },
 }
 </script>

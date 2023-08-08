@@ -27,20 +27,21 @@
   <p v-if="updateInProgress">(Note: leaving this page will not stop an active update.)</p>
 
   <br>
-  <p>Something not working right?</p>
-  <a class="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
+  <BugFooter/>
 </template>
 
 <script>
 /* eslint-disable */
 import BigLoading from "./BigLoading.vue";
 import MainHeader from "./MainHeader.vue";
+import BugFooter from "./BugFooter.vue";
 import {SERVER_URL} from "@/assets/constants";
 export default {
   name: 'InProgressComponent',
   components: {
     BigLoading,
     MainHeader,
+    BugFooter,
   },
   data () {
     return {

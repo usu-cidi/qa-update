@@ -854,12 +854,22 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Fixed adding a new term documentation - main CIDI docs
 * Added interaction ID to bucket names
 
+### 8.8.23
+* Fixed navbar issue
+* Moved bug report to right place
+* Worked on fixing the Box issues...
+  * Wrote simple script to test if an access token is valid
+  * One generated from the production build is, one from the development build is not
+  * 
+
 ### TODO:
-* Refactor and clean up again
 * Fix whatever's going on with Box
+* Double email
+* Testing
+* Refactor and clean up again
 * Testing
 
-### 1.1.1
+*New features for 1.1.1*
 * Add back fun Ally waiting things
 * Big refactor
 * Add a better way to add a new term
@@ -870,8 +880,8 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Fix bug reports
 
 ### Future Versions:
-* Stop update button?
-
+* Stop update option?
+  * Or reverse update option?
 
 ## Dependencies:
 ### Server

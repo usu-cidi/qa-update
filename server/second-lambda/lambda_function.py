@@ -178,7 +178,7 @@ def composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycl
         msg += f"{course}\n"
 
     msg += "\nThanks for updating the QA board!\n\n"
-    msg += "(Something not working as expected? Fill out a bug report here: https://master.d3kepc58nvsh8n.amplifyapp.com/bug-report)"
+    msg += "(Something not working as expected? Fill out a bug report here: https://master.d3onio3knkhn91.amplifyapp.com/bug-report)"
 
     sendEmail(msg, sub, recipient)
     msg += f"\n\n Initiated by {recipient}"
@@ -193,7 +193,7 @@ def composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambd
     msg += f"the QA board with the following id: {boardId}. Update ID: {interID}. "
 
     msg += f"The update failed for the following reason: {err}.\n\n"
-    msg += f"Please fill out a bug report form here: https://master.d3kepc58nvsh8n.amplifyapp.com/bug-report (include the text of this message in your report)\n"
+    msg += f"Please fill out a bug report form here: https://master.d3onio3knkhn91.amplifyapp.com/bug-report (include the text of this message in your report)\n"
 
     msg += f"{lambdaCycles} lambda cycles; {numNew} attempted new rows; {numUpdated} attempted updated rows;\n\n"
 

@@ -3,35 +3,36 @@
 
   <h2>Update the QA Board</h2>
 
-  <div class="feature-box blue">
+  <div className="feature-box blue">
     <br>
 
     <form @submit.prevent="runUpdate">
-      <div class="form-group">
+      <div className="form-group">
         <h4>monday.com API Key</h4>
-        <p>Enter your <a href="https://support.monday.com/hc/en-us/articles/360005144659-Does-monday-com-have-an-API-">API key for monday.com</a>.</p>
-        <input type="text" id="mon-api-key" name="mon-api-key" class="form-control">
+        <p>Enter your <a href="https://support.monday.com/hc/en-us/articles/360005144659-Does-monday-com-have-an-API-">API
+          key for monday.com</a>.</p>
+        <input type="text" id="mon-api-key" name="mon-api-key" className="form-control">
         <br>
 
         <h4>Update Type</h4>
         <p>Select 'Update existing board' if you are updating a board that already exists (mid-semester).
           Select 'Fill in new board' if you are filling in a completely blank board at the beginning of a semester. </p>
-        <select name="trigger-type" id="trigger-type" class="form-select">
+        <select name="trigger-type" id="trigger-type" className="form-select">
           <option value=""></option>
           <option value="update">Update existing board</option>
           <option value="new">Fill in new board</option>
         </select>
 
-        <input name="check" class="visually-hidden" tabIndex="-1" autoComplete="off">
+        <input name="check" className="visually-hidden" tabIndex="-1" autoComplete="off">
 
         <br>
         <h4>monday.com Board ID</h4>
         <p>Enter the <a
             href="https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s">
           board id</a> for the monday.com board you're updating (found in the url).</p>
-        <img class="url-ex" src="../assets/mon-ex.png" alt="Example of getting a monday board id from the url."/>
+        <img className="url-ex" src="../assets/mon-ex.png" alt="Example of getting a monday board id from the url."/>
         <br>
-        <input type="text" name="board-id" id="board-id" class="form-control">
+        <input type="text" name="board-id" id="board-id" className="form-control">
 
 
         <br>
@@ -39,45 +40,45 @@
         <p>Enter the <a
             href="https://developer.box.com/reference/get-files-id/#:~:text=The%20ID%20for%20any%20file,123%20the%20file_id%20is%20123%20.">
           Box file ID</a> for the most recent Course Summary file from the Canvas Data Reports (found in the url).</p>
-        <img class="url-ex" src="../assets/box-ex.png" alt="Example of getting a box file id from the url."/>
+        <img className="url-ex" src="../assets/box-ex.png" alt="Example of getting a box file id from the url."/>
         <br>
-        <input type="text" name="cr-box-id" id="cr-box-id" class="form-control">
+        <input type="text" name="cr-box-id" id="cr-box-id" className="form-control">
 
         <br>
         <h4>Your Email</h4>
         <p>A report will be sent to this email once the update is complete.</p>
-        <input type="text" name="email" id="email" class="form-control">
+        <input type="text" name="email" id="email" className="form-control">
       </div>
 
       <br>
 
-      <p class="feature-box error-message">WARNING: Update process cannot be stopped once began!!</p>
+      <p className="feature-box error-message">WARNING: Update process cannot be stopped once began!!</p>
 
-      <div class="form-group">
-        <button type="submit" class="btn btn-light button">Submit</button>
+      <div className="form-group">
+        <button type="submit" className="btn btn-light button">Submit</button>
       </div>
 
-      <p v-if="error" class="error-message">{{ error }}</p>
+      <p v-if="error" className="error-message">{{ error }}</p>
 
       <br>
     </form>
 
   </div>
 
-  <br>
-  <p>Something not working right?</p>
-  <a class="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
+  <BugFooter/>
 </template>
 
 <script>
 /* eslint-disable */
 import MainHeader from "./MainHeader.vue";
+import BugFooter from "./BugFooter.vue";
 
 export default {
   name: 'AddInfoComponent',
   emits: ["form-submitted"],
   components: {
     MainHeader,
+    BugFooter,
   },
   data() {
     return {
