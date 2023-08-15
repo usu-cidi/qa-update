@@ -15,6 +15,7 @@
 <script>
 /* eslint-disable */
 import MainHeader from "./MainHeader.vue";
+import {SERVER_URL} from '@/assets/constants.js';
 
 export default {
   name: 'LoadingBoxComponent',
@@ -78,8 +79,21 @@ export default {
     } else if (error) {
       this.errorText = error + ": " + error_description
     } else {
-      console.log("Success!");
-      this.$router.replace({path: `/add-info`, query: {boxAccess: code, boxRefresh: "", interID: interID}});
+      this.postData(SERVER_URL + "finish-oauth", {code: code, state: interID})
+          .then((data) => {
+            console.log(data);
+            data = data.body;
+            console.log(data);
+            if (data.result === "Success") {
+              console.log("Success!");
+              this.$router.replace({
+                path: `/add-info`,
+                query: {boxAccess: data.access_token, boxRefresh: "", interID: interID}
+              });
+            } else {
+              this.errorText = "Box authorization failed: " + data.result;
+            }
+          });
     }
 
   },

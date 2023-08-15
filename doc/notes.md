@@ -860,14 +860,22 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Worked on fixing the Box issues...
   * Wrote simple script to test if an access token is valid
   * One generated from the production build is, one from the development build is not
-  * 
+
+### 8.15.23
+* Confirmed Box issue isn't with my new email alias
+* Finally figured out Box issue
+  * Somewhere switching the temporary access token for the real one got skipped
+  * Fixed issue
+* Ran a test update
+  * First lambda worked great
+  * Second lambda failed to update all courses :(
+* It works!!!!
 
 ### TODO:
-* Fix whatever's going on with Box
-* Double email
 * Testing
 * Refactor and clean up again
-* Testing
+* Last testing
+* Deploy update
 
 *New features for 1.1.1*
 * Add back fun Ally waiting things

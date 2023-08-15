@@ -18,6 +18,9 @@ MY_NAME = os.environ.get("MY_NAME")
 API_URL = "https://api.monday.com/v2"
 S3_BUCKET = 'dev-qa-update-data-bucket'
 
+INTERACTION_TABLE_NAME = 'QA_Interactions'
+TERM_TABLE_NAME = 'QA_Terms'
+
 TIMEOUT = 45000  # <- 45 seconds
 
 def getAllyFileS3Name(id):
@@ -178,7 +181,7 @@ def composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycl
         msg += f"{course}\n"
 
     msg += "\nThanks for updating the QA board!\n\n"
-    msg += "(Something not working as expected? Fill out a bug report here: https://master.d3onio3knkhn91.amplifyapp.com/bug-report)"
+    msg += "(Something not working as expected? Fill out a bug report here: https://master.d3onio3knkhn91.amplifyapp.com/bug-report )"
 
     sendEmail(msg, sub, recipient)
     msg += f"\n\n Initiated by {recipient}"

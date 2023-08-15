@@ -116,6 +116,27 @@ def getBoxUrl():
     return prepResponse({'authUrl': auth_url, 'csrfTok': interID}), 200
 
 
+@app.route('/finish-oauth', methods=['POST'])
+def oauth_callback():
+    code = json.loads(request.data)["code"]
+    state = json.loads(request.data)["state"]
+
+    print(f"code: {code}")
+
+    try:
+        oauth = OAuth2(
+            client_id=BOX_CLIENT_ID,
+            client_secret=BOX_SECRET,
+        )
+
+        access_token, refresh_token = oauth.authenticate(code)
+        print(access_token)
+
+        return prepResponse({'access_token': access_token, 'result': "Success"}), 200
+    except Exception as e:
+        return prepResponse({'access_token': "", 'result': f"Failed: {e}"}), 200
+
+
 @app.route('/get-ally-link', methods=['POST'])
 def getAllyLink():
     requestInfo = json.loads(request.data)

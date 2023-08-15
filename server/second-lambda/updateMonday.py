@@ -21,6 +21,7 @@ from databaseInteraction import getAllDatabaseItems, updateDatabaseRow, checkRow
 
 API_URL = "https://api.monday.com/v2"
 NUM_STU_INDEX = 9
+TERM_TABLE_NAME = 'QA_Terms'
 # 9: number of students index - from Meghan's file
 
 COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", "status8", "__of_students",
@@ -39,7 +40,7 @@ GROUP_IDS = {100: "new_group659", 50: "new_group84060", 20: "new_group63769", 10
 
 def updateColIds(boardId):
 
-    termData = checkRowExistence(TERM_TABLE_NAME, boardID, "id");
+    termData = checkRowExistence(TERM_TABLE_NAME, boardId, "id");
     if termData is None:
         raise Exception(f"{boardId} is not a recognized board ID. ")
     boardName = termData["Name"]
