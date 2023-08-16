@@ -3,12 +3,12 @@
 <template>
   <svg class="loading-spinner">
     <circle
-      :cx="circlePositions[index] && circlePositions[index].x"
-      :cy="circlePositions[index] && circlePositions[index].y"
-      :r="item.radius"
-      :fill="item.color"
-      v-for="(item, index) in circles"
-      :key="index"/>
+        :cx="circlePositions[index] && circlePositions[index].x"
+        :cy="circlePositions[index] && circlePositions[index].y"
+        :r="item.radius"
+        :fill="item.color"
+        v-for="(item, index) in circles"
+        :key="index"/>
   </svg>
 </template>
 
@@ -34,9 +34,9 @@ function calculatePositions(component) {
   let positions = {};
   component.circles.forEach((circle, index) => {
     positions[index] = positionOnCircle(
-      RADIUS,
-      angleIncrement * index,
-      {x: CENTER_X, y: CENTER_Y}
+        RADIUS,
+        angleIncrement * index,
+        {x: CENTER_X, y: CENTER_Y}
     )
   });
   return positions;
@@ -46,15 +46,15 @@ export default {
   data() {
     return {
       circles: [
-        {color: '#E0F2F1', radius: 0},
         {color: '#BAD7E9', radius: 0},
         {color: '#93BFCF', radius: 0},
         {color: '#5B8FB9', radius: 0},
         {color: '#3C84AB', radius: 0},
         {color: '#146C94', radius: 0},
-        {color: '#19376D', radius: 0},
-        {color: '#0B2447', radius: 0},
-        {color: '#210062', radius: 0},
+        {color: '#3C84AB', radius: 0},
+        {color: '#5B8FB9', radius: 0},
+        {color: '#93BFCF', radius: 0},
+        {color: '#CEE6F3', radius: 0},
       ],
       counter: 0,
       interval: null

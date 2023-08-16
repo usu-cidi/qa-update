@@ -879,10 +879,10 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Tested running more than one lambda cycle
 * Clean up client
 * Clean up server
-* 
+* Improved loading colors
+* Testing full semester's update
 
 ### TODO:
-* Refactor and clean up again
 * Testing
 * Deploy update
 

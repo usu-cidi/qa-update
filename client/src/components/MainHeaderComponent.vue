@@ -14,7 +14,7 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo01" data-toggle="collapse" data-target=".navbar-collapse" >
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link nav-button" href="/">Restart Update</a>
+            <a class="nav-link nav-button" href="/">Restart</a>
           </li>
           <li class="nav-item nav-button">
             <a class="nav-link" href="/add-new-term">Add a New Term</a>
