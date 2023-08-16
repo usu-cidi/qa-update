@@ -32,7 +32,7 @@
 
 <script>
 /* eslint-disable */
-import BigLoading from "./SmallLoadingComponent.vue";
+import BigLoading from "./LoadingComponent.vue";
 import MainHeader from "./MainHeaderComponent.vue";
 import BugFooter from "./BugFooterComponent.vue";
 import {SERVER_URL} from "@/assets/constants";

@@ -16,13 +16,11 @@ import requests
 import json
 import pandas as pd
 from datetime import date
-from databaseInteraction import getAllDatabaseItems, updateDatabaseRow, checkRowExistence
+from databaseInteraction import checkRowExistence
 
 API_URL = "https://api.monday.com/v2"
-NUM_STU_INDEX = 9
+NUM_STU_INDEX = 9   # 9: number of students index - from Meghan's file
 TERM_TABLE_NAME = 'QA_Terms'
-# 9: number of students index - from Meghan's file
-
 COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", "status8", "__of_students",
            "__content_in_use",
            "files_total", "files_with_link", "files___in_use", "wysiwyg_content", "wysiwyg_in_use", "videos",
@@ -32,8 +30,6 @@ COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", 
            "images", "images_wo_alt_text", "numbers"]
 # "status_15": trigger column - DEV, "status_12": Summer 2023, "status_13": Fall 2023
 # "date": last updated column - DEV - same in Summer 2023 & Fall 2023
-
-
 GROUP_IDS = {100: "new_group659", 50: "new_group84060", 20: "new_group63769", 10: "new_group69712", 1: "new_group",
              0: "new_group7956"}
 
@@ -42,7 +38,6 @@ def updateColIds(boardId):
     termData = checkRowExistence(TERM_TABLE_NAME, boardId, "id")
     if termData is None:
         raise Exception(f"{boardId} is not a recognized board ID. ")
-    boardName = termData["Name"]
     COL_IDS.append(termData["TriggerColID"])
     COL_IDS.append("date")
 
@@ -108,31 +103,6 @@ def removeNaN(rowData):
         if pd.isna(rowData[item]):
             rowData[item] = ""
     return rowData
-
-
-def fillNewBoard(courseDF, boardId, mondayAPIKey):
-    updateColIds(boardId)
-
-    HEADERS = {"Authorization": mondayAPIKey}
-    numNew = 0
-
-    for i in courseDF.index:  # through courseDF
-
-        rowData = courseDF.iloc[i].values.tolist()
-        rowData = removeNaN(rowData)
-
-        if "Study Abroad" in rowData:
-            print("Replacing 'Study Abroad' with 'Supervised'.")
-            rowData[rowData.index("Study Abroad")] = "Supervised"
-
-        itemID = createNewItem(rowData, boardId, HEADERS)
-        if itemID is None:
-            print("Failed")
-            continue
-        numNew += 1
-        print(f"{courseDF['Course'][i]} added as new row")
-
-    return numNew
 
 
 def doOneUpdate(courseDF, boardId, mondayAPIKey, currBoard):

@@ -3,7 +3,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 
 import BoxLoginComponent from './components/BoxLoginPage.vue'
 import AddInfoComponent from './components/AddInfoPage.vue'
-import LoadingBoxComponent from './components/LoadingBox.vue'
+import LoadingBoxComponent from './components/LoadingBoxPage.vue'
 import InProgressComponent from "./components/InProgressPage.vue";
 import AllyLinkComponent from "./components/AllyPage.vue";
 import NotFoundComponent from "./components/NotFoundPage.vue";

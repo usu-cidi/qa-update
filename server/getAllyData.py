@@ -23,7 +23,10 @@ LOADING_MESSAGES = ["Pulling data from Ally API...", "Loading...", "Going to spa
                     "Rearranging solar panels...", "Hacking government computers...", "Preparing data...",
                     "Preparing data...", "API response pending...", "Waiting for response...",
                     "Preparing file...", "Solving the WORDLE...", "Loading...", "Reading files...",
-                    "Convincing reCAPTCHA I'm not a robot...", "Preparing data...", "Flirting with ChatGPT..."]
+                    "Convincing reCAPTCHA I'm not a robot...", "Preparing data...", "Flirting with ChatGPT...",
+                    "Rearranging solar panels...", "Going to space...", "Going to space...", "Thinking...",
+                    "Checking out a library book...", "Running a mile...", "Thinking...", "Getting lost in Roku city..."
+                    ]
 
 
 def startGettingUrl(allyClientId, allyConsumKey, allyConsumSec, termCode):

@@ -1,4 +1,3 @@
-
 # Copyright (C) 2023  Emma Lynn
 #
 #     This program is free software: you can redistribute it and/or modify
@@ -22,22 +21,20 @@ BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
 BOX_SECRET = os.environ.get("BOX_SECRET")
 
 
-def getDataFromBox(fileId, fileType, accessToken, refreshToken):
+def getDataFromBox(theFileId, fileType, theAccessToken, refreshToken):
 
-    auth = OAuth2(
+    theAuth = OAuth2(
         client_id=BOX_CLIENT_ID,
         client_secret=BOX_SECRET,
-        access_token=accessToken,
+        access_token=theAccessToken,
         refresh_token=refreshToken,
     )
-    client = Client(auth)
-
-    file_info = client.file(fileId)
-
-    some_bytes = file_info.get().content()
+    theClient = Client(theAuth)
+    theFileInfo = theClient.file(theFileId)
+    someBytes = theFileInfo.get().content()
 
     toread = io.BytesIO()
-    toread.write(some_bytes)  # pass your `decrypted` string as the argument here
+    toread.write(someBytes)  # pass your `decrypted` string as the argument here
     toread.seek(0)  # reset the pointer
 
     if fileType == "excel":
@@ -47,9 +44,10 @@ def getDataFromBox(fileId, fileType, accessToken, refreshToken):
 
     return boxData
 
+
 if __name__ == "__main__":
     while True:
-        #to test if an access token is valid
+        # to test if an access token is valid
         fileId = "1176109699393"
         accessToken = input("\nEnter access token: ")
 

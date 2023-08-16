@@ -70,7 +70,7 @@
 
 <script>
 /* eslint-disable */
-import LoadingBar from "./SmallLoadingComponent.vue";
+import LoadingBar from "./LoadingComponent.vue";
 import MainHeader from "./MainHeaderComponent.vue";
 import BugFooter from "./BugFooterComponent.vue";
 import {SERVER_URL} from '@/assets/constants.js';

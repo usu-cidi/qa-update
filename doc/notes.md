@@ -878,11 +878,12 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Added option to select board id from the list gotten from the database
 * Tested running more than one lambda cycle
 * Clean up client
+* Clean up server
+* 
 
 ### TODO:
-* Testing
 * Refactor and clean up again
-* Last testing
+* Testing
 * Deploy update
 
 *New features for 1.1.1*
@@ -898,6 +899,7 @@ which is sus... but I don't think we have a runaway lambda which is good
 ### Future Versions:
 * Stop update option?
   * Or reverse update option?
+* Either remove or better utilize interactions table
 
 ## Dependencies:
 ### Server

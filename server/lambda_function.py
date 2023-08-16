@@ -18,50 +18,37 @@ from boxsdk import Client, OAuth2
 import os
 import json
 import pandas as pd
-import smtplib
-import ssl
-
 import random
-
-from email.message import EmailMessage
-from datetime import datetime
-
-import awsgi #for production
-import boto3 #for production
-
-botoClient = boto3.client('lambda') #for production
+import awsgi
+import boto3
 
 from getAllyData import startGettingUrl
-from databaseInteraction import getAllDatabaseItems, addRowToInterDatabase, addRowToTermDatabase, updateDatabaseRow, getItem, checkRowExistence
+from databaseInteraction import getAllDatabaseItems, addRowToInterDatabase, addRowToTermDatabase, checkRowExistence
+
+lambdaClient = boto3.client('lambda')
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
-app.config['SECRET_KEY'] = os.environ.get('CSRF')
-
-#allyDataFrame = None
-
-EXTENSION_FUNC = os.environ.get("EXTENSION_FUNC")
-
+# constants
 CLIENT_URL_CORS = "https://master.d1m71ela3noy6u.amplifyapp.com"
 CLIENT_URL = f"{CLIENT_URL_CORS}/"
 ALLOWED_EXTENSIONS = {'csv'}
-REDIRECT_URL = f"{CLIENT_URL}oauth/callback"
 PARTIAL_URL = "master.d1m71ela3noy6u.amplifyapp.com"
-
-BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
-BOX_SECRET = os.environ.get("BOX_SECRET")
-
-DEV_EMAIL = os.environ.get("DEV_EMAIL")
-EMAIL_PASS = os.environ.get("EMAIL_PASS")
-
 BUCKET_NAME = "dev-qa-update-data-bucket"
-
 INTERACTION_TABLE_NAME = 'QA_Interactions'
 TERM_TABLE_NAME = 'QA_Terms'
 
-def getAllyFileS3Name(id):
-    return f"ally-data-{id}.txt"
+# constants from env
+EXTENSION_FUNC = os.environ.get("EXTENSION_FUNC")
+BOX_CLIENT_ID = os.environ.get("BOX_CLIENT_ID")
+BOX_SECRET = os.environ.get("BOX_SECRET")
+DEV_EMAIL = os.environ.get("DEV_EMAIL")
+EMAIL_PASS = os.environ.get("EMAIL_PASS")
+
+
+def getAllyFileS3Name(theID):
+    return f"ally-data-{theID}.txt"
 
 
 def prepResponse(body, code=200, isBase64Encoded="false"):
@@ -76,23 +63,11 @@ def prepResponse(body, code=200, isBase64Encoded="false"):
 
 @app.route('/test')
 def test():
-
-    #id = genInterID()
-    #print(id)
-
-    #return prepResponse("{'response': '" + id + "'}")
-
-    #addRowToDatabase(id, INTERACTION_TABLE_NAME)
-    #updateDatabaseRow('310', INTERACTION_TABLE_NAME)
-
-
     return prepResponse("{'response': 'hello world!!!'}")
 
 
 def genInterID():
-
     existingCodes = getAllDatabaseItems(INTERACTION_TABLE_NAME)
-
     code = str(random.randint(100, 999))
     while True:
         for item in existingCodes:
@@ -107,22 +82,16 @@ def genInterID():
 
 @app.route('/get-box-url', methods=['GET'])
 def getBoxUrl():
-
     args = request.args
     interID = args.get("interID")
-
-    auth_url = f'https://account.box.com/api/oauth2/authorize?state={interID}&response_type=code&client_id={BOX_CLIENT_ID}&redirect_uri=https%3A%2F%2F{PARTIAL_URL}%2Foauth%2Fcallback'
-
+    auth_url = (f'https://account.box.com/api/oauth2/authorize?state={interID}&response_type=code&client_id=' +
+                f'{BOX_CLIENT_ID}&redirect_uri=https%3A%2F%2F{PARTIAL_URL}%2Foauth%2Fcallback')
     return prepResponse({'authUrl': auth_url, 'csrfTok': interID}), 200
 
 
 @app.route('/finish-oauth', methods=['POST'])
 def oauth_callback():
     code = json.loads(request.data)["code"]
-    state = json.loads(request.data)["state"]
-
-    print(f"code: {code}")
-
     try:
         oauth = OAuth2(
             client_id=BOX_CLIENT_ID,
@@ -140,7 +109,6 @@ def oauth_callback():
 @app.route('/get-ally-link', methods=['POST'])
 def getAllyLink():
     requestInfo = json.loads(request.data)
-
     allyClientId = requestInfo["clientId"]
     allyConsumKey = requestInfo["consumKey"]
     allyConsumSec = requestInfo["consumSec"]
@@ -176,16 +144,14 @@ def getAllyURL(allyClientId, allyConsumKey, allyConsumSec, termCode):
 @app.route('/process-ally-file', methods=['POST'])
 def processAllyFile():
     print(request.files)
-
-    interID = genInterID();
-
+    interID = genInterID()
     try:
         for file in request.files.getlist('files'):
             if file and file.filename.split('.')[-1].lower() in ALLOWED_EXTENSIONS:
                 allyDataFrame = pd.read_csv(file)
 
                 print("Uploading ally file to S3")
-                allyKey = uploadToS3(allyDataFrame, getAllyFileS3Name(interID))
+                uploadToS3(allyDataFrame, getAllyFileS3Name(interID))
             else:
                 return prepResponse({"message": "File type is invalid. The file will be called courses.csv."}), 400
 
@@ -227,7 +193,8 @@ def updating():
             errorMessage += 'Invalid course report ID, '
             error = True
         if checkRowExistence(TERM_TABLE_NAME, boardId, "id") is None:
-            errorMessage += 'Unsupported monday board - please check for accuracy. If correct, please add support for the new board by Adding a New Term from the navigation bar above.'
+            errorMessage += ('Unsupported monday board - please check for accuracy. If correct, please add support ' +
+                             'for the new board by Adding a New Term from the navigation bar above.')
             error = True
 
     if boxAccess == "":
@@ -256,42 +223,34 @@ def doUpdate(triggerType, boardId, crBoxId, mondayAPIKey, email, boxAccess, boxR
 
     try:
         print("doing the long update")
-        return doLongUpdate(triggerType, boardId, boxInfo, mondayAPIKey, email, interID)
+
+        inputParams = {
+            "triggerType": triggerType,
+            "completeReportName": "",
+            "boardId": boardId,
+            "mondayAPIKey": mondayAPIKey,
+            "recipient": email,
+            "numNew": 0,
+            "numUpdated": 0,
+            "lambdaCycles": 0,
+            "failedCourses": [],
+
+            "needToCombineAndGetBox": True,
+            "boxInfo": boxInfo,
+            "interID": interID
+        }
+
+        print("invoking other function- bye!")
+        response = lambdaClient.invoke(
+            FunctionName=EXTENSION_FUNC,
+            InvocationType='Event',
+            Payload=json.dumps(inputParams)
+        )
+
+        return "Uploaded data has been blended and the monday update has been successfully initiated."
     except Exception as e:
         print(f"Exception doing update. {e}")
         return f"Exception doing update. {e}"
-
-
-def doLongUpdate(triggerType, boardId, boxInfo, mondayAPIKey, email, interID):
-
-    inputParams = {
-        "triggerType": triggerType,
-        "completeReportName": "",
-        "boardId": boardId,
-        "mondayAPIKey": mondayAPIKey,
-        "recipient": email,
-        "numNew": 0,
-        "numUpdated": 0,
-        "lambdaCycles": 0,
-        "failedCourses": [],
-
-        "needToCombineAndGetBox": True,
-        "boxInfo": boxInfo,
-        "interID": interID
-    }
-
-    print("invoking other function- bye!")
-    response = botoClient.invoke(
-       FunctionName=EXTENSION_FUNC,
-       InvocationType='Event',
-       Payload=json.dumps(inputParams)
-    )
-
-    #responseFromChild = json.load(response['Payload'])
-
-    toReturn = "Uploaded data has been blended and the monday update has been successfully initiated."
-
-    return toReturn
 
 
 def uploadToS3(dataframe, fileName):
@@ -306,58 +265,6 @@ def uploadToS3(dataframe, fileName):
     print(s3Response.key)
     key = s3Response.key
     return key
-
-
-@app.route('/send-bug-email', methods=['POST'])
-def bugReport():
-    print("Sending an email now")
-
-    supportedTools = ["QA Update", "YCCT"]
-
-    requestInfo = json.loads(request.data)
-
-    if not requestInfo["app-name"] in supportedTools:
-        return redirect(url_for('submitted', msg='Invalid application name (stop messing with my dev tools!)'))
-
-    reportInfo = {
-        "App Name": requestInfo["app-name"],
-        "Date and time": requestInfo["date-time"],
-        "Expected Behavior": requestInfo["expected-behavior"],
-        "Actual Behavior": requestInfo["actual-behavior"],
-        "Errors": requestInfo["errors"],
-        "Browser": requestInfo["browser"],
-        "Other Info": requestInfo["other-info"],
-        "Name": requestInfo["name"],
-        "Email": requestInfo["email"],
-    }
-
-    message = f"Bug reported for {requestInfo['app-name']} submitted on {datetime.now()}" \
-              f"\n\n------Form Info------\n"
-
-    for info in reportInfo:
-        message += f"{info}: {reportInfo[info]}\n"
-
-    sendEmail(message, f"Bug Report - {requestInfo['app-name']}")
-    return prepResponse({"result": "Email sent"}), 200
-
-
-def sendEmail(message, subject):
-    port = 465  # For SSL
-    smtp_server = "smtp.gmail.com"
-    sender_email = DEV_EMAIL
-    receiver_email = DEV_EMAIL
-    password = EMAIL_PASS
-
-    msg = EmailMessage()
-    msg.set_content(message)
-    msg['Subject'] = subject
-    msg['From'] = sender_email
-    msg['To'] = receiver_email
-
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-        server.login(sender_email, password)
-        server.send_message(msg, from_addr=sender_email, to_addrs=receiver_email)
 
 
 @app.route('/add-new-term', methods=['POST'])
@@ -390,5 +297,6 @@ def listCurrentTerms():
 if __name__ == '__main__':
     app.run(port=8000, debug=True, host="localhost")
 
+
 def lambda_handler(event, context):  # for production
-   return awsgi.response(app, event, context)
+    return awsgi.response(app, event, context)

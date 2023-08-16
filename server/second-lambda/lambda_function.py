@@ -1,6 +1,7 @@
 import json
 import os
-import smtplib, ssl
+import smtplib
+import ssl
 from email.message import EmailMessage
 from datetime import datetime
 import pandas as pd
@@ -11,44 +12,40 @@ from updateMonday import doOneUpdate
 from combineData import combineReports
 from talkToBox import getDataFromBox
 
+API_URL = "https://api.monday.com/v2"
+S3_BUCKET = 'dev-qa-update-data-bucket'
+TIMEOUT = 45000  # <- 45 seconds
+
 DEV_EMAIL = os.environ.get("DEV_EMAIL")
 EMAIL_PASS = os.environ.get("EMAIL_PASS")
 MY_NAME = os.environ.get("MY_NAME")
-API_URL = "https://api.monday.com/v2"
-S3_BUCKET = 'dev-qa-update-data-bucket'
-
-INTERACTION_TABLE_NAME = 'QA_Interactions'
-TERM_TABLE_NAME = 'QA_Terms'
-
-TIMEOUT = 45000  # <- 45 seconds
 
 
-def getAllyFileS3Name(id):
-    return f"ally-data-{id}.txt"
+def getAllyFileS3Name(theID):
+    return f"ally-data-{theID}.txt"
 
 
-def getCombinedFileS3Name(id):
-    return f"qa-update-data-{id}.txt"
+def getCombinedFileS3Name(theID):
+    return f"qa-update-data-{theID}.txt"
 
 
 def lambda_handler(event, context):
+    if context.get_remaining_time_in_millis() <= (TIMEOUT + 10000):
+        print("The function does not have enough time to execute. Please increase the timeout window.")
+        raise Exception("Timeout window too small.")
+
+    triggerType = event["triggerType"]
+    objKey = event["completeReportName"]
+    boardId = event["boardId"]
+    mondayAPIKey = event["mondayAPIKey"]
+    recipient = event["recipient"]
+    numNew = event["numNew"]
+    numUpdated = event["numUpdated"]
+    lambdaCycles = event["lambdaCycles"]
+    failedCourses = event["failedCourses"]
+    interID = event["interID"]
+
     try:
-
-        if context.get_remaining_time_in_millis() <= (TIMEOUT + 10000):
-            print("The function does not have enough time to execute. Please increase the timeout window.")
-            raise Exception("Timeout window too small.")
-
-        triggerType = event["triggerType"]
-        objKey = event["completeReportName"]
-        boardId = event["boardId"]
-        mondayAPIKey = event["mondayAPIKey"]
-        recipient = event["recipient"]
-        numNew = event["numNew"]
-        numUpdated = event["numUpdated"]
-        lambdaCycles = event["lambdaCycles"]
-        failedCourses = event["failedCourses"]
-        interID = event["interID"]
-
         needToStart = event["needToCombineAndGetBox"]
         print(needToStart)
         if needToStart:
@@ -62,17 +59,12 @@ def lambda_handler(event, context):
             print("and now we need to combine the data")
 
             allyData = getFromS3(getAllyFileS3Name(interID))
-
             completeReport = combineReports(courseReportData, allyData)
-
             objKey = uploadToS3(completeReport, getCombinedFileS3Name(interID))
 
         lambdaCycles += 1
-
         completeReport = getFromS3(objKey)
-
         print(f"Invoking ({lambdaCycles}) with {len(completeReport.index)} rows left.")
-
         currBoard = {}
 
         if triggerType == "update":
@@ -202,7 +194,8 @@ def composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycl
         msg += f"{course}\n"
 
     msg += "\nThanks for updating the QA board!\n\n"
-    msg += "(Something not working as expected? Fill out a bug report here: https://master.d3onio3knkhn91.amplifyapp.com/bug-report )"
+    msg += ("(Something not working as expected? Fill out a bug report here: https://master.d3onio3knkhn91." +
+            "amplifyapp.com/bug-report )")
 
     sendEmail(msg, sub, recipient)
     msg += f"\n\n Initiated by {recipient}"
@@ -217,7 +210,8 @@ def composeErrorEmail(triggerType, boardId, recipient, numNew, numUpdated, lambd
     msg += f"the QA board with the following id: {boardId}. Update ID: {interID}. "
 
     msg += f"The update failed for the following reason: {err}.\n\n"
-    msg += f"Please fill out a bug report form here: https://master.d3onio3knkhn91.amplifyapp.com/bug-report (include the text of this message in your report)\n"
+    msg += (f"Please fill out a bug report form here: https://master.d3onio3knkhn91.amplifyapp.com/bug-report " +
+            f"(include the text of this message in your report)\n")
 
     msg += f"{lambdaCycles} lambda cycles; {numNew} attempted new rows; {numUpdated} attempted updated rows;\n\n"
 
