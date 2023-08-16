@@ -18,7 +18,6 @@ import pandas as pd
 from datetime import date
 from databaseInteraction import getAllDatabaseItems, updateDatabaseRow, checkRowExistence
 
-
 API_URL = "https://api.monday.com/v2"
 NUM_STU_INDEX = 9
 TERM_TABLE_NAME = 'QA_Terms'
@@ -38,9 +37,9 @@ COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", 
 GROUP_IDS = {100: "new_group659", 50: "new_group84060", 20: "new_group63769", 10: "new_group69712", 1: "new_group",
              0: "new_group7956"}
 
-def updateColIds(boardId):
 
-    termData = checkRowExistence(TERM_TABLE_NAME, boardId, "id");
+def updateColIds(boardId):
+    termData = checkRowExistence(TERM_TABLE_NAME, boardId, "id")
     if termData is None:
         raise Exception(f"{boardId} is not a recognized board ID. ")
     boardName = termData["Name"]
@@ -160,16 +159,17 @@ def doOneUpdate(courseDF, boardId, mondayAPIKey, currBoard):
         itemID = currBoard[rowData[0]]
 
         if updateRow(itemID, rowData, boardId, HEADERS) is None:
-            return [newDF, 0, 0]
+            print("Failed updating row")
+            return [newDF, 0, 0, rowData[0]]
 
         numUpdated = 1
         print(f"{rowData[0]} matched and updated if needed")
     else:
         itemID = createNewItem(rowData, boardId, HEADERS)
         if itemID is None:
-            print("Failed")
-            return [newDF, 0, 0]
+            print("Failed creating new")
+            return [newDF, 0, 0, rowData[0]]
         numNew = 1
         print(f"{rowData[0]} added as new row")
 
-    return [newDF, numUpdated, numNew]
+    return [newDF, numUpdated, numNew, ""]

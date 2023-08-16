@@ -871,7 +871,14 @@ which is sus... but I don't think we have a runaway lambda which is good
   * Second lambda failed to update all courses :(
 * It works!!!!
 
+### 8.16.23
+* Added auto-clean up of S3 files
+* Failed rows aren't being logged
+  * Fixed it
+* 
+
 ### TODO:
+* Select Monday board from list
 * Testing
 * Refactor and clean up again
 * Last testing
@@ -1022,7 +1029,7 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Long-running serverless functions: https://medium.com/@vsaravind007/implementing-long-running-serverless-functions-with-aws-lambda-fe06d97120b2
 * S3 objects: https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingObjects.html
 * Writing to S3 from lambda: https://stackoverflow.com/questions/48945389/how-could-i-use-aws-lambda-to-write-file-to-s3-python
-* 
+* S3 with boto3: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3/client/delete_object.html
 
 ### Misc
 * Citing code: https://uark.libguides.com/CSCE/CitingCode

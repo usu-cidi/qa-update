@@ -11,7 +11,6 @@ from updateMonday import doOneUpdate
 from combineData import combineReports
 from talkToBox import getDataFromBox
 
-
 DEV_EMAIL = os.environ.get("DEV_EMAIL")
 EMAIL_PASS = os.environ.get("EMAIL_PASS")
 MY_NAME = os.environ.get("MY_NAME")
@@ -23,11 +22,14 @@ TERM_TABLE_NAME = 'QA_Terms'
 
 TIMEOUT = 45000  # <- 45 seconds
 
+
 def getAllyFileS3Name(id):
     return f"ally-data-{id}.txt"
 
+
 def getCombinedFileS3Name(id):
     return f"qa-update-data-{id}.txt"
+
 
 def lambda_handler(event, context):
     try:
@@ -54,7 +56,8 @@ def lambda_handler(event, context):
             boxInfo = event["boxInfo"]
             print(boxInfo)
             print(f"Box access token: {boxInfo['accessTok']}")
-            courseReportData = getDataFromBox(boxInfo["id"], boxInfo["type"], boxInfo["accessTok"], boxInfo["refreshTok"])
+            courseReportData = getDataFromBox(boxInfo["id"], boxInfo["type"], boxInfo["accessTok"],
+                                              boxInfo["refreshTok"])
 
             print("and now we need to combine the data")
 
@@ -83,19 +86,14 @@ def lambda_handler(event, context):
             for theRow in jsonObj["data"]["boards"][0]["items"]:
                 currBoard[theRow["name"]] = theRow["id"]
 
-        # failsafe = 0
         while not completeReport.empty:
-            # if failsafe >= 15:
-            #    return
             # check if we're almost out of time, if we are and we're not done, pass stuff to next one
             if context.get_remaining_time_in_millis() <= TIMEOUT:
                 if completeReport.empty:
                     break
-                    print("BAD BAD BAD")
 
                 key = uploadToS3(completeReport, getCombinedFileS3Name(interID))
 
-                # reportToSend = completeReport.to_json(orient='index')
                 dataToPass = {
                     "triggerType": triggerType,
                     "completeReportName": key,
@@ -111,21 +109,21 @@ def lambda_handler(event, context):
                 }
                 make_recursive_call(event, context, dataToPass)
                 return
-                print("We should not be here....")
 
-            # completeReport = simulateUpdate(completeReport)
             try:
                 result = doOneUpdate(completeReport, boardId, mondayAPIKey, currBoard)
                 completeReport = result[0]
                 numUpdated += result[1]
                 numNew += result[2]
+                if not result[3] == "":
+                    failedCourses.append(result[3])
             except Exception as e:
-                # failsafe += 1;
                 rowData = completeReport.iloc[0].values.tolist()
                 completeReport = completeReport.tail(-1)
                 print(f"{rowData[0]} failed to add :( ({e})")
                 failedCourses.append(rowData[0])
 
+        cleanUp(interID)
         composeEmail(triggerType, boardId, recipient, numNew, numUpdated, lambdaCycles, failedCourses, interID)
     except Exception as e:
         print(e)
@@ -139,6 +137,29 @@ def getFromS3(fileKey):
     fileContent = encoded_file_content.decode("utf-8")
     completeReport = pd.read_json(fileContent, orient='index')
     return completeReport
+
+
+def cleanUp(interID):
+    allyName = getAllyFileS3Name(interID)
+    print(f"Removing {allyName}")
+    if not removeFromS3(allyName):
+        print("Error while cleaning ally :((")
+
+    combinedName = getCombinedFileS3Name(interID)
+    print(f"Removing {combinedName}")
+    if not removeFromS3(combinedName):
+        print("Error while cleaning combined :((")
+
+
+def removeFromS3(fileName):
+    try:
+        s3 = boto3.client("s3")
+        s3Response = s3.delete_object(Bucket=S3_BUCKET, Key=fileName, )
+        print(s3Response)
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 
 def uploadToS3(dataframe, fileName):
