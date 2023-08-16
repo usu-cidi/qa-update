@@ -32,9 +32,9 @@
 
 <script>
 /* eslint-disable */
-import BigLoading from "./BigLoading.vue";
-import MainHeader from "./MainHeader.vue";
-import BugFooter from "./BugFooter.vue";
+import BigLoading from "./SmallLoadingComponent.vue";
+import MainHeader from "./MainHeaderComponent.vue";
+import BugFooter from "./BugFooterComponent.vue";
 import {SERVER_URL} from "@/assets/constants";
 export default {
   name: 'InProgressComponent',

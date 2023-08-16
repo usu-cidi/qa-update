@@ -875,10 +875,11 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Added auto-clean up of S3 files
 * Failed rows aren't being logged
   * Fixed it
-* 
+* Added option to select board id from the list gotten from the database
+* Tested running more than one lambda cycle
+* Clean up client
 
 ### TODO:
-* Select Monday board from list
 * Testing
 * Refactor and clean up again
 * Last testing

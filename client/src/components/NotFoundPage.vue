@@ -1,10 +1,9 @@
 <template>
-  <BugHeader/>
+  <MainHeader/>
 
-  <div class="feature-box orange">
+  <div class="feature-box blue">
     <br>
-    <h2>Thank you for submitting a bug report!</h2>
-    <p>I will get back to you promptly with an update if you included your contact information.</p>
+    <h2>Error 404: Not Found</h2>
     <br>
 
     <!-----------------------
@@ -25,26 +24,18 @@
 
   </div>
 
-  <br>
-  <p>Something not working right?</p>
-  <a class="btn btn-dark button" href="/bug-report">Fill out a bug report form</a>
+  <BugFooter/>
 </template>
 
 <script>
 /* eslint-disable */
-import BugHeader from "./BugHeader.vue";
+import MainHeader from "./MainHeaderComponent.vue";
+import BugFooter from "./BugFooterComponent.vue";
 export default {
-  name: 'SubmittedComponent',
+  name: 'NotFound',
   components: {
-    BugHeader,
+    MainHeader,
+    BugFooter,
   },
 }
 </script>
-
-
-<style>
-.orange {
-  border-color: #fa8520;
-  background: #EA906C;
-}
-</style>

@@ -1,20 +1,20 @@
 <template>
   <MainHeader/>
 
-  <div className="feature-box blue">
+  <div class="feature-box blue">
     <br>
     <h3>Verifying Box authentication....</h3>
 
     <div v-if="errorText">
       <p>{{ errorText }}</p>
-      <a className="btn btn-dark button" href="/box-login">Authorize again</a>
+      <a class="btn btn-dark button" href="/box-login">Authorize again</a>
     </div>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
-import MainHeader from "./MainHeader.vue";
+import MainHeader from "./MainHeaderComponent.vue";
 import {SERVER_URL} from '@/assets/constants.js';
 
 export default {

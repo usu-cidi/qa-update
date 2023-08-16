@@ -55,8 +55,8 @@
 
 <script>
 /* eslint-disable */
-import MainHeader from "./MainHeader.vue";
-import BugFooter from "./BugFooter.vue";
+import MainHeader from "./MainHeaderComponent.vue";
+import BugFooter from "./BugFooterComponent.vue";
 import {SERVER_URL} from '@/assets/constants.js';
 export default {
   name: 'AddNewTerm',
