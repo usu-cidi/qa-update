@@ -1,5 +1,4 @@
 <template>
-  <h1 class="error-message">IN DEVELOPMENT - version: 1.1.1 </h1>
   <div class="heading-box">
     <h1>QA Update</h1>
     <p>Center for Instructional Design and Innovation - USU</p>

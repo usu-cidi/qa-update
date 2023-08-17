@@ -31,11 +31,11 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 # constants
-CLIENT_URL_CORS = "https://master.d1m71ela3noy6u.amplifyapp.com"
+CLIENT_URL_CORS = "https://master.d3kepc58nvsh8n.amplifyapp.com"
 CLIENT_URL = f"{CLIENT_URL_CORS}/"
 ALLOWED_EXTENSIONS = {'csv'}
-PARTIAL_URL = "master.d1m71ela3noy6u.amplifyapp.com"
-BUCKET_NAME = "dev-qa-update-data-bucket"
+PARTIAL_URL = "master.d3kepc58nvsh8n.amplifyapp.com"
+BUCKET_NAME = "qa-update-data-bucket"
 INTERACTION_TABLE_NAME = 'QA_Interactions'
 TERM_TABLE_NAME = 'QA_Terms'
 

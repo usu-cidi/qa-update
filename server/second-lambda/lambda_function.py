@@ -13,7 +13,7 @@ from combineData import combineReports
 from talkToBox import getDataFromBox
 
 API_URL = "https://api.monday.com/v2"
-S3_BUCKET = 'dev-qa-update-data-bucket'
+S3_BUCKET = 'qa-update-data-bucket'
 TIMEOUT = 45000  # <- 45 seconds
 
 DEV_EMAIL = os.environ.get("DEV_EMAIL")

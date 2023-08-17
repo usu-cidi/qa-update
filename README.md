@@ -47,18 +47,6 @@ authorize access to your Box account.
 * The update will begin. The monday board will be automatically updated using the API. You will
 receive an email when the update is complete.
 
-Note: currently, only one update can be run at a time. This functionality will be updated in future versions.
-
-## Future Versions
-
-### Features to be added
-* Running more than one update at a time
-* A report in the completion email of any courses that failed to add/update
-* A simpler/more intuitive data flow
-
-### Features that may be added
-* Cancelling update once initiated
-
 ## Prepping a New QA Board
 When a new QA Board has been created and needs to be populated with data, follow these steps to prep the board.
 * Add the following automations to the board:
@@ -78,17 +66,19 @@ When a new QA Board has been created and needs to be populated with data, follow
 
   <img src="./doc/trigger-id.png">
 
-* When finished adding the new board, select `Fill in new board` when updating the board using the tool.
+* When finished adding the new board, select the `Fill in new board` option when updating the board using the tool.
 
 ## Change Log
 
 ### 1.1.1
 * More responsive retrieval of Ally link
-* Support for adding support for a new term
+* Support for adding a new term
 * More intuitive flow
 * Support for running multiple updates at once
 * Improved bug reports
 * Better conformation to software development best practices
+* Added reliance on database
+* Better input validation
 
 ### 1.1.0
 * Added support for larger terms like Fall & Spring
@@ -100,7 +90,6 @@ When a new QA Board has been created and needs to be populated with data, follow
 * Changed the monday completion status from `Updated` to `Done` to conform better with the rest of the boards
 
 ### 1.0.0
-5.31.23
 * Initial release as web application
 
 ## Bug Reports

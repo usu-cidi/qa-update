@@ -882,9 +882,12 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Improved loading colors
 * Testing full semester's update
 
+### 8.17.23
+* Pushing full update
+* Everything looks great!! Great news! Great software! Nice!
+
 ### TODO:
-* Testing
-* Deploy update
+* New waiting: Writing a strongly worded email...
 
 *New features for 1.1.1*
 * Add back fun Ally waiting things
