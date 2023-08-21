@@ -69,6 +69,9 @@ def createNewItem(rowInfo, boardId, HEADERS):
 
     try:
         return r.json()["data"]["create_item"]["id"]
+    except ComplexityException as e:
+            print(f"Hit rate limit {e}")
+            return 429
     except Exception as e:
         print(f":( error when creating new row {e}")
         print(r.json())
@@ -92,6 +95,9 @@ def updateRow(itemID, rowInfo, boardId, HEADERS):
     r = requests.post(url=API_URL, json=data, headers=HEADERS)  # make request
     try:
         return r.json()["data"]["change_multiple_column_values"]["id"]
+    except ComplexityException as e:
+        print(f"Hit rate limit {e}")
+        return 429
     except Exception as e:
         print(f":(( Error updating row {e}")
         print(r.json())
@@ -132,11 +138,18 @@ def doOneUpdate(courseDF, boardId, mondayAPIKey, currBoard):
             print("Failed updating row")
             return [newDF, 0, 0, rowData[0]]
 
+        if updateRow(itemID, rowData, boardId, HEADERS) == 429:
+            print("Needs to be retried")
+            return [newDF, 0, 0, 429]
+
         numUpdated = 1
         print(f"{rowData[0]} matched and updated if needed")
     else:
         itemID = createNewItem(rowData, boardId, HEADERS)
         if itemID is None:
+            print("Failed creating new")
+            return [newDF, 0, 0, rowData[0]]
+        if itemID == 429:
             print("Failed creating new")
             return [newDF, 0, 0, rowData[0]]
         numNew = 1

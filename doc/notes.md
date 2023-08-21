@@ -886,18 +886,13 @@ which is sus... but I don't think we have a runaway lambda which is good
 * Pushing full update
 * Everything looks great!! Great news! Great software! Nice!
 
-### TODO:
-* New waiting: Writing a strongly worded email...
+### 8.21.23
+* Jenn hit Monday's complexity (rate) limit
+  * Which is weird that that's never happened before but whatever
+  * Added an exponential backoff algorithm
 
-*New features for 1.1.1*
-* Add back fun Ally waiting things
-* Big refactor
-* Add a better way to add a new term
-* Combine steps two and three
-  * Or hide the other fields until the Ally file is uploaded
-* Support running multiple updates at a time
-  * Should be fixed by making API stateless and figuring out better bucket obj names
-* Fix bug reports
+### TODO:
+
 
 ### Future Versions:
 * Stop update option?

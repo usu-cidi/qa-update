@@ -7,6 +7,9 @@ from datetime import datetime
 import pandas as pd
 import requests
 import boto3
+import math
+import random
+import time
 
 from updateMonday import doOneUpdate
 from combineData import combineReports
@@ -19,6 +22,9 @@ TIMEOUT = 45000  # <- 45 seconds
 DEV_EMAIL = os.environ.get("DEV_EMAIL")
 EMAIL_PASS = os.environ.get("EMAIL_PASS")
 MY_NAME = os.environ.get("MY_NAME")
+
+MAX_BACKOFF = 32
+TIME_BASE = 4
 
 
 def getAllyFileS3Name(theID):
@@ -78,6 +84,8 @@ def lambda_handler(event, context):
             for theRow in jsonObj["data"]["boards"][0]["items"]:
                 currBoard[theRow["name"]] = theRow["id"]
 
+        backoff = -1 #so we know we don't need to backoff
+
         while not completeReport.empty:
             # check if we're almost out of time, if we are and we're not done, pass stuff to next one
             if context.get_remaining_time_in_millis() <= TIMEOUT:
@@ -103,10 +111,21 @@ def lambda_handler(event, context):
                 return
 
             try:
+                if backoff > -1:
+                    waitTime = min(((TIME_BASE ** backoff) + math.floor(random.randint(0, 1) * 1001)), MAX_BACKOFF) / 1000
+                    time.sleep(waitTime)
+                    print(f"Backed off for {waitTime} seconds, starting again")
+
                 result = doOneUpdate(completeReport, boardId, mondayAPIKey, currBoard)
+
+                if result[3] == 429:
+                    backoff += 2
+                    continue
+
                 completeReport = result[0]
                 numUpdated += result[1]
                 numNew += result[2]
+                backoff = -1 #so we know we don't need to backoff
                 if not result[3] == "":
                     failedCourses.append(result[3])
             except Exception as e:
