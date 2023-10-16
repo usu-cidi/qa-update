@@ -11,11 +11,10 @@ import math
 import random
 import time
 
-from updateMonday import doOneUpdate
+from updateMonday import doOneUpdate, getBoardContents
 from combineData import combineReports
 from talkToBox import getDataFromBox
 
-API_URL = "https://api.monday.com/v2"
 S3_BUCKET = 'qa-update-data-bucket'
 TIMEOUT = 45000  # <- 45 seconds
 
@@ -74,17 +73,9 @@ def lambda_handler(event, context):
         currBoard = {}
 
         if triggerType == "update":
-            HEADERS = {"Authorization": mondayAPIKey}
-            getIdsQuery = f'{{ boards(ids:{boardId}) {{ name items {{ name id }} }} }}'
-            data = {'query': getIdsQuery}
+            currBoard = getBoardContents(mondayAPIKey, boardId, currBoard)
 
-            r = requests.post(url=API_URL, json=data, headers=HEADERS)
-            jsonObj = json.loads(r.content)
-
-            for theRow in jsonObj["data"]["boards"][0]["items"]:
-                currBoard[theRow["name"]] = theRow["id"]
-
-        backoff = -1 #so we know we don't need to backoff
+        backoff = -1  # so we know we don't need to backoff
 
         while not completeReport.empty:
             # check if we're almost out of time, if we are and we're not done, pass stuff to next one
@@ -112,7 +103,8 @@ def lambda_handler(event, context):
 
             try:
                 if backoff > -1:
-                    waitTime = min(((TIME_BASE ** backoff) + math.floor(random.randint(0, 1) * 1001)), MAX_BACKOFF) / 1000
+                    waitTime = min(((TIME_BASE ** backoff) + math.floor(random.randint(0, 1) * 1001)),
+                                   MAX_BACKOFF) / 1000
                     time.sleep(waitTime)
                     print(f"Backed off for {waitTime} seconds, starting again")
 
@@ -125,7 +117,7 @@ def lambda_handler(event, context):
                 completeReport = result[0]
                 numUpdated += result[1]
                 numNew += result[2]
-                backoff = -1 #so we know we don't need to backoff
+                backoff = -1  # so we know we don't need to backoff
                 if not result[3] == "":
                     failedCourses.append(result[3])
             except Exception as e:

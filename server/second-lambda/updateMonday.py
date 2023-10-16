@@ -28,8 +28,6 @@ COL_IDS = ["text8", "text67", "text83", "text", "text6", "status4", "status35", 
            "overall_a11y_score",
            "files_ally_score", "wysiwyg_ally_score", "__of_pdf_files", "pdf_files_in_use", "pdf_scanned_not_ocr_d",
            "images", "images_wo_alt_text", "numbers"]
-# "status_15": trigger column - DEV, "status_12": Summer 2023, "status_13": Fall 2023
-# "date": last updated column - DEV - same in Summer 2023 & Fall 2023
 GROUP_IDS = {100: "new_group659", 50: "new_group84060", 20: "new_group63769", 10: "new_group69712", 1: "new_group",
              0: "new_group7956"}
 
@@ -70,8 +68,8 @@ def createNewItem(rowInfo, boardId, HEADERS):
     try:
         return r.json()["data"]["create_item"]["id"]
     except ComplexityException as e:
-            print(f"Hit rate limit {e}")
-            return 429
+        print(f"Hit rate limit {e}")
+        return 429
     except Exception as e:
         print(f":( error when creating new row {e}")
         print(r.json())
@@ -156,3 +154,17 @@ def doOneUpdate(courseDF, boardId, mondayAPIKey, currBoard):
         print(f"{rowData[0]} added as new row")
 
     return [newDF, numUpdated, numNew, ""]
+
+
+def getBoardContents(mondayAPIKey, boardId, currBoard):
+    HEADERS = {"Authorization": mondayAPIKey}
+    getIdsQuery = f'{{ boards(ids:{boardId}) {{ name items {{ name id }} }} }}'
+    data = {'query': getIdsQuery}
+
+    r = requests.post(url=API_URL, json=data, headers=HEADERS)
+    jsonObj = json.loads(r.content)
+
+    for theRow in jsonObj["data"]["boards"][0]["items"]:
+        currBoard[theRow["name"]] = theRow["id"]
+
+    return currBoard
