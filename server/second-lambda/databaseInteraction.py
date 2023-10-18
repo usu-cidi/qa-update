@@ -1,5 +1,4 @@
 import boto3
-from datetime import datetime
 
 REGION_NAME = "us-east-2"
 

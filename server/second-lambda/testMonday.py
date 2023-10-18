@@ -8,10 +8,9 @@ TEST_BOARD_ID = '4565600141'
 
 
 def testCreateNewItem():
-    rowInfo = ['New test one we added', 'https://usu.instructure.com/courses/741171',
-               'https://usu.instructure.com/courses/741171/external_tools/28805',
-               'https://usu.instructure.com/courses/741171/external_tools/29768', 'Rachel Turner', 'a02342628@usu.edu',
-               'EEJ Education & Human Services', 'Teacher Education & Leadership', 'Broadcast', 101, 0.3854166667,
+    rowInfo = ['New test one we added', 'url', 'url',
+               'url', 'Instructor', 'email',
+               'some place', 'some group', 'format', 101, 0.3854166667,
                307, 43, 0.1400651466, 96, 37.0, 18, 5, 31, 0, 0, 20, 'hidden', 0.549026125, 0.42329011590000004,
                0.9868298193, 96, 0.1875, 8, 94, 57, 0.1382978723]
     headers = {"Authorization": MONDAY_API}
@@ -19,10 +18,9 @@ def testCreateNewItem():
 
 
 def testUpdateRow():
-    rowInfo = ['Spring 2023 BIOL-3095-003', 'we changed it',
-               'https://usu.instructure.com/courses/741171/external_tools/28805',
-               'https://usu.instructure.com/courses/741171/external_tools/29768', 'Rachel Turner', 'a02342628@usu.edu',
-               'EEJ Education & Human Services', 'Teacher Education & Leadership', 'Broadcast', 101, 0.3854166667,
+    rowInfo = ['Name', 'url', 'url',
+               'url', 'Instructor', 'email',
+               'some place', 'some group', 'format', 101, 0.3854166667,
                307, 43, 0.1400651466, 96, 37.0, 18, 5, 31, 0, 0, 20, 'hidden', 0.549026125, 0.42329011590000004,
                0.9868298193, 96, 0.1875, 8, 94, 57, 0.1382978723]
     headers = {"Authorization": MONDAY_API}
