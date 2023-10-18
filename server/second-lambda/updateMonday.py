@@ -47,10 +47,13 @@ def findGroupID(numStu):
     return GROUP_IDS[0]
 
 
-def createNewItem(rowInfo, boardId, HEADERS):
+def createNewItem(rowInfo, boardId, headers):
+    headers['API-Version'] = '2023-10'
+    headers['Content-Type'] = 'application/json'
+
     groupID = findGroupID(rowInfo[NUM_STU_INDEX])
     query = f'mutation ($myItemName: String!, $columnVals: JSON!) ' \
-            f'{{ create_item (board_id:{boardId}, group_id:{groupID}, ' \
+            f'{{ create_item (board_id:{boardId}, group_id: "{groupID}", ' \
             f'item_name:$myItemName, column_values:$columnVals) {{ id }} }}'
 
     rowInfo.append("Done")
@@ -63,20 +66,23 @@ def createNewItem(rowInfo, boardId, HEADERS):
     }
 
     data = {'query': query, 'variables': theVars}
-    r = requests.post(url=API_URL, json=data, headers=HEADERS)  # make request
+    r = requests.post(url=API_URL, json=data, headers=headers)  # make request
 
     try:
         return r.json()["data"]["create_item"]["id"]
-    except ComplexityException as e:
-        print(f"Hit rate limit {e}")
-        return 429
     except Exception as e:
+        # if e.contains('429'):
+        #     print(f"Hit rate limit {e}")
+        #     return 429
         print(f":( error when creating new row {e}")
         print(r.json())
         return None
 
 
-def updateRow(itemID, rowInfo, boardId, HEADERS):
+def updateRow(itemID, rowInfo, boardId, headers):
+    headers['API-Version'] = '2023-10'
+    headers['Content-Type'] = 'application/json'
+
     query = f'mutation ($columnVals: JSON!) {{ change_multiple_column_values (board_id:{boardId}, ' \
             f'item_id: {itemID}, column_values:$columnVals) {{ name id }} }}'
 
@@ -90,13 +96,13 @@ def updateRow(itemID, rowInfo, boardId, HEADERS):
 
     data = {'query': query, 'variables': theVars}
 
-    r = requests.post(url=API_URL, json=data, headers=HEADERS)  # make request
+    r = requests.post(url=API_URL, json=data, headers=headers)  # make request
     try:
         return r.json()["data"]["change_multiple_column_values"]["id"]
-    except ComplexityException as e:
-        print(f"Hit rate limit {e}")
-        return 429
     except Exception as e:
+        # if e.contains('429'):
+        #     print(f"Hit rate limit {e}")
+        #     return 429
         print(f":(( Error updating row {e}")
         print(r.json())
         return None
@@ -131,12 +137,13 @@ def doOneUpdate(courseDF, boardId, mondayAPIKey, currBoard):
 
     if rowData[0] in currBoard:
         itemID = currBoard[rowData[0]]
+        updateAttempt = updateRow(itemID, rowData, boardId, HEADERS)
 
-        if updateRow(itemID, rowData, boardId, HEADERS) is None:
+        if updateAttempt is None:
             print("Failed updating row")
             return [newDF, 0, 0, rowData[0]]
 
-        if updateRow(itemID, rowData, boardId, HEADERS) == 429:
+        if updateAttempt == 429:
             print("Needs to be retried")
             return [newDF, 0, 0, 429]
 
@@ -157,14 +164,28 @@ def doOneUpdate(courseDF, boardId, mondayAPIKey, currBoard):
 
 
 def getBoardContents(mondayAPIKey, boardId, currBoard):
-    HEADERS = {"Authorization": mondayAPIKey}
-    getIdsQuery = f'{{ boards(ids:{boardId}) {{ name items {{ name id }} }} }}'
+    HEADERS = {'Content-Type': 'application/json', 'Authorization': mondayAPIKey, 'API-Version': '2023-10'}
+    getIdsQuery = f'{{ boards(ids:{boardId}) {{ items_page(limit: 500) {{ cursor items {{ name id }} }} }} }}'
     data = {'query': getIdsQuery}
 
     r = requests.post(url=API_URL, json=data, headers=HEADERS)
     jsonObj = json.loads(r.content)
 
-    for theRow in jsonObj["data"]["boards"][0]["items"]:
+    for theRow in jsonObj['data']["boards"][0]["items_page"]['items']:
         currBoard[theRow["name"]] = theRow["id"]
+
+    cursor = jsonObj['data']["boards"][0]["items_page"]['cursor']
+
+    while cursor is not None:
+        retryQuery = f'{{ next_items_page(limit: 500, cursor: "{cursor}") {{ cursor items {{ name id }} }} }}'
+        data = {'query': retryQuery}
+
+        r = requests.post(url=API_URL, json=data, headers=HEADERS)
+        jsonObj = json.loads(r.content)
+
+        for theRow in jsonObj["data"]["next_items_page"]['items']:
+            currBoard[theRow["name"]] = theRow["id"]
+
+        cursor = jsonObj["data"]["next_items_page"]['cursor']
 
     return currBoard
