@@ -1,6 +1,6 @@
 # Monday QA Board Update Tool
 Center for Instructional Design and Innovation - Utah State University
-* Created by Emma Lynn (a02391851@usu.edu)
+* Created by Emma Lynn (e.lynn@usu.edu)
 * Supervised by Neal Legler, CIDI Director (neal.legler@usu.edu)
 * On request from Neal Legler, CIDI Director & Christopher Phillips, Electronic & Information Technology Accessibility Coordinator
 
@@ -11,7 +11,7 @@ This repository contains code that will:
 
 This tool is currently hosted at: https://master.d3kepc58nvsh8n.amplifyapp.com/
 
-Active version: **1.1.2**
+Active version: **2.0.0**
 
 To use this tool on the command line, switch to the branch `archive/cli`.
 * Note: the command line version of the tool has been deprecated. Usage is discouraged, please use the new web application.
@@ -20,9 +20,10 @@ To use this tool on the command line, switch to the branch `archive/cli`.
 * Navigate to https://master.d3kepc58nvsh8n.amplifyapp.com/.
 * To download the most recent Ally Accessibility report, enter your Ally credentials and the term code.
 If you do not have the institutional Ally credentials, reach out to Christopher Phillips.
-  * Current term codes:
+  * Relevant term codes:
     * Summer 2023: 888
     * Fall 2023: 889
+    * Spring 2024: 890
 * Wait until a link appears, and then click on it to download the Ally report. This may take several minutes.
 * You will download a `zip` file. Unzip the file, and you will have a folder with two files, `courses.csv`
 and `terms.csv`. You will upload `courses.csv` in a moment. Click the `Next` button.
@@ -70,6 +71,9 @@ When a new QA Board has been created and needs to be populated with data, follow
 
 ## Change Log
 
+### 2.0.0
+* Migrated monday.com API calls for version 2023-10 (BREAKING CHANGE after 01-2023)
+
 ### 1.1.2
 * Bug fixes
 
@@ -99,9 +103,9 @@ When a new QA Board has been created and needs to be populated with data, follow
 If something behaves unexpectedly, or you run into a problem with the program, please let me know.
 
 Fill out a bug report [here](https://master.d3kepc58nvsh8n.amplifyapp.com/bug-report), 
-or if the bug is affecting the operation of this form, follow the following steps:
+or follow the following steps:
 
-Send bug reports to a02391851@usu.edu with the subject line "Bug Report - Monday QA Webhook".
+Send bug reports to e.lynn@usu.edu with the subject line "Bug Report - Monday QA Update".
 
 Please include:
 * What you expected to happen
