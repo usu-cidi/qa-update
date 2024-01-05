@@ -1,6 +1,6 @@
 # Monday QA Board Automation Project
 Center for Instructional Design and Innovation - Utah State University
-* Created by Emma Lynn (a02391851@usu.edu)
+* Created by Emma Lynn (e.lynn@usu.edu)
 * Supervised by Neal Legler, CIDI Director (neal.legler@usu.edu)
 * On request from Neal Legler, CIDI Director & Christopher Phillips, Electronic & Information Technology Accessibility Coordinator
 
@@ -884,14 +884,12 @@ which is sus... but I don't think we have a runaway lambda which is good
 
 ### 8.17.23
 * Pushing full update
-* Everything looks great!! Great news! Great software! Nice!
+* Everything looks great!!
 
 ### 8.21.23
 * Jenn hit Monday's complexity (rate) limit
   * Which is weird that that's never happened before but whatever
   * Added an exponential backoff algorithm
-
-### TODO:
 
 
 ### Future Versions:
