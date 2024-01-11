@@ -145,7 +145,7 @@ export default {
     getAllyLink() {
       this.error1 = "";
 
-      let clientId = document.getElementById("ally-client-id").value;
+      let clientId = document.getElementById("ally-old-client-id").value;
       let consumKey = document.getElementById("ally-consum-key").value;
       let consumSec = document.getElementById("ally-consum-sec").value;
       let termCode = document.getElementById("term-code").value;
