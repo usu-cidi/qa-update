@@ -7,6 +7,13 @@ exports.getHeadMaintainer = async function () {
     return "e.lynn@usu.edu";
 }
 
+exports.updateLastRun = async function () {
+    return true;
+}
+
+exports.updateLastIssues = async function (issues) {
+    return true;
+}
 
 
 

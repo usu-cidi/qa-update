@@ -118,7 +118,6 @@ exports.addRows = async function (rowsToAdd, boardId) {
 
 
 addOneRow = async function (courseData, boardId) {
-
     console.log(`Adding ${courseData.name} individually`);
 
     //get group ID
@@ -135,10 +134,39 @@ addOneRow = async function (courseData, boardId) {
 
     //add to query variables
     let theVars = {
-
+        "myItemName": courseData.name,
+        "columnVals": JSON.stringify(row)
     };
-    theVars[`myItemName`] = courseData.name;
-    theVars[`columnVals`] = JSON.stringify(row);
+
+    let query = `mutation (${queryVars}) { ${queryMiddle} }`;
+
+    const headers = {
+        headers: {
+            Authorization: MONDAY_API_KEY,
+            'Content-Type': 'application/json',
+            'API-Version': API_VERSION,
+        }
+    };
+
+    return await postData(URL, {query: query, variables: theVars}, headers);
+}
+
+updateOneRow = async function (courseData, boardId) {
+    console.log(`Updating ${courseData.name} individually`);
+
+    //add to query
+    let queryMiddle = `updateItem: change_multiple_column_values (board_id:${boardId}, 
+        item_id:${courseData.itemID}, column_values:$columnVals) { id } `;
+
+    let queryVars = `$columnVals: JSON!, `;
+
+    //format column values
+    const row = formatColumnVals(courseData);
+
+    //add to query variables
+    let theVars = {
+        "columnVals": JSON.stringify(row)
+    };
 
     let query = `mutation (${queryVars}) { ${queryMiddle} }`;
 
@@ -191,9 +219,70 @@ addNewRowBatch = async function (rowsToAdd, boardId) {
     return await postData(URL, {query: query, variables: theVars}, headers);
 }
 
-exports.updateRowBatch = async function (rowsToUpdate, boardId) {
-    console.log(`Updating ${rowsToUpdate.length} new rows`);
-    return [];
+exports.updateRows = async function (rowsToUpdate, boardId) {
+    let failedToUpdate = [];
+
+    for (let i = 0; i < rowsToUpdate.length / BATCH_SIZE; i++) {
+        let thisSection;
+
+        if (((i * BATCH_SIZE) + BATCH_SIZE - 1) < rowsToUpdate.length) {
+            thisSection = rowsToUpdate.slice((i * BATCH_SIZE), (i * BATCH_SIZE) + BATCH_SIZE);
+        } else {
+            thisSection = rowsToUpdate.slice(i * BATCH_SIZE);
+        }
+
+        const batchAddResult = await updateRowBatch(thisSection, boardId);
+        console.log(batchAddResult);
+
+        if (batchAddResult.error_code !== undefined) {
+            console.log("There was an error so we'll do each one individually");
+            for (let j = 0; j < thisSection.length; j++) {
+                const result = await updateOneRow(thisSection[j], boardId);
+
+                if (result.error_code !== undefined) {
+                    thisSection[j].error = result;
+                    failedToUpdate.push(thisSection[j]);
+                }
+            }
+        }
+    }
+
+    return failedToUpdate;
+}
+
+updateRowBatch = async function (rowsToUpdate, boardId) {
+    console.log(`Updating ${rowsToUpdate.length} rows`);
+
+    let queryMiddle = '';
+    let queryVars = '';
+    let theVars = {};
+
+    for (let i = 0; i < rowsToUpdate.length; i++) {
+
+        //add to query
+        queryMiddle += `updateItem${i}: change_multiple_column_values (board_id:${boardId}, 
+        item_id:${rowsToUpdate[i].itemID}, column_values:$columnVals${i}) { id } `
+
+        queryVars += `$columnVals${i}: JSON!, `;
+
+        //format column values
+        const row = formatColumnVals(rowsToUpdate[i]);
+
+        //add to query variables
+        theVars[`columnVals${i}`] = JSON.stringify(row);
+    }
+
+    let query = `mutation (${queryVars}) { ${queryMiddle} }`;
+
+    const headers = {
+        headers: {
+            Authorization: MONDAY_API_KEY,
+            'Content-Type': 'application/json',
+            'API-Version': API_VERSION,
+        }
+    };
+
+    return await postData(URL, {query: query, variables: theVars}, headers);
 }
 
 function findGroupID(numStu) {
@@ -203,10 +292,6 @@ function findGroupID(numStu) {
         }
     }
     return GROUP_IDS[GROUP_IDS.length];
-}
-
-updateExistingRow = async function (courseData) {
-    console.log(`Updating row: ${courseData.name}`);
 }
 
 
