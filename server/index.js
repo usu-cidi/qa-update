@@ -2,15 +2,15 @@ const express = require('express')
 const app = express()
 const port = 3000
 
-const runUpdate = require('./run-update.js');
+const initiateUpdate = require('./run-update.js');
 
 app.get('/', (req, res) => {
-    runUpdate(1234);
+    //initiateUpdate(1234);
     res.send('Hello World!');
 });
 
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`)
+    console.log(`App listening on port ${port}`);
 });
 
 //trigger an update
@@ -48,6 +48,10 @@ app.listen(port, () => {
     //email
 
 //view all maintainer emails
+
+//edit head maintainer email
+
+//view head maintainer email
 
 
 
