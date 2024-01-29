@@ -44,14 +44,77 @@ function formatColumnVals(row) {
     };
 }
 
-async function postData(url, data, headers) {
-    return axios.post(url, data, headers)
-        .then(response => {
-            return response.data;
-        })
-        .catch(error => {
-            throw error;
-        });
+exports.updateRows = async function (rowsToUpdate, boardId) {
+    let failedToUpdate = [];
+
+    for (let i = 0; i < rowsToUpdate.length / BATCH_SIZE; i++) {
+        let thisSection;
+
+        if (((i * BATCH_SIZE) + BATCH_SIZE - 1) < rowsToUpdate.length) {
+            thisSection = rowsToUpdate.slice((i * BATCH_SIZE), (i * BATCH_SIZE) + BATCH_SIZE);
+        } else {
+            thisSection = rowsToUpdate.slice(i * BATCH_SIZE);
+        }
+
+        const batchAddResult = await updateRowBatch(thisSection, boardId);
+        console.log(batchAddResult);
+
+        if (batchAddResult.error_code !== undefined) {
+            console.log("There was an error so we'll do each one individually");
+
+            const currentBoard = await this.getMondayCourses(boardId);
+
+            for (let j = 0; j < thisSection.length; j++) {
+
+                if (!currentBoard.filter(e => e.name === thisSection[j].name).length > 0) {
+                    const result = await updateOneRow(thisSection[j], boardId);
+
+                    if (result.error_code !== undefined) {
+                        thisSection[j].error = result;
+                        failedToUpdate.push(thisSection[j]);
+                    }
+                }
+            }
+        }
+    }
+
+    return failedToUpdate;
+}
+
+exports.addRows = async function (rowsToAdd, boardId) {
+
+    let failedToAdd = [];
+
+    for (let i = 0; i < rowsToAdd.length / BATCH_SIZE; i++) {
+        let thisSection;
+
+        if (((i * BATCH_SIZE) + BATCH_SIZE - 1) < rowsToAdd.length) {
+            thisSection = rowsToAdd.slice((i * BATCH_SIZE), (i * BATCH_SIZE) + BATCH_SIZE);
+        } else {
+            thisSection = rowsToAdd.slice(i * BATCH_SIZE);
+        }
+
+        const batchAddResult = await addNewRowBatch(thisSection, boardId);
+
+        if (batchAddResult.error_code !== undefined) {
+            console.log("There was an error so we'll do each one individually");
+
+            const currentBoard = await this.getMondayCourses(boardId);
+
+            for (let j = 0; j < thisSection.length; j++) {
+                if (!currentBoard.filter(e => e.name === thisSection[j].name).length > 0) {
+                    const result = await addOneRow(thisSection[j], boardId);
+
+                    if (result.error_code !== undefined) {
+                        thisSection[j].error = result;
+                        failedToAdd.push(thisSection[j]);
+                    }
+                }
+            }
+        }
+    }
+
+    return failedToAdd;
 }
 
 exports.getMondayCourses = async function (boardId) {
@@ -84,38 +147,6 @@ exports.getMondayCourses = async function (boardId) {
 
     return rows;
 }
-
-exports.addRows = async function (rowsToAdd, boardId) {
-
-    let failedToAdd = [];
-
-    for (let i = 0; i < rowsToAdd.length / BATCH_SIZE; i++) {
-        let thisSection;
-
-        if (((i * BATCH_SIZE) + BATCH_SIZE - 1) < rowsToAdd.length) {
-            thisSection = rowsToAdd.slice((i * BATCH_SIZE), (i * BATCH_SIZE) + BATCH_SIZE);
-        } else {
-            thisSection = rowsToAdd.slice(i * BATCH_SIZE);
-        }
-
-        const batchAddResult = await addNewRowBatch(thisSection, boardId);
-
-        if (batchAddResult.error_code !== undefined) {
-            console.log("There was an error so we'll do each one individually");
-            for (let j = 0; j < thisSection.length; j++) {
-                const result = await addOneRow(thisSection[j], boardId);
-
-                if (result.error_code !== undefined) {
-                    thisSection[j].error = result;
-                    failedToAdd.push(thisSection[j]);
-                }
-            }
-        }
-    }
-
-    return failedToAdd;
-}
-
 
 addOneRow = async function (courseData, boardId) {
     console.log(`Adding ${courseData.name} individually`);
@@ -219,37 +250,6 @@ addNewRowBatch = async function (rowsToAdd, boardId) {
     return await postData(URL, {query: query, variables: theVars}, headers);
 }
 
-exports.updateRows = async function (rowsToUpdate, boardId) {
-    let failedToUpdate = [];
-
-    for (let i = 0; i < rowsToUpdate.length / BATCH_SIZE; i++) {
-        let thisSection;
-
-        if (((i * BATCH_SIZE) + BATCH_SIZE - 1) < rowsToUpdate.length) {
-            thisSection = rowsToUpdate.slice((i * BATCH_SIZE), (i * BATCH_SIZE) + BATCH_SIZE);
-        } else {
-            thisSection = rowsToUpdate.slice(i * BATCH_SIZE);
-        }
-
-        const batchAddResult = await updateRowBatch(thisSection, boardId);
-        console.log(batchAddResult);
-
-        if (batchAddResult.error_code !== undefined) {
-            console.log("There was an error so we'll do each one individually");
-            for (let j = 0; j < thisSection.length; j++) {
-                const result = await updateOneRow(thisSection[j], boardId);
-
-                if (result.error_code !== undefined) {
-                    thisSection[j].error = result;
-                    failedToUpdate.push(thisSection[j]);
-                }
-            }
-        }
-    }
-
-    return failedToUpdate;
-}
-
 updateRowBatch = async function (rowsToUpdate, boardId) {
     console.log(`Updating ${rowsToUpdate.length} rows`);
 
@@ -292,6 +292,16 @@ function findGroupID(numStu) {
         }
     }
     return GROUP_IDS[GROUP_IDS.length];
+}
+
+async function postData(url, data, headers) {
+    return axios.post(url, data, headers)
+        .then(response => {
+            return response.data;
+        })
+        .catch(error => {
+            throw error;
+        });
 }
 
 

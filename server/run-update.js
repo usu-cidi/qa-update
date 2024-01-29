@@ -86,13 +86,14 @@ ${formatCourseList(failedToUpdate)}
     
 You're receiving this email because you are listed as a maintainer for the QA Update tool. If you wish to be removed from this list, please contact ${headMaintainer}.`;
 
-    await sendMaintainerEmail(message, subject);
+    console.log(message);
+    //await sendMaintainerEmail(message, subject);
 }
 
 function formatCourseList(courses) {
     let result = "";
     for (let i = 0; i < courses.length; i++) {
-        result += ` -- ${courses[i].name}: ${JSON.stringify(courses[i].error)}\n\n`
+        result += `${courses[i].name}: ${JSON.stringify(courses[i].error)}\n\n`
     }
     return result;
 }
