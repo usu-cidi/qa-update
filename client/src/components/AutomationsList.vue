@@ -4,15 +4,21 @@
 
   defineProps({
     active: Boolean
-  })
+  });
 </script>
 
 <template>
 
-  <p v-if="active">Here are the active automations</p>
-  <p v-else>Here are the inactive automations</p>
-
-  <Automation :active="active"/>
+  <div class="automation-list">
+    <Automation :active="active"
+                :details="{
+      mondayId: '54321',
+      updateColId: '54321',
+      allySemId: '123',
+      endDate: '05/01/2024',
+      lastUpdated: '01/28/2024',
+    }"/>
+  </div>
 
 </template>
 
@@ -29,5 +35,9 @@ export default {
 
 
 <style>
+
+.automation-list {
+  margin-bottom: 50px;
+}
 
 </style>
