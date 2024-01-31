@@ -9,10 +9,18 @@
     <a href="https://github.com/emmalynnnn/cidi-monday-qa-automation" target="_blank" class="link">About</a>
   </div>
 
-  <h2>Active Automations - Updates Nightly at {{time}}</h2>
-  <AutomationsList active />
-  <h2>Inactive Automations</h2>
-  <AutomationsList :active="false" />
+  <div v-if="!automations || automations.length === 0">
+    <p>Loading...</p>
+  </div>
+
+  <div v-else>
+    <h2>Active Automations - Updates Nightly at {{time}}</h2>
+    <AutomationsList active :automations="automations"/>
+    <h2>Inactive Automations</h2>
+    <AutomationsList :active="false" :automations="automations"/>
+  </div>
+
+
 
 </template>
 
@@ -31,6 +39,7 @@ export default {
   data() {
     return {
       time: '8:00 PM',
+      automations: [],
     }
   },
 
@@ -44,7 +53,35 @@ export default {
       this.$router.push({path: '/add'})
     },
 
-  }
+  },
+
+  created() {
+    //TODO: get saved automation info from database
+    this.automations = [{
+      mondayId: '54321',
+      updateColId: '54321',
+      allySemId: '123',
+      endDate: '05/01/2024',
+      lastUpdated: '01/28/2024',
+      active: true,
+    }, {
+      mondayId: '54321',
+      updateColId: '54321',
+      allySemId: '123',
+      endDate: '05/01/2024',
+      lastUpdated: '01/28/2024',
+      active: false
+    },
+      {
+        mondayId: '54321',
+        updateColId: '54321',
+        allySemId: '123',
+        endDate: '05/01/2024',
+        lastUpdated: '01/28/2024',
+        active: true,
+      }];
+  },
+
 }
 </script>
 

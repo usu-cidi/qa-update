@@ -40,9 +40,9 @@ export default {
   created() {
     this.isChecked = this.activated;
     if (this.isChecked) {
-      this.text = "Disable?"
+      this.text = "Deactivate"
     } else {
-      this.text = "Enable?"
+      this.text = "Activate"
     }
   }
 

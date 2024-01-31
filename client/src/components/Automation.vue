@@ -51,6 +51,8 @@
 <script>
 export default {
 
+  props: ['details', 'active'],
+
   methods: {
     editAutomation() {
       console.log("Editing an automation");

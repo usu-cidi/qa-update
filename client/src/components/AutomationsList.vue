@@ -3,21 +3,20 @@
   import Automation from "@/components/Automation.vue";
 
   defineProps({
+    automations: Array,
     active: Boolean
   });
 </script>
 
 <template>
 
-  <div class="automation-list">
+  <div v-if="relevantAutomations.length === 0">
+    <p class="none-found">No automations found.</p>
+  </div>
+
+  <div class="automation-list" v-for="item in relevantAutomations">
     <Automation :active="active"
-                :details="{
-      mondayId: '54321',
-      updateColId: '54321',
-      allySemId: '123',
-      endDate: '05/01/2024',
-      lastUpdated: '01/28/2024',
-    }"/>
+                :details="item"/>
   </div>
 
 </template>
@@ -26,8 +25,20 @@
 <script>
 export default {
 
+  props: ['active', 'automations'],
+
+  data() {
+    return {
+      relevantAutomations: [],
+    }
+  },
+
   methods: {
 
+  },
+
+  created() {
+    this.relevantAutomations = this.automations.filter((item) => item.active === this.active);
   },
 
 }
