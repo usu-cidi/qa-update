@@ -167,6 +167,6 @@ function cleanRow(row) {
     return row;
 }
 
-initiateUpdate(3779195138);
+//initiateUpdate(3779195138);
 
 module.exports = initiateUpdate;

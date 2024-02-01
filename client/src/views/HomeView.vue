@@ -20,14 +20,13 @@
     <AutomationsList :active="false" :automations="automations"/>
   </div>
 
-
-
 </template>
 
 
 <script>
 import Button from "@/components/Button.vue";
 import AutomationsList from "@/components/AutomationsList.vue";
+import { SERVER_URL } from "@/constants.js";
 
 export default {
 
@@ -53,33 +52,43 @@ export default {
       this.$router.push({path: '/add'})
     },
 
+    async refreshBoards(newAutomations=null) {
+      if (newAutomations) {
+        this.automations = newAutomations;
+      } else {
+        const resp = await fetch(`${SERVER_URL}get-boards`);
+        const body = await resp.json();
+        this.automations = body;
+      }
+    },
+
+    postData(url, data, contentType="application/json") {
+      return fetch(url, {
+        method: "POST",
+        cache: "no-cache",
+        credentials: "same-origin",
+        connection: "keep-alive",
+        headers: {
+          Accept: 'application.json',
+          "Content-Type": contentType,
+        },
+        body: JSON.stringify(data)
+      })
+          .then(res => {
+            return res.json();
+          })
+          .then((obj) => {
+            return obj;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+    },
+
   },
 
-  created() {
-    //TODO: get saved automation info from database
-    this.automations = [{
-      mondayId: '54321',
-      updateColId: '54321',
-      allySemId: '123',
-      endDate: '05/01/2024',
-      lastUpdated: '01/28/2024',
-      active: true,
-    }, {
-      mondayId: '54321',
-      updateColId: '54321',
-      allySemId: '123',
-      endDate: '05/01/2024',
-      lastUpdated: '01/28/2024',
-      active: false
-    },
-      {
-        mondayId: '54321',
-        updateColId: '54321',
-        allySemId: '123',
-        endDate: '05/01/2024',
-        lastUpdated: '01/28/2024',
-        active: true,
-      }];
+  async created() {
+    this.refreshBoards();
   },
 
 }

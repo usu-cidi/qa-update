@@ -4,7 +4,7 @@
 
   defineProps({
     automations: Array,
-    active: Boolean
+    active: Boolean,
   });
 </script>
 
@@ -16,7 +16,8 @@
 
   <div class="automation-list" v-for="item in relevantAutomations">
     <Automation :active="active"
-                :details="item"/>
+                :details="item"
+    />
   </div>
 
 </template>
@@ -25,7 +26,7 @@
 <script>
 export default {
 
-  props: ['active', 'automations'],
+  props: ['active', 'automations', 'postData'],
 
   data() {
     return {

@@ -5,7 +5,7 @@
 
   defineProps({
     details: Object,
-    active: Boolean
+    active: Boolean,
   });
 
 </script>
@@ -15,7 +15,7 @@
   <div v-if="active" class="automation">
     <h3>Spring 2024</h3>
 
-    <Button class="edit-button" text="edit" @go-to-link="editAutomation"/>
+    <Button class="edit-button" text="Edit" @go-to-link="() => editAutomation(details)"/>
 
     <div class="p-container">
       <p>Monday ID: {{details.mondayId}}</p>
@@ -28,12 +28,17 @@
       <p>Last Updated: {{details.lastUpdated}}</p>
     </div>
 
+    <div class="trigger-now-button-box">
+      <Button v-if="updateText === 'Trigger Update Now'" :text="updateText" @go-to-link="() => manuallyTrigger(details)"/>
+      <p v-else>{{updateText}}</p>
+    </div>
+
   </div>
 
   <div v-else class="automation">
     <h3>Fall 2023</h3>
 
-    <Button class="edit-button" text="edit" @go-to-link="editAutomation"/>
+    <Button class="edit-button" text="Edit" @go-to-link="() => editAutomation(details)"/>
 
     <div class="p-container">
       <p>Monday ID: {{details.mondayId}}</p>
@@ -49,14 +54,53 @@
 
 
 <script>
+import {SERVER_URL} from "@/constants.js";
+
 export default {
 
-  props: ['details', 'active'],
+  props: ['details', 'active', 'postData'],
+
+  data() {
+    return {
+      updateText: 'Trigger Update Now',
+    }
+  },
 
   methods: {
-    editAutomation() {
+
+    editAutomation(info) {
       console.log("Editing an automation");
-    }
+      console.log(info);
+    },
+
+    async manuallyTrigger(info) {
+      this.updateText = "Update initiated!"
+      const result = await this.postData(`${SERVER_URL}update-now`, {id: info.mondayId});
+      console.log(result);
+    },
+
+    postData(url, data, contentType="application/json") {
+      return fetch(url, {
+        method: "POST",
+        cache: "no-cache",
+        credentials: "same-origin",
+        connection: "keep-alive",
+        headers: {
+          Accept: 'application.json',
+          "Content-Type": contentType,
+        },
+        body: JSON.stringify(data)
+      })
+          .then(res => {
+            return res.json();
+          })
+          .then((obj) => {
+            return obj;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+    },
   },
 
 }
@@ -64,6 +108,11 @@ export default {
 
 
 <style>
+
+.trigger-now-button-box {
+  text-align: center;
+  padding: 10px;
+}
 
 .automation {
   background-color: #EEF5FF; /* Background color */
