@@ -2,7 +2,9 @@
   <h1>Maintainers</h1>
   <Button class="maintainer-button" text="Home" @goToLink="leaveMaintainers" />
 
-  <MaintainerList maintainers="maintainers"/>
+  <MaintainerList :maintainers="maintainers"/>
+
+  <Button class="add-button" text="Add New Maintainer" @goToLink="addNew" />
 
 </template>
 
@@ -25,8 +27,8 @@ export default {
     }
   },
 
-  async created() {
-    this.refreshBoards();
+  created() {
+    this.refreshMaintainers();
   },
 
   methods: {
@@ -34,7 +36,11 @@ export default {
       this.$router.push({path: '/'});
     },
 
-    async refreshBoards(newMaintainers=null) {
+    addNew() {
+      this.$router.push({path: '/maintainers/add'});
+    },
+
+    async refreshMaintainers(newMaintainers=null) {
       if (newMaintainers) {
         this.maintainers = newMaintainers;
       } else {
@@ -55,6 +61,12 @@ export default {
   position: fixed;
   top: 10px; /* Adjust the top distance as needed */
   left: 20px; /* Adjust the right distance as needed */
+}
+
+.add-button {
+  position: fixed;
+  top: 10px; /* Adjust the top distance as needed */
+  right: 20px; /* Adjust the right distance as needed */
 }
 
 </style>

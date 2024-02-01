@@ -91,27 +91,18 @@ app.get('/get-boards', (req, res) => {
 app.get('/get-maintainers', (req, res) => {
     res.json([
         {
-            mondayId: '54321',
-            updateColId: '54321',
-            allySemId: '123',
-            endDate: '05/01/2024',
-            lastUpdated: '01/28/2024',
-            active: true,
+            name: 'Emma Lynn',
+            email: 'email@email.com',
+            primary: true,
         }, {
-            mondayId: '54321',
-            updateColId: '54321',
-            allySemId: '123',
-            endDate: '05/01/2024',
-            lastUpdated: '01/28/2024',
-            active: false
+            name: 'Maddi May',
+            email: 'email@email.com',
+            primary: false,
         },
         {
-            mondayId: '54321',
-            updateColId: '54321',
-            allySemId: '123',
-            endDate: '05/01/2024',
-            lastUpdated: '01/28/2024',
-            active: true,
+            name: 'Percy the Shark',
+            email: 'email@email.com',
+            primary: false,
         }
     ]);
 });

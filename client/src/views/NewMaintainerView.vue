@@ -1,27 +1,19 @@
 <template>
-  <Button class="back-button" text="Home" @goToLink="goBack" />
-  <h1>Add Board</h1>
+  <Button class="back-button" text="Back" @goToLink="goBack" />
+  <h1>Add Maintainer</h1>
   <br/>
 
   <div>
     <form @submit.prevent="addUser">
       <div>
-        <label>Board Name:</label>
-        <input type="text" id="name" v-model="board.name" required />
+        <label>Name:</label>
+        <input type="text" id="name" v-model="maintainer.name" required />
       </div>
       <div>
-        <label>Monday.com ID:</label>
-        <input type="text" id="mondayID" v-model="board.mondayID" required />
+        <label>Email:</label>
+        <input type="email" id="mondayID" v-model="maintainer.email" required />
       </div>
-      <div>
-        <label>Update Column ID:</label>
-        <input type="text" id="updateCol" v-model="board.updateColID" required />
-      </div>
-      <div>
-        <label>Ally Semester ID:</label>
-        <input type="text" id="allyID" v-model="board.allyID" required />
-      </div>
-      <button class="submit-button" type="submit">Add Board</button>
+      <button class="submit-button" type="submit">Add Maintainer</button>
 
       <p>{{message}}</p>
     </form>
@@ -43,11 +35,10 @@ export default {
 
   data() {
     return {
-      board: {
+      maintainer: {
         name: '',
-        mondayID: '',
-        updateColID: '',
-        allyID: ''
+        email: '',
+        primary: false,
       },
       message: '',
     };
@@ -56,18 +47,17 @@ export default {
   methods: {
 
     goBack() {
-      this.$router.push({path: '/'});
+      this.$router.push({path: '/maintainers'});
     },
 
     addUser() {
-      console.log(`Adding new board: ${JSON.stringify(this.board)}`);
+      console.log(`Adding new maintainer: ${JSON.stringify(this.maintainer)}`);
       this.message = "Added!"
 
-      this.board = {
+      this.maintainer = {
         name: '',
-        mondayID: '',
-        updateColID: '',
-        allyID: ''
+        email: '',
+        primary: false,
       };
     },
 

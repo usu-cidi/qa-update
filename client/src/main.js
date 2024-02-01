@@ -4,6 +4,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 import HomeView from "@/views/HomeView.vue";
 import MaintainersView from "@/views/MaintainersView.vue";
 import AddBoardView from "@/views/AddBoardView.vue";
+import NewMaintainerView from "@/views/NewMaintainerView.vue";
 
 import './assets/main.css'
 
@@ -14,6 +15,7 @@ const router = createRouter({
     routes:[
         { path: '/', component: HomeView },
         { path: '/maintainers', component: MaintainersView },
+        { path: '/maintainers/add', component: NewMaintainerView },
         { path: '/add', component: AddBoardView },
     ]
 })
