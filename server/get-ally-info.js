@@ -8,6 +8,7 @@ const CLIENT_ID = '4';
 const BASE_URL = `https://${REGION}/api/v2/clients/${CLIENT_ID}/reports`
 const METHODS_URL = `${BASE_URL}/overall`;
 const ISSUES_URL = `${BASE_URL}/issues`;
+const WAIT_TIME = 1000;
 
 
 function getAllyInfo() {
@@ -55,8 +56,8 @@ function getAllyInfo() {
     ]
 }
 
-function pullAllyInfo(termName) {
-    return getAllyData(termName)
+function pullAllyInfo(termID) {
+    return getAllyData(termID)
         .then(resp => {
             return filterAllyData(resp.methods, resp.issues);
         });
@@ -75,30 +76,55 @@ async function getAllyData(termID) {
     return {methods: methods.data, issues: issues.data};
 }
 
-function makeRequestToAlly(url, params) {
-    //`${METHODS_URL}?courseName=co:${termName}`
+async function makeRequestToAlly(url, params) {
 
     //TODO: deal with pagination
     //TODO: deal wth processing status - backoff
 
-    return fetch(`${url}?${params}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${TOKEN}`
-        },
-    })
-        .then(res => {
-            return res.json();
-        })
-        .then(resp => {
-            if (resp.metadata.to < resp.metadata.filteredTotal) {
-                console.log(`We are missing ${resp.metadata.filteredTotal - resp.metadata.to} courses`);
+    try {
+
+        const resp = await axios.get(`${url}?${params}`, {headers: {
+                'Authorization': `Bearer ${TOKEN}`
             }
-            return resp;
-        })
-        .catch(err => {
-            console.log(err);
-            return err.message;
+        });
+        const result = resp.data;
+        console.log(result);
+
+        while (true/*result.metadata.status === 'Processing'*/) {
+            //backoff and try again
+            await wait(WAIT_TIME);
+            console.log("trying again");
+            const resp = await axios.get(`${url}?${params}`, {headers: {
+                    'Authorization': `Bearer ${TOKEN}`
+                }
+            });
+            const result = resp.data;
+
+            break;
+        }
+
+        if (result.metadata.to < result.metadata.filteredTotal) {
+            console.log(`We are missing ${result.metadata.filteredTotal - result.metadata.to} courses`);
+        }
+        return result;
+
+    } catch (err) {
+        console.log(err);
+        return err.message;
+    }
+}
+
+async function wait(waitTime) {
+    const throttle = require('promise-ratelimit')(waitTime); /* rateInMilliseconds */
+    const startTime = Date.now();
+    return throttle().then(function() {
+        console.log(Date.now() - startTime);
+        return throttle();
+    })
+        .then(function() {
+            const timePast = Date.now() - startTime;
+            console.log(timePast);
+            return 'Done at ' + timePast;
         });
 }
 
