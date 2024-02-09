@@ -13,6 +13,10 @@
         <label>Email:</label>
         <input type="email" id="mondayID" v-model="maintainer.email" required />
       </div>
+      <div>
+        <label for="checkbox">Primary Maintainer? (Note: setting this maintainer as the primary will replace the current primary maintainer)</label>
+        <input type="checkbox" id="checkbox" v-model="maintainer.primary" />
+      </div>
       <button class="submit-button" type="submit">Add Maintainer</button>
 
       <p>{{message}}</p>
@@ -51,7 +55,7 @@ export default {
     },
 
     addUser() {
-      console.log(`Adding new maintainer: ${JSON.stringify(this.maintainer)}`);
+      console.log(`Adding new maintainer on server: ${JSON.stringify(this.maintainer)}`);
       this.message = "Added!"
 
       this.maintainer = {

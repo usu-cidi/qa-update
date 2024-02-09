@@ -1,6 +1,6 @@
 <template>
   <Button class="back-button" text="Home" @goToLink="goBack" />
-  <h1>Add Board</h1>
+  <h1>Edit Board</h1>
   <br/>
 
   <div>
@@ -21,7 +21,7 @@
         <label>Ally Semester ID:</label>
         <input type="text" id="allyID" v-model="board.allyID" required />
       </div>
-      <button class="submit-button" type="submit">Add Board</button>
+      <button class="submit-button" type="submit">Update Board</button>
 
       <p>{{message}}</p>
     </form>
@@ -53,6 +53,17 @@ export default {
     };
   },
 
+  created() {
+    const item = JSON.parse(this.$route.query.item);
+    console.log(item);
+    this.board = {
+      name: item.name,
+      mondayID: item.mondayId,
+      updateColID: item.updateColId,
+      allyID: item.allySemId,
+    };
+  },
+
   methods: {
 
     goBack() {
@@ -60,15 +71,8 @@ export default {
     },
 
     addUser() {
-      console.log(`Adding new board to server: ${JSON.stringify(this.board)}`);
-      this.message = "Added!"
-
-      this.board = {
-        name: '',
-        mondayID: '',
-        updateColID: '',
-        allyID: ''
-      };
+      console.log(`Updating board on server: ${JSON.stringify(this.board)}`);
+      this.message = "Updated!"
     },
 
   }

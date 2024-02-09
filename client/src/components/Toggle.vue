@@ -2,7 +2,8 @@
 <script setup>
 
 defineProps({
-  activated: Boolean
+  activated: Boolean,
+  item: Object
 })
 </script>
 
@@ -22,7 +23,9 @@ defineProps({
 <script>
 export default {
 
-  props: ['activated'],
+  props: ['activated', 'item'],
+
+  emits: ['activate', 'deactivate'],
 
   data () {
     return {
@@ -33,7 +36,11 @@ export default {
 
   methods: {
     handleCheckboxChange() {
-      console.log('Checkbox state changed. New value:', this.isChecked);
+      if (this.isChecked) {
+        this.$emit("activate", this.item);
+      } else {
+        this.$emit("deactivate", this.item);
+      }
     }
   },
 

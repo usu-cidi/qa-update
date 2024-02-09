@@ -24,6 +24,8 @@ import Button from "@/components/Button.vue";
 
 export default {
 
+  emits: ['remove'],
+
   components: {
     Button,
   },
@@ -49,6 +51,7 @@ export default {
     editMaintainer(item) {
       if (confirm(`Are you sure you want to remove ${item.name} as a maintainer?`)) {
         console.log(`Removing ${item.name}`);
+        this.$emit("remove", item);
       }
     },
 

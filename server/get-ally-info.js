@@ -63,7 +63,7 @@ function pullAllyInfo(termID) {
         });
 }
 
-pullAllyInfo('890');
+//pullAllyInfo('890');
 
 async function getAllyData(termID) {
 
@@ -90,7 +90,7 @@ async function makeRequestToAlly(url, params) {
         const result = resp.data;
         console.log(result);
 
-        while (true/*result.metadata.status === 'Processing'*/) {
+        /*while (true/*result.metadata.status === 'Processing') {
             //backoff and try again
             await wait(WAIT_TIME);
             console.log("trying again");
@@ -101,7 +101,7 @@ async function makeRequestToAlly(url, params) {
             const result = resp.data;
 
             break;
-        }
+        }*/
 
         if (result.metadata.to < result.metadata.filteredTotal) {
             console.log(`We are missing ${result.metadata.filteredTotal - result.metadata.to} courses`);

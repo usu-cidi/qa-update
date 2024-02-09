@@ -2,7 +2,10 @@
   <h1>Maintainers</h1>
   <Button class="maintainer-button" text="Home" @goToLink="leaveMaintainers" />
 
-  <MaintainerList :maintainers="maintainers"/>
+  <MaintainerList
+      :maintainers="maintainers"
+      v-on:remove="removeMaintainer"
+  />
 
   <Button class="add-button" text="Add New Maintainer" @goToLink="addNew" />
 
@@ -38,6 +41,10 @@ export default {
 
     addNew() {
       this.$router.push({path: '/maintainers/add'});
+    },
+
+    removeMaintainer(item) {
+      console.log(`Removing ${item.name} from the server / database`);
     },
 
     async refreshMaintainers(newMaintainers=null) {

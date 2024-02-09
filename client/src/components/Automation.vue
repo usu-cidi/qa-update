@@ -13,7 +13,7 @@
 <template>
 
   <div v-if="active" class="automation">
-    <h3>Spring 2024</h3>
+    <h3>{{details.name}}</h3>
 
     <Button class="edit-button" text="Edit" @go-to-link="() => editAutomation(details)"/>
 
@@ -21,7 +21,12 @@
       <p>Monday ID: {{details.mondayId}}</p>
       <p>Update Column ID: {{details.updateColId}}</p>
 
-      <Toggle :activated="active"/>
+      <Toggle
+          :activated="active"
+          :item="details"
+          v-on:activate="activateAutomation"
+          v-on:deactivate="deactivateAutomation"
+      />
 
       <p>Ally Semester ID: {{details.allySemId}}</p>
       <p>End Date: {{details.endDate}}</p>
@@ -36,7 +41,7 @@
   </div>
 
   <div v-else class="automation">
-    <h3>Fall 2023</h3>
+    <h3>{{details.name}}</h3>
 
     <Button class="edit-button" text="Edit" @go-to-link="() => editAutomation(details)"/>
 
@@ -44,7 +49,11 @@
       <p>Monday ID: {{details.mondayId}}</p>
       <p>Last Update: {{details.lastUpdated}}</p>
 
-      <Toggle :activated="active"/>
+      <Toggle :activated="active"
+              :item="details"
+              v-on:activate="activateAutomation"
+              v-on:deactivate="deactivateAutomation"
+      />
 
     </div>
 
@@ -68,9 +77,17 @@ export default {
 
   methods: {
 
+    activateAutomation(item) {
+      console.log(`Activating ${item.name}`);
+    },
+
+    deactivateAutomation(item) {
+      console.log(`Deactivating ${item.name}`);
+    },
+
     editAutomation(info) {
       console.log("Editing an automation");
-      console.log(info);
+      this.$router.push({path: '/edit', query: {item: JSON.stringify(info)}});
     },
 
     async manuallyTrigger(info) {

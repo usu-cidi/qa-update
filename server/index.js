@@ -56,6 +56,7 @@ app.post('/update-now', async (req, res) => {
 app.get('/get-boards', (req, res) => {
     res.json([
         {
+            name: 'Spring 2024',
             mondayId: '54321',
             updateColId: '54321',
             allySemId: '123',
@@ -63,6 +64,7 @@ app.get('/get-boards', (req, res) => {
             lastUpdated: '01/28/2024',
             active: true,
         }, {
+            name: 'Fall 2023',
             mondayId: '54321',
             updateColId: '54321',
             allySemId: '123',
@@ -71,6 +73,7 @@ app.get('/get-boards', (req, res) => {
             active: false
         },
         {
+            name: 'Summer 2024',
             mondayId: '54321',
             updateColId: '54321',
             allySemId: '123',
