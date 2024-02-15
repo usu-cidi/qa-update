@@ -15,6 +15,11 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
+
 const initiateUpdate = require('./run-update.js');
 
 app.get('/', (req, res) => {
@@ -68,9 +73,17 @@ app.post('/delete-board', async (req, res) => {
 
 //activate board
 //board id
+app.post('/activate-board', async (req, res) => {
+    const result = await database.changeBoardStatus(req.body, true);
+    res.json({result: result});
+});
 
 //deactivate board
 //board id
+app.post('/deactivate-board', async (req, res) => {
+    const result = await database.changeBoardStatus(req.body, false);
+    res.json({result: result});
+});
 
 //get list of current boards
 app.get('/get-boards', async (req, res) => {
@@ -79,13 +92,18 @@ app.get('/get-boards', async (req, res) => {
 
 //add maintainer email
 //email, name
+app.post('/add-maintainer', async (req, res) => {
+    const result = await database.addNewMaintainer(req.body);
+    console.log(result);
+    res.json({result: result});
+});
 
 //remove maintainer email
 //email
 
 //view all maintainer emails
-app.get('/get-maintainers', (req, res) => {
-    res.json([
+app.get('/get-maintainers', async (req, res) => {
+    /*res.json([
         {
             name: 'Emma Lynn',
             email: 'email@email.com',
@@ -100,7 +118,8 @@ app.get('/get-maintainers', (req, res) => {
             email: 'email@email.com',
             primary: false,
         }
-    ]);
+    ]);*/
+    res.json(await database.getMaintainers);
 });
 
 //edit head maintainer email

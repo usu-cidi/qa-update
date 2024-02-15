@@ -15,9 +15,9 @@
 
   <div v-else>
     <h2>Active Automations - Updates Nightly at {{time}}</h2>
-    <AutomationsList active :automations="automations"/>
+    <AutomationsList :active="true" :automations="automations" v-on:refresh="refreshBoards"/>
     <h2>Inactive Automations</h2>
-    <AutomationsList :active="false" :automations="automations"/>
+    <AutomationsList :active="false" :automations="automations" v-on:refresh="refreshBoards"/>
   </div>
 
 </template>
@@ -49,7 +49,7 @@ export default {
     },
 
     goToAddBoard() {
-      this.$router.push({path: '/add'})
+      this.$router.push({path: '/add'});
     },
 
     async refreshBoards(newAutomations=null) {
@@ -57,8 +57,7 @@ export default {
         this.automations = newAutomations;
       } else {
         const resp = await fetch(`${SERVER_URL}get-boards`);
-        const body = await resp.json();
-        this.automations = body;
+        this.automations = await resp.json();
       }
     },
 

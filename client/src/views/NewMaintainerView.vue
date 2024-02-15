@@ -30,6 +30,7 @@
 <script>
 
 import Button from "@/components/Button.vue";
+import {SERVER_URL} from "@/constants.js";
 
 export default {
 
@@ -54,15 +55,46 @@ export default {
       this.$router.push({path: '/maintainers'});
     },
 
-    addUser() {
+    async addUser() {
       console.log(`Adding new maintainer on server: ${JSON.stringify(this.maintainer)}`);
-      this.message = "Added!"
 
-      this.maintainer = {
-        name: '',
-        email: '',
-        primary: false,
-      };
+      const result = await this.postData(`${SERVER_URL}add-maintainer`, this.maintainer);
+      console.log(result);
+
+      if (result.result === 'success') {
+        this.message = "Added!"
+
+        this.maintainer = {
+          name: '',
+          email: '',
+          primary: false,
+        };
+      } else {
+        this.message = `Failed: ${JSON.stringify(result.result)}`;
+      }
+    },
+
+    postData(url, data, contentType="application/json") {
+      return fetch(url, {
+        method: "POST",
+        cache: "no-cache",
+        credentials: "same-origin",
+        connection: "keep-alive",
+        headers: {
+          Accept: 'application.json',
+          "Content-Type": contentType,
+        },
+        body: JSON.stringify(data)
+      })
+          .then(res => {
+            return res.json();
+          })
+          .then((obj) => {
+            return obj;
+          })
+          .catch(err => {
+            console.log(err);
+          });
     },
 
   }

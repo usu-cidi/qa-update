@@ -53,6 +53,7 @@ export default {
       } else {
         const resp = await fetch(`${SERVER_URL}get-maintainers`);
         const body = await resp.json();
+        console.log(body);
         this.maintainers = body;
       }
     },

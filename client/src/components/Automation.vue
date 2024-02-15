@@ -1,7 +1,6 @@
 
 <script setup>
   import Button from "@/components/Button.vue";
-  import Toggle from "@/components/Toggle.vue";
 
   defineProps({
     details: Object,
@@ -21,12 +20,7 @@
       <p>Monday ID: {{details.mondayId}}</p>
       <p>Update Column ID: {{details.updateColId}}</p>
 
-      <Toggle
-          :activated="active"
-          :item="details"
-          v-on:activate="activateAutomation"
-          v-on:deactivate="deactivateAutomation"
-      />
+      <Button class="toggle-button" text="Deactivate" @go-to-link="() => deactivateAutomation(details)"/>
 
       <p>Ally Semester ID: {{details.allySemId}}</p>
       <p>End Date: {{details.endDate}}</p>
@@ -49,11 +43,7 @@
       <p>Monday ID: {{details.mondayId}}</p>
       <p>Last Update: {{details.lastUpdated}}</p>
 
-      <Toggle :activated="active"
-              :item="details"
-              v-on:activate="activateAutomation"
-              v-on:deactivate="deactivateAutomation"
-      />
+      <Button class="toggle-button" text="Activate" @go-to-link="() => activateAutomation(details)"/>
 
     </div>
 
@@ -68,6 +58,7 @@ import {SERVER_URL} from "@/constants.js";
 export default {
 
   props: ['details', 'active', 'postData'],
+  emits: ['refresh'],
 
   data() {
     return {
@@ -77,12 +68,18 @@ export default {
 
   methods: {
 
-    activateAutomation(item) {
+    async activateAutomation(item) {
       console.log(`Activating ${item.name}`);
+      const result = await this.postData(`${SERVER_URL}activate-board`, {id: item.mondayId});
+      console.log(result);
+      this.$emit("refresh");
     },
 
-    deactivateAutomation(item) {
+    async deactivateAutomation(item) {
       console.log(`Deactivating ${item.name}`);
+      const result = await this.postData(`${SERVER_URL}deactivate-board`, {id: item.mondayId});
+      console.log(result);
+      this.$emit("refresh");
     },
 
     editAutomation(info) {
@@ -91,9 +88,9 @@ export default {
     },
 
     async manuallyTrigger(info) {
-      this.updateText = "Update initiated!"
       const result = await this.postData(`${SERVER_URL}update-now`, {id: info.mondayId});
       console.log(result);
+      this.updateText = "Update initiated!"
     },
 
     postData(url, data, contentType="application/json") {
@@ -146,6 +143,11 @@ export default {
   position: absolute;
   top: 15px; /* Adjust the top distance as needed */
   right: 15px; /* Adjust the right distance as needed */
+}
+
+.toggle-button {
+  width: 150px;
+  height: 45px;
 }
 
 .p-container {

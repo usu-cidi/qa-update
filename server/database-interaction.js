@@ -25,6 +25,21 @@ let BOARDS = [{
     active: true,
 }];
 
+let MAINTAINERS = [
+    {
+        email: "e.lynn@usu.edu",
+        name: 'Emma Lynn',
+        id: 1
+    },
+    {
+        email: "a02391851@usu.edu",
+        name: 'Emma Student',
+        id: 2
+    }
+];
+let PRIMARY_MAINTAINER = {id: 1};
+let MAINTAINER_IDS = [1, 2];
+
 // --- boards ---
 
 exports.getBoards = async () => {
@@ -73,7 +88,16 @@ exports.deleteBoard = async (board) => {
         return `Board with ID ${board.mondayID} not found.`;
     }
     BOARDS.splice(index, 1);
-    console.log(BOARDS);
+    return 'success';
+}
+
+exports.changeBoardStatus = async (board, newStatus) => {
+    const index = BOARDS.findIndex(theBoard => theBoard.mondayId === board.id);
+    if (index === -1) {
+        return `Board with ID ${board.mondayID} not found.`;
+    }
+
+    BOARDS[index].active = newStatus;
     return 'success';
 }
 
@@ -91,12 +115,52 @@ exports.updateLastRun = async (boardID) => {
 
 // --- maintainers ---
 
+function getMaintainerById(id) {
+    try {
+        return MAINTAINERS.filter((person) => person.id === id)[0];
+    } catch {
+        return undefined;
+    }
+}
+
+function getNewMaintainerId() {
+    const newID = MAINTAINER_IDS[MAINTAINER_IDS.length - 1] + 1;
+    MAINTAINER_IDS.push(newID);
+    return newID;
+}
+
 exports.getMaintainerEmails = async () => {
-    return ["e.lynn@usu.edu", "a02391851@usu.edu"];
+    const emails = [];
+    for (let i = 0; i < MAINTAINERS.length; i++) {
+        emails.push(MAINTAINERS[i].email);
+    }
+    return emails;
+}
+
+exports.getMaintainers = async () => {
+    console.log(`returning ${JSON.stringify(MAINTAINERS)}`);
+    return MAINTAINERS;
 }
 
 exports.getHeadMaintainer = async () => {
-    return "e.lynn@usu.edu";
+    return getMaintainerById(PRIMARY_MAINTAINER.id).email;
+}
+
+exports.addNewMaintainer = async (maintainer) => {
+    const id = getNewMaintainerId();
+
+    MAINTAINERS.push({
+        email: maintainer.email,
+        name: maintainer.name,
+        id: id,
+    });
+
+    if (maintainer.primary) {
+        console.log(`New primary maintainer: ${maintainer.name}`);
+        PRIMARY_MAINTAINER = {id: id};
+    }
+
+    return 'success';
 }
 
 

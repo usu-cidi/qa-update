@@ -17,6 +17,7 @@
   <div class="automation-list" v-for="item in relevantAutomations">
     <Automation :active="active"
                 :details="item"
+                v-on:refresh="refresh"
     />
   </div>
 
@@ -27,6 +28,7 @@
 export default {
 
   props: ['active', 'automations', 'postData'],
+  emits: ['refresh'],
 
   data() {
     return {
@@ -35,11 +37,24 @@ export default {
   },
 
   methods: {
+    refresh() {
+      this.$emit("refresh");
+    },
+
+    sortBoards() {
+      this.relevantAutomations = this.automations.filter((item) => item.active === this.active);
+    }
 
   },
 
+  watch: {
+    automations(newVal){
+      this.sortBoards();
+    }
+  },
+
   created() {
-    this.relevantAutomations = this.automations.filter((item) => item.active === this.active);
+    this.sortBoards();
   },
 
 }
