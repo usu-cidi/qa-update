@@ -21,6 +21,10 @@
         <label>Ally Semester ID:</label>
         <input type="text" id="allyID" v-model="board.allyID" required />
       </div>
+      <div>
+        <label>End Date (optional):</label>
+        <input type="text" id="allyID" v-model="board.endDate" />
+      </div>
       <button class="submit-button" type="submit">Add Board</button>
 
       <p>{{message}}</p>
@@ -34,6 +38,8 @@
 <script>
 
 import Button from "@/components/Button.vue";
+import {postprocess} from "eslint-plugin-vue/lib/processor.js";
+import {SERVER_URL} from "@/constants.js";
 
 export default {
 
@@ -47,7 +53,8 @@ export default {
         name: '',
         mondayID: '',
         updateColID: '',
-        allyID: ''
+        allyID: '',
+        endDate: '',
       },
       message: '',
     };
@@ -59,16 +66,48 @@ export default {
       this.$router.push({path: '/'});
     },
 
-    addUser() {
+    async addUser() {
       console.log(`Adding new board to server: ${JSON.stringify(this.board)}`);
-      this.message = "Added!"
 
-      this.board = {
-        name: '',
-        mondayID: '',
-        updateColID: '',
-        allyID: ''
-      };
+      const result = await this.postData(`${SERVER_URL}add-board`, this.board);
+      console.log(result);
+
+      if (result.result === 'success') {
+        this.message = "Added!"
+
+        this.board = {
+          name: '',
+          mondayID: '',
+          updateColID: '',
+          allyID: '',
+          endDate: '',
+        };
+      } else {
+        this.message = `Failed: ${JSON.stringify(result.result)}`;
+      }
+    },
+
+    async postData(url, data, contentType="application/json") {
+      return fetch(url, {
+        method: "POST",
+        cache: "no-cache",
+        credentials: "same-origin",
+        connection: "keep-alive",
+        headers: {
+          Accept: 'application.json',
+          "Content-Type": contentType,
+        },
+        body: JSON.stringify(data)
+      })
+          .then(res => {
+            return res.json();
+          })
+          .then((obj) => {
+            return obj;
+          })
+          .catch(err => {
+            console.log(err);
+          });
     },
 
   }

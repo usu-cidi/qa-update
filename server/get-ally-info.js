@@ -56,14 +56,14 @@ function getAllyInfo() {
     ]
 }
 
+//pullAllyInfo('890');
+
 function pullAllyInfo(termID) {
     return getAllyData(termID)
         .then(resp => {
             return filterAllyData(resp.methods, resp.issues);
         });
 }
-
-//pullAllyInfo('890');
 
 async function getAllyData(termID) {
 

@@ -1,5 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+
+const database = require(`./database-interaction.js`);
 
 const app = express();
 const port = 3000;
@@ -9,6 +12,8 @@ const CLIENT_URL = 'http://localhost:5173'
 app.use(cors({
     origin: CLIENT_URL
 }));
+
+app.use(bodyParser.json());
 
 const initiateUpdate = require('./run-update.js');
 
@@ -20,8 +25,8 @@ app.get('/', (req, res) => {
 //board id
 app.post('/update-now', async (req, res) => {
     res.json({result: 'success'});
-    console.log(req.body);
-    //const result = await initiateUpdate(3779195138);
+    const result = await initiateUpdate(req.body.id);
+    console.log(result);
     /*if (result) {
         res.json({result: 'success'});
     } else {
@@ -35,16 +40,31 @@ app.post('/update-now', async (req, res) => {
 //ally semester ID
 //update column ID
 //end date
+app.post('/add-board', async (req, res) => {
+    const result = await database.addNewBoard(req.body);
+    console.log(result);
+    res.json({result: result});
+});
 
 //edit board information
 //board id (required)
-//title (optional)
-//ally semester ID (optional)
-//update column ID (optional)
-//end date (optional)
+//title
+//ally semester ID
+//update column ID
+//end date
+app.post('/edit-board', async (req, res) => {
+    const result = await database.updateBoard(req.body);
+    console.log(result);
+    res.json({result: result});
+});
 
 //remove board information
 //board id
+app.post('/delete-board', async (req, res) => {
+    const result = await database.deleteBoard(req.body);
+    console.log(result);
+    res.json({result: result});
+});
 
 //activate board
 //board id
@@ -53,35 +73,8 @@ app.post('/update-now', async (req, res) => {
 //board id
 
 //get list of current boards
-app.get('/get-boards', (req, res) => {
-    res.json([
-        {
-            name: 'Spring 2024',
-            mondayId: '54321',
-            updateColId: '54321',
-            allySemId: '123',
-            endDate: '05/01/2024',
-            lastUpdated: '01/28/2024',
-            active: true,
-        }, {
-            name: 'Fall 2023',
-            mondayId: '54321',
-            updateColId: '54321',
-            allySemId: '123',
-            endDate: '05/01/2024',
-            lastUpdated: '01/28/2024',
-            active: false
-        },
-        {
-            name: 'Summer 2024',
-            mondayId: '54321',
-            updateColId: '54321',
-            allySemId: '123',
-            endDate: '05/01/2024',
-            lastUpdated: '01/28/2024',
-            active: true,
-        }
-    ]);
+app.get('/get-boards', async (req, res) => {
+    res.json(await database.getBoards());
 });
 
 //add maintainer email

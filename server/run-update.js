@@ -67,7 +67,7 @@ async function runUpdate(boardID) {
     }
 
     //update date of last update in database
-    await database.updateLastRun();
+    await database.updateLastRun(boardID);
 
     return true;
 }
