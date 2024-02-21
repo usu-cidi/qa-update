@@ -4,6 +4,7 @@
 
   <MaintainerList
       :maintainers="maintainers"
+      :primaryMaintainer="primaryMaintainer"
       v-on:remove="removeMaintainer"
   />
 
@@ -27,6 +28,7 @@ export default {
   data() {
     return {
       maintainers: [],
+      primaryMaintainer: null,
     }
   },
 
@@ -43,8 +45,17 @@ export default {
       this.$router.push({path: '/maintainers/add'});
     },
 
-    removeMaintainer(item) {
-      console.log(`Removing ${item.name} from the server / database`);
+    async removeMaintainer(item) {
+      console.log(`Removing ${item.name} from the server & database`);
+
+      const result = await this.postData(`${SERVER_URL}delete-maintainer`, item);
+      console.log(result);
+
+      if (result.result === 'success') {
+        await this.refreshMaintainers();
+      } else {
+        alert(`Deletion failed: ${result.result}`);
+      }
     },
 
     async refreshMaintainers(newMaintainers=null) {
@@ -54,8 +65,37 @@ export default {
         const resp = await fetch(`${SERVER_URL}get-maintainers`);
         const body = await resp.json();
         console.log(body);
+
+        const respPrimary = await fetch(`${SERVER_URL}get-primary-maintainer`);
+        const bodyPrimary = await respPrimary.json();
+        console.log(bodyPrimary);
+
+        this.primaryMaintainer = bodyPrimary;
         this.maintainers = body;
       }
+    },
+
+    async postData(url, data, contentType="application/json") {
+      return fetch(url, {
+        method: "POST",
+        cache: "no-cache",
+        credentials: "same-origin",
+        connection: "keep-alive",
+        headers: {
+          Accept: 'application.json',
+          "Content-Type": contentType,
+        },
+        body: JSON.stringify(data)
+      })
+          .then(res => {
+            return res.json();
+          })
+          .then((obj) => {
+            return obj;
+          })
+          .catch(err => {
+            console.log(err);
+          });
     },
 
   }

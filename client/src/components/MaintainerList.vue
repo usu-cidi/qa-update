@@ -2,6 +2,7 @@
 
 defineProps({
   maintainers: Array,
+  primaryMaintainer: Number,
 });
 </script>
 
@@ -42,7 +43,7 @@ export default {
   methods: {
     formatMaintainer(item) {
       let text = `${item.name}: ${item.email}`;
-      if (item.primary) {
+      if (item.id === this.primaryMaintainer) {
         text += ' (primary maintainer)';
       }
       return text;

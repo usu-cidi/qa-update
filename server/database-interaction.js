@@ -25,26 +25,33 @@ let BOARDS = [{
     active: true,
 }];
 
-let MAINTAINERS = [
-    {
-        email: "e.lynn@usu.edu",
-        name: 'Emma Lynn',
-        id: 1
-    },
-    {
-        email: "a02391851@usu.edu",
-        name: 'Emma Student',
-        id: 2
-    }
-];
+let MAINTAINERS = [{
+    email: "e.lynn@usu.edu",
+    name: 'Emma Lynn',
+    id: 1
+}, {
+    email: "e.lynn@usu.edu",
+    name: 'Emma 2',
+    id: 2
+}, {
+    email: "e.lynn@usu.edu",
+    name: 'Emma 3',
+    id: 3
+}, {
+    email: "a02391851@usu.edu",
+    name: 'Emma Student',
+    id: 4
+}];
+
 let PRIMARY_MAINTAINER = {id: 1};
-let MAINTAINER_IDS = [1, 2];
+let MAINTAINER_IDS = [1, 2, 3, 4];
 
 // --- boards ---
 
 exports.getBoards = async () => {
     return BOARDS;
 }
+
 
 exports.addNewBoard = async (board) => {
     BOARDS.push({
@@ -138,7 +145,6 @@ exports.getMaintainerEmails = async () => {
 }
 
 exports.getMaintainers = async () => {
-    console.log(`returning ${JSON.stringify(MAINTAINERS)}`);
     return MAINTAINERS;
 }
 
@@ -161,6 +167,28 @@ exports.addNewMaintainer = async (maintainer) => {
     }
 
     return 'success';
+}
+
+exports.deleteMaintainer = async (maintainer) => {
+
+    if (MAINTAINERS.length <= 1) {
+        return 'There must be at least one maintainer. Add a new one before removing this one.'
+    }
+
+    if (maintainer.id === PRIMARY_MAINTAINER.id) {
+        return 'You must set a new primary maintainer before removing this one.';
+    }
+
+    const index = MAINTAINERS.findIndex(thePerson => thePerson.id === maintainer.id);
+    if (index === -1) {
+        return `Maintainer with ID ${maintainer.id} not found.`;
+    }
+    MAINTAINERS.splice(index, 1);
+    return 'success';
+}
+
+exports.getPrimaryMaintainer = async () => {
+    return PRIMARY_MAINTAINER.id;
 }
 
 

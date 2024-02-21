@@ -93,38 +93,29 @@ app.get('/get-boards', async (req, res) => {
 //add maintainer email
 //email, name
 app.post('/add-maintainer', async (req, res) => {
+    console.log(req.body);
     const result = await database.addNewMaintainer(req.body);
-    console.log(result);
     res.json({result: result});
 });
 
 //remove maintainer email
 //email
+app.post('/delete-maintainer', async (req, res) => {
+    console.log(req.body);
+    const result = await database.deleteMaintainer(req.body);
+    res.json({result: result});
+});
 
 //view all maintainer emails
 app.get('/get-maintainers', async (req, res) => {
-    /*res.json([
-        {
-            name: 'Emma Lynn',
-            email: 'email@email.com',
-            primary: true,
-        }, {
-            name: 'Maddi May',
-            email: 'email@email.com',
-            primary: false,
-        },
-        {
-            name: 'Percy the Shark',
-            email: 'email@email.com',
-            primary: false,
-        }
-    ]);*/
-    res.json(await database.getMaintainers);
+    res.json(await database.getMaintainers());
 });
 
-//edit head maintainer email
 
 //view head maintainer email
+app.get('/get-primary-maintainer', async (req, res) => {
+    res.json(await database.getPrimaryMaintainer());
+});
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}! 🥳`);
