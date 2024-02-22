@@ -16,7 +16,7 @@
 <script>
 import Button from "@/components/Button.vue";
 import MaintainerList from "@/components/MaintainerList.vue";
-import {SERVER_URL} from "@/constants.js";
+import {SERVER_URL, postData} from "@/constants.js";
 
 export default {
 
@@ -48,7 +48,7 @@ export default {
     async removeMaintainer(item) {
       console.log(`Removing ${item.name} from the server & database`);
 
-      const result = await this.postData(`${SERVER_URL}delete-maintainer`, item);
+      const result = await postData(`${SERVER_URL}delete-maintainer`, item);
       console.log(result);
 
       if (result.result === 'success') {
@@ -73,29 +73,6 @@ export default {
         this.primaryMaintainer = bodyPrimary;
         this.maintainers = body;
       }
-    },
-
-    async postData(url, data, contentType="application/json") {
-      return fetch(url, {
-        method: "POST",
-        cache: "no-cache",
-        credentials: "same-origin",
-        connection: "keep-alive",
-        headers: {
-          Accept: 'application.json',
-          "Content-Type": contentType,
-        },
-        body: JSON.stringify(data)
-      })
-          .then(res => {
-            return res.json();
-          })
-          .then((obj) => {
-            return obj;
-          })
-          .catch(err => {
-            console.log(err);
-          });
     },
 
   }

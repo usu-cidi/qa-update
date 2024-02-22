@@ -27,7 +27,7 @@
 <script>
 export default {
 
-  props: ['active', 'automations', 'postData'],
+  props: ['active', 'automations'],
   emits: ['refresh'],
 
   data() {

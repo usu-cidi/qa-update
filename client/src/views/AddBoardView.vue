@@ -38,8 +38,7 @@
 <script>
 
 import Button from "@/components/Button.vue";
-import {postprocess} from "eslint-plugin-vue/lib/processor.js";
-import {SERVER_URL} from "@/constants.js";
+import {SERVER_URL, postData} from "@/constants.js";
 
 export default {
 
@@ -69,7 +68,7 @@ export default {
     async addUser() {
       console.log(`Adding new board to server: ${JSON.stringify(this.board)}`);
 
-      const result = await this.postData(`${SERVER_URL}add-board`, this.board);
+      const result = await postData(`${SERVER_URL}add-board`, this.board);
       console.log(result);
 
       if (result.result === 'success') {
@@ -85,29 +84,6 @@ export default {
       } else {
         this.message = `Failed: ${JSON.stringify(result.result)}`;
       }
-    },
-
-    async postData(url, data, contentType="application/json") {
-      return fetch(url, {
-        method: "POST",
-        cache: "no-cache",
-        credentials: "same-origin",
-        connection: "keep-alive",
-        headers: {
-          Accept: 'application.json',
-          "Content-Type": contentType,
-        },
-        body: JSON.stringify(data)
-      })
-          .then(res => {
-            return res.json();
-          })
-          .then((obj) => {
-            return obj;
-          })
-          .catch(err => {
-            console.log(err);
-          });
     },
 
   }

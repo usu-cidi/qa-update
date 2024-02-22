@@ -53,11 +53,11 @@
 
 
 <script>
-import {SERVER_URL} from "@/constants.js";
+import {SERVER_URL, postData} from "@/constants.js";
 
 export default {
 
-  props: ['details', 'active', 'postData'],
+  props: ['details', 'active'],
   emits: ['refresh'],
 
   data() {
@@ -70,14 +70,14 @@ export default {
 
     async activateAutomation(item) {
       console.log(`Activating ${item.name}`);
-      const result = await this.postData(`${SERVER_URL}activate-board`, {id: item.mondayId});
+      const result = await postData(`${SERVER_URL}activate-board`, {id: item.mondayId});
       console.log(result);
       this.$emit("refresh");
     },
 
     async deactivateAutomation(item) {
       console.log(`Deactivating ${item.name}`);
-      const result = await this.postData(`${SERVER_URL}deactivate-board`, {id: item.mondayId});
+      const result = await postData(`${SERVER_URL}deactivate-board`, {id: item.mondayId});
       console.log(result);
       this.$emit("refresh");
     },
@@ -88,32 +88,9 @@ export default {
     },
 
     async manuallyTrigger(info) {
-      const result = await this.postData(`${SERVER_URL}update-now`, {id: info.mondayId});
+      const result = await postData(`${SERVER_URL}update-now`, {id: info.mondayId});
       console.log(result);
       this.updateText = "Update initiated!"
-    },
-
-    postData(url, data, contentType="application/json") {
-      return fetch(url, {
-        method: "POST",
-        cache: "no-cache",
-        credentials: "same-origin",
-        connection: "keep-alive",
-        headers: {
-          Accept: 'application.json',
-          "Content-Type": contentType,
-        },
-        body: JSON.stringify(data)
-      })
-          .then(res => {
-            return res.json();
-          })
-          .then((obj) => {
-            return obj;
-          })
-          .catch(err => {
-            console.log(err);
-          });
     },
   },
 

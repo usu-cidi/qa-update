@@ -8,7 +8,7 @@ const CLIENT_ID = '4';
 const BASE_URL = `https://${REGION}/api/v2/clients/${CLIENT_ID}/reports`
 const METHODS_URL = `${BASE_URL}/overall`;
 const ISSUES_URL = `${BASE_URL}/issues`;
-const WAIT_TIME = 1000;
+const WAIT_TIME = 60000; //milliseconds - default recommended to be 1 minute
 
 
 function getAllyInfo() {
@@ -56,7 +56,10 @@ function getAllyInfo() {
     ]
 }
 
-//pullAllyInfo('890');
+pullAllyInfo('890')
+    .then(resp => {
+        console.log(resp);
+    })
 
 function pullAllyInfo(termID) {
     return getAllyData(termID)
@@ -88,9 +91,9 @@ async function makeRequestToAlly(url, params) {
             }
         });
         const result = resp.data;
-        console.log(result);
+        //console.log(result);
 
-        /*while (true/*result.metadata.status === 'Processing') {
+        while (result.metadata.status === 'Processing') {
             //backoff and try again
             await wait(WAIT_TIME);
             console.log("trying again");
@@ -100,8 +103,8 @@ async function makeRequestToAlly(url, params) {
             });
             const result = resp.data;
 
-            break;
-        }*/
+            console.log(result.metadata.status);
+        }
 
         if (result.metadata.to < result.metadata.filteredTotal) {
             console.log(`We are missing ${result.metadata.filteredTotal - result.metadata.to} courses`);

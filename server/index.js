@@ -22,10 +22,6 @@ app.use((req, res, next) => {
 
 const initiateUpdate = require('./run-update.js');
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-
 //trigger an update
 //board id
 app.post('/update-now', async (req, res) => {
