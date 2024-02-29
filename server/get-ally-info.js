@@ -70,11 +70,11 @@ function pullAllyInfo(termID) {
 
 async function getAllyData(termID) {
 
-    const methods = await makeRequestToAlly(METHODS_URL, `termId=eq:${termID}`);
-    console.log(methods.metadata);
+    const methods = await makeRequestToAlly(METHODS_URL, `courseName=co:Utah&limit=4`);
+    //const methods = await makeRequestToAlly(METHODS_URL, `termId=eq:${termID}`);
 
-    const issues = await makeRequestToAlly(ISSUES_URL, `termId=eq:${termID}`);
-    console.log(issues.metadata);
+    const issues = await makeRequestToAlly(ISSUES_URL, `courseName=co:Utah&limit=4`);
+    //const issues = await makeRequestToAlly(ISSUES_URL, `termId=eq:${termID}`);
 
     return {methods: methods.data, issues: issues.data};
 }
@@ -82,32 +82,20 @@ async function getAllyData(termID) {
 async function makeRequestToAlly(url, params) {
 
     //TODO: deal with pagination
-    //TODO: deal wth processing status - backoff
 
     try {
 
-        const resp = await axios.get(`${url}?${params}`, {headers: {
-                'Authorization': `Bearer ${TOKEN}`
-            }
-        });
-        const result = resp.data;
-        //console.log(result);
+        const result = await makeRequestWithBackoff(url, params);
 
-        while (result.metadata.status === 'Processing') {
-            //backoff and try again
-            await wait(WAIT_TIME);
-            console.log("trying again");
-            const resp = await axios.get(`${url}?${params}`, {headers: {
-                    'Authorization': `Bearer ${TOKEN}`
-                }
-            });
-            const result = resp.data;
+        while (result.metadata.to + 1 < result.metadata.filteredTotal) {
+            console.log(`We are missing ${result.metadata.filteredTotal - result.metadata.to} course(s)`);
 
-            console.log(result.metadata.status);
-        }
-
-        if (result.metadata.to < result.metadata.filteredTotal) {
-            console.log(`We are missing ${result.metadata.filteredTotal - result.metadata.to} courses`);
+            const moreResults = await makeRequestWithBackoff(url, `${params}&offset=${result.metadata.to}`);
+            console.log(`Length before adding more ${result.data.length}`);
+            result.data = result.data.concat(moreResults.data);
+            console.log(`Length after ${result.data.length}`);
+            result.metadata = moreResults.metadata;
+            console.log(`New metadata ${JSON.stringify(result.metadata)}`);
         }
         return result;
 
@@ -115,6 +103,34 @@ async function makeRequestToAlly(url, params) {
         console.log(err);
         return err.message;
     }
+}
+
+async function makeRequestWithBackoff(url, params) {
+    try {
+        let result = await makeRequest(url, params);
+        while (result.metadata.status === 'Processing') {
+            //backoff and try again
+            await wait(WAIT_TIME);
+            result = await makeRequest(url, params);
+        }
+        return result;
+    } catch (err) {
+        console.log(err);
+        return err.message;
+    }
+}
+
+async function makeRequest(url, params) {
+    console.log(url);
+    const resp = await axios.get(`${url}?${params}`, {headers: {
+            'Authorization': `Bearer ${TOKEN}`
+        }
+    });
+
+    console.log(resp.data.metadata);
+    console.log(resp.data.metadata.status);
+
+    return resp.data;
 }
 
 async function wait(waitTime) {
