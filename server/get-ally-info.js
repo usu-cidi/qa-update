@@ -70,18 +70,16 @@ function pullAllyInfo(termID) {
 
 async function getAllyData(termID) {
 
-    const methods = await makeRequestToAlly(METHODS_URL, `courseName=co:Utah&limit=4`);
-    //const methods = await makeRequestToAlly(METHODS_URL, `termId=eq:${termID}`);
+    //const methods = await makeRequestToAlly(METHODS_URL, `courseName=co:Utah&limit=6`);
+    const methods = await makeRequestToAlly(METHODS_URL, `termId=eq:${termID}`);
 
-    const issues = await makeRequestToAlly(ISSUES_URL, `courseName=co:Utah&limit=4`);
-    //const issues = await makeRequestToAlly(ISSUES_URL, `termId=eq:${termID}`);
+    //const issues = await makeRequestToAlly(ISSUES_URL, `courseName=co:Utah&limit=6`);
+    const issues = await makeRequestToAlly(ISSUES_URL, `termId=eq:${termID}`);
 
     return {methods: methods.data, issues: issues.data};
 }
 
 async function makeRequestToAlly(url, params) {
-
-    //TODO: deal with pagination
 
     try {
 
