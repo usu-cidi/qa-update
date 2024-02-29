@@ -58,7 +58,7 @@ function getAllyInfo() {
 
 pullAllyInfo('890')
     .then(resp => {
-        console.log(resp);
+        console.log(resp.length);
     })
 
 function pullAllyInfo(termID) {
@@ -70,11 +70,10 @@ function pullAllyInfo(termID) {
 
 async function getAllyData(termID) {
 
-    //const methods = await makeRequestToAlly(METHODS_URL, `courseName=co:Utah&limit=6`);
-    const methods = await makeRequestToAlly(METHODS_URL, `termId=eq:${termID}`);
-
-    //const issues = await makeRequestToAlly(ISSUES_URL, `courseName=co:Utah&limit=6`);
-    const issues = await makeRequestToAlly(ISSUES_URL, `termId=eq:${termID}`);
+    const [methods, issues] = await Promise.all([
+        makeRequestToAlly(METHODS_URL, `termId=eq:${termID}`),
+        makeRequestToAlly(ISSUES_URL, `termId=eq:${termID}`),
+    ]);
 
     return {methods: methods.data, issues: issues.data};
 }
@@ -89,9 +88,7 @@ async function makeRequestToAlly(url, params) {
             console.log(`We are missing ${result.metadata.filteredTotal - result.metadata.to} course(s)`);
 
             const moreResults = await makeRequestWithBackoff(url, `${params}&offset=${result.metadata.to}`);
-            console.log(`Length before adding more ${result.data.length}`);
             result.data = result.data.concat(moreResults.data);
-            console.log(`Length after ${result.data.length}`);
             result.metadata = moreResults.metadata;
             console.log(`New metadata ${JSON.stringify(result.metadata)}`);
         }
