@@ -14,7 +14,8 @@ async function initiateUpdate(boardID) {
     try {
         return await runUpdate(boardID);
     } catch (err) {
-        await sendErrorEmail(err, boardID);
+        await database.updateLastIssues({boardId: boardID, message: err.message, type: 'critical error'});
+        //TODO: add back - await sendErrorEmail(err, boardID);
         return false;
     }
 }
@@ -59,11 +60,12 @@ async function runUpdate(boardID) {
     const rowsFailedToUpdate = await monday.updateRows(rowsToUpdate, boardID);
 
     if (rowsFailedToAdd.length > 0 || rowsFailedToUpdate > 0) {
-        //send an issue email to the maintainer emails
-        await sendIssueEmail(rowsFailedToAdd, rowsFailedToUpdate, boardID);
 
         //update issues with last update in database
-        await database.updateLastIssues({failedToAdd: rowsFailedToAdd, failedToUpdate: rowsFailedToUpdate});
+        await database.updateLastIssues({message: `The following rows failed to add: ${JSON.stringify(rowsFailedToAdd)}. The following rows failed to update: ${rowsFailedToUpdate}`, boardId: boardID, type: 'non-critical issue'});
+
+        //send an issue email to the maintainer emails
+        //TODO: add back - await sendIssueEmail(rowsFailedToAdd, rowsFailedToUpdate, boardID);
     }
 
     //update date of last update in database
@@ -166,7 +168,5 @@ function cleanRow(row) {
 
     return row;
 }
-
-//initiateUpdate(3779195138);
 
 module.exports = initiateUpdate;

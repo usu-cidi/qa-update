@@ -25,6 +25,32 @@ let BOARDS = [{
     active: true,
 }];
 
+let ISSUES = [{
+    boardId: 1,
+    id: 0,
+    dateTime: "now",
+    message: "here is my error message1",
+    type: "non-critical issue"
+}, {
+    boardId: 2,
+    id: 1,
+    dateTime: "now",
+    message: "here is my error message2",
+    type: "non-critical issue"
+}, {
+    boardId: 2,
+    id: 2,
+    dateTime: "now",
+    message: "here is my error message3",
+    type: "critical error"
+}, {
+    boardId: 1,
+    id: 3,
+    dateTime: "now",
+    message: "here is my error message4",
+    type: "non-critical issue"
+}]
+
 let MAINTAINERS = [{
     email: "e.lynn@usu.edu",
     name: 'Emma Lynn',
@@ -45,6 +71,7 @@ let MAINTAINERS = [{
 
 let PRIMARY_MAINTAINER = {id: 1};
 let MAINTAINER_IDS = [1, 2, 3, 4];
+let ISSUE_IDS = [0, 1, 2, 3];
 
 // --- boards ---
 
@@ -117,6 +144,12 @@ function updateIfNeeded(original, updated) {
 }
 
 exports.updateLastRun = async (boardID) => {
+    const index = BOARDS.findIndex(theBoard => theBoard.mondayId === boardID);
+    if (index === -1) {
+        return `Board with ID ${boardID} not found.`;
+    }
+
+    BOARDS[index].lastUpdated = Date.now();
     return true;
 }
 
@@ -194,8 +227,23 @@ exports.getPrimaryMaintainer = async () => {
 
 // --- issues ---
 
+function getNewIssueId() {
+    const newID = ISSUE_IDS[ISSUE_IDS.length - 1] + 1;
+    ISSUE_IDS.push(newID);
+    return newID;
+}
+
 exports.updateLastIssues = async (issues) => {
+    console.log(`Here are the issues: ${JSON.stringify(issues)}`);
+    issues.id = getNewIssueId();
+    issues.dateTime = Date.now();
+    ISSUES.push(issues);
+
     return true;
+}
+
+exports.getIssues = async () => {
+    return ISSUES;
 }
 
 

@@ -1,6 +1,11 @@
 <template>
 
-  <Button class="maintainer-button" text="Manage Maintainers" @goToLink="goToMaintainers" />
+  <div class="two-buttons">
+    <Button text="Manage Maintainers" @goToLink="goToMaintainers" />
+    <p>   </p>
+    <Button text="View Errors / Issues" @goToLink="goToIssues" />
+  </div>
+
   <Button class="add-button" text="Add New Board" @goToLink="goToAddBoard" />
 
   <h1>QA Update</h1>
@@ -52,6 +57,10 @@ export default {
       this.$router.push({path: '/add'});
     },
 
+    goToIssues() {
+      this.$router.push({path: '/issues'});
+    },
+
     async refreshBoards(newAutomations=null) {
       if (newAutomations) {
         this.automations = newAutomations;
@@ -82,11 +91,12 @@ h2 {
   text-align: center;
 }
 
-.maintainer-button {
+.two-buttons {
   position: fixed;
   top: 10px; /* Adjust the top distance as needed */
   left: 20px; /* Adjust the right distance as needed */
 }
+
 
 .add-button {
   position: fixed;

@@ -28,11 +28,6 @@ app.post('/update-now', async (req, res) => {
     res.json({result: 'success'});
     const result = await initiateUpdate(req.body.id);
     console.log(result);
-    /*if (result) {
-        res.json({result: 'success'});
-    } else {
-        res.json({result: 'failure'});
-    }*/
 });
 
 //add new board information to database
@@ -111,6 +106,11 @@ app.get('/get-maintainers', async (req, res) => {
 //view head maintainer email
 app.get('/get-primary-maintainer', async (req, res) => {
     res.json(await database.getPrimaryMaintainer());
+});
+
+//view issues & errors
+app.get('/get-issues', async (req, res) => {
+    res.json(await database.getIssues());
 });
 
 app.listen(port, () => {

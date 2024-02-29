@@ -6,6 +6,7 @@ import MaintainersView from "@/views/MaintainersView.vue";
 import AddBoardView from "@/views/AddBoardView.vue";
 import NewMaintainerView from "@/views/NewMaintainerView.vue";
 import EditBoardView from "@/views/EditBoardView.vue";
+import IssuesView from "@/views/IssuesView.vue";
 
 import './assets/main.css'
 
@@ -19,6 +20,7 @@ const router = createRouter({
         { path: '/maintainers/add', component: NewMaintainerView },
         { path: '/add', component: AddBoardView },
         { path: '/edit', component: EditBoardView },
+        { path: '/issues', component: IssuesView },
     ]
 })
 

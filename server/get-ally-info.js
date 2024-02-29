@@ -56,10 +56,10 @@ function getAllyInfo() {
     ]
 }
 
-pullAllyInfo('890')
+/*pullAllyInfo('890')
     .then(resp => {
         console.log(resp.length);
-    })
+    })*/
 
 function pullAllyInfo(termID) {
     return getAllyData(termID)
