@@ -1,14 +1,14 @@
 
 let BOARDS = [{
-    name: 'Spring 2024',
-    mondayId: '1',
-    updateColId: '54321',
+    name: 'Demo 1 (testing new fill in everything)',
+    mondayId: '3779195138',
+    updateColId: 'date',
     allySemId: '123',
     endDate: '05/01/2024',
     lastUpdated: '01/28/2024',
     active: true,
 }, {
-    name: 'Fall 2023',
+    name: "This one doesn't work",
     mondayId: '2',
     updateColId: '54321',
     allySemId: '123',
@@ -16,7 +16,7 @@ let BOARDS = [{
     lastUpdated: '01/28/2024',
     active: false
 }, {
-    name: 'Summer 2024',
+    name: "This one doesn't work either",
     mondayId: '3',
     updateColId: '54321',
     allySemId: '123',
@@ -28,25 +28,25 @@ let BOARDS = [{
 let ISSUES = [{
     boardId: 1,
     id: 0,
-    dateTime: "now",
+    dateTime: 1709368132395,
     message: "here is my error message1",
     type: "non-critical issue"
 }, {
     boardId: 2,
     id: 1,
-    dateTime: "now",
+    dateTime: 1709568131395,
     message: "here is my error message2",
     type: "non-critical issue"
 }, {
     boardId: 2,
     id: 2,
-    dateTime: "now",
+    dateTime: 1701568132395,
     message: "here is my error message3",
     type: "critical error"
 }, {
     boardId: 1,
     id: 3,
-    dateTime: "now",
+    dateTime: 1409568132395,
     message: "here is my error message4",
     type: "non-critical issue"
 }]
@@ -243,7 +243,10 @@ exports.updateLastIssues = async (issues) => {
 }
 
 exports.getIssues = async () => {
-    return ISSUES;
+    ISSUES.reverse();
+    const toReturn = [...ISSUES];
+    ISSUES.reverse();
+    return toReturn;
 }
 
 

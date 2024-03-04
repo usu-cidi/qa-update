@@ -1,6 +1,5 @@
 
 <script setup>
-import Button from "@/components/Button.vue";
 
 defineProps({
   details: Object,
@@ -11,7 +10,7 @@ defineProps({
 <template>
 
   <div :class="getColor(details.type)">
-    <h3>{{formatType(details.type)}} - {{details.dateTime}}</h3>
+    <h3>{{formatType(details.type)}} - {{new Date(details.dateTime).toLocaleDateString()}} {{new Date(details.dateTime).toLocaleTimeString()}}</h3>
     <p>Monday Board ID: {{details.boardId}}</p>
     <p>Details: {{details.message}}</p>
 

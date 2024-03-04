@@ -18,13 +18,13 @@
 
     <div class="p-container">
       <p>Monday ID: {{details.mondayId}}</p>
-      <p>Update Column ID: {{details.updateColId}}</p>
+      <p>Last Updated Column ID: {{details.updateColId}}</p>
 
       <Button class="toggle-button" text="Deactivate" @go-to-link="() => deactivateAutomation(details)"/>
 
       <p>Ally Semester ID: {{details.allySemId}}</p>
       <p>End Date: {{details.endDate}}</p>
-      <p>Last Updated: {{details.lastUpdated}}</p>
+      <p>Last Updated: {{new Date(details.lastUpdated).toLocaleDateString()}} {{new Date(details.lastUpdated).toLocaleTimeString()}}</p>
     </div>
 
     <div class="trigger-now-button-box">

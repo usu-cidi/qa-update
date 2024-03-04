@@ -62,7 +62,7 @@ async function runUpdate(boardID) {
     if (rowsFailedToAdd.length > 0 || rowsFailedToUpdate > 0) {
 
         //update issues with last update in database
-        await database.updateLastIssues({message: `The following rows failed to add: ${JSON.stringify(rowsFailedToAdd)}. The following rows failed to update: ${rowsFailedToUpdate}`, boardId: boardID, type: 'non-critical issue'});
+        await database.updateLastIssues({message: formatErrorDetails(rowsFailedToAdd, rowsFailedToUpdate), boardId: boardID, type: 'non-critical issue'});
 
         //send an issue email to the maintainer emails
         //TODO: add back - await sendIssueEmail(rowsFailedToAdd, rowsFailedToUpdate, boardID);
@@ -72,6 +72,29 @@ async function runUpdate(boardID) {
     await database.updateLastRun(boardID);
 
     return true;
+}
+
+function formatErrorDetails(rowsFailedToAdd, rowsFailedToUpdate) {
+
+    let summaryAdd = "";
+    if (rowsFailedToAdd.length > 0) {
+        summaryAdd = "The following rows failed to add: ";
+        for (let i = 0; i < rowsFailedToAdd.length; i++) {
+            summaryAdd += (rowsFailedToAdd[i]["Course"] + ", ");
+        }
+        summaryAdd += `<br/> Full details: ${JSON.stringify(rowsFailedToAdd)}`;
+    }
+
+    let summaryUpdate = "";
+    if (rowsFailedToUpdate.length > 0) {
+        summaryUpdate = "The following rows failed to update: ";
+        for (let i = 0; i < rowsFailedToUpdate.length; i++) {
+            summaryUpdate += (rowsFailedToUpdate[i]["Course"] + ", ");
+        }
+        summaryUpdate += `<br/> Full details: ${JSON.stringify(rowsFailedToUpdate)}`;
+    }
+
+    return `${summaryAdd}<br/><br/>-------<br/><br/>${summaryUpdate}`;
 }
 
 async function sendIssueEmail(failedToAdd, failedToUpdate, boardID) {

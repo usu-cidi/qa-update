@@ -14,7 +14,7 @@
         <input type="text" id="mondayID" v-model="board.mondayID" required />
       </div>
       <div>
-        <label>Update Column ID:</label>
+        <label>Last Updated Column ID:</label>
         <input type="text" id="updateCol" v-model="board.updateColID" required />
       </div>
       <div>
