@@ -82,7 +82,6 @@ function formatErrorDetails(rowsFailedToAdd, rowsFailedToUpdate) {
         for (let i = 0; i < rowsFailedToAdd.length; i++) {
             summaryAdd += (rowsFailedToAdd[i]["Course"] + ", ");
         }
-        summaryAdd += `<br/> Full details: ${JSON.stringify(rowsFailedToAdd)}`;
     }
 
     let summaryUpdate = "";
@@ -91,10 +90,17 @@ function formatErrorDetails(rowsFailedToAdd, rowsFailedToUpdate) {
         for (let i = 0; i < rowsFailedToUpdate.length; i++) {
             summaryUpdate += (rowsFailedToUpdate[i]["Course"] + ", ");
         }
-        summaryUpdate += `<br/> Full details: ${JSON.stringify(rowsFailedToUpdate)}`;
     }
 
-    return `${summaryAdd}<br/><br/>-------<br/><br/>${summaryUpdate}`;
+    return {
+        failedToAddDetails: rowsFailedToAdd,
+        failedToUpdateDetails: rowsFailedToUpdate,
+        failedToAdd: summaryAdd,
+        failedToUpdate: summaryUpdate,
+        rowIssue: true
+    };
+
+    //return `${summaryAdd}<br/><br/>-------<br/><br/>${summaryUpdate}`;
 }
 
 async function sendIssueEmail(failedToAdd, failedToUpdate, boardID) {
