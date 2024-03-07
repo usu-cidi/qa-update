@@ -8,8 +8,12 @@ const GROUP_IDS = ["new_group659", "new_group84060", "new_group63769", "new_grou
 const GROUP_CUTOFFS = [100, 50, 20, 10, 1, 0];
 const BATCH_SIZE = 2;
 
-function formatColumnVals(row) {
-    return {
+function formatColumnVals(row, boardId) {
+
+    //TODO: get date column id from boardId
+    const dateCol = "date";
+
+    const data = {
         "text8": row["URL"],
         "text67": row["TidyUp URL"],
         "text83": row["Report URL"],
@@ -40,8 +44,13 @@ function formatColumnVals(row) {
         "pdf_scanned_not_ocr_d": row["PDF no OCR"],
         "images": row["Images"],
         "images_wo_alt_text": row["Images no Alt"],
-        "numbers": row["Images in Use"]
+        "numbers": row["Images in Use"],
     };
+
+    data[dateCol] = {"date": Date.now().toLocaleDateString(), "time": Date.now().toLocaleTimeString()};
+    //TODO: fix this
+
+    return data;
 }
 
 exports.updateRows = async function (rowsToUpdate, boardId) {
@@ -161,7 +170,7 @@ addOneRow = async function (courseData, boardId) {
     const queryVars = `$myItemName: String!, $columnVals: JSON!, `;
 
     //format column values
-    const row = formatColumnVals(courseData);
+    const row = formatColumnVals(courseData, boardId);
 
     //add to query variables
     let theVars = {
@@ -192,7 +201,7 @@ updateOneRow = async function (courseData, boardId) {
     let queryVars = `$columnVals: JSON!, `;
 
     //format column values
-    const row = formatColumnVals(courseData);
+    const row = formatColumnVals(courseData, boardId);
 
     //add to query variables
     let theVars = {
@@ -230,7 +239,7 @@ addNewRowBatch = async function (rowsToAdd, boardId) {
         queryVars += `$myItemName${i}: String!, $columnVals${i}: JSON!, `;
 
         //format column values
-        const row = formatColumnVals(rowsToAdd[i]);
+        const row = formatColumnVals(rowsToAdd[i], boardId);
 
         //add to query variables
         theVars[`myItemName${i}`] = rowsToAdd[i].name;
@@ -266,7 +275,7 @@ updateRowBatch = async function (rowsToUpdate, boardId) {
         queryVars += `$columnVals${i}: JSON!, `;
 
         //format column values
-        const row = formatColumnVals(rowsToUpdate[i]);
+        const row = formatColumnVals(rowsToUpdate[i], boardId);
 
         //add to query variables
         theVars[`columnVals${i}`] = JSON.stringify(row);
