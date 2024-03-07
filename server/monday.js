@@ -47,8 +47,9 @@ function formatColumnVals(row, boardId) {
         "numbers": row["Images in Use"],
     };
 
-    data[dateCol] = {"date": Date.now().toLocaleDateString(), "time": Date.now().toLocaleTimeString()};
-    //TODO: fix this
+    const date = new Date;
+    const parsed = date.toISOString();
+    data[dateCol] = {"date": parsed.slice(0, 10), "time": parsed.slice(11, 19)};
 
     return data;
 }
