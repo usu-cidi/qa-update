@@ -10,7 +10,7 @@ let BOARDS = [{
 }, {
     name: "This one doesn't work",
     mondayId: '2',
-    updateColId: '54321',
+    updateColId: 'test',
     allySemId: '123',
     endDate: '05/01/2024',
     lastUpdated: '01/28/2024',
@@ -18,7 +18,7 @@ let BOARDS = [{
 }, {
     name: "This one doesn't work either",
     mondayId: '3',
-    updateColId: '54321',
+    updateColId: 'test',
     allySemId: '123',
     endDate: '05/01/2024',
     lastUpdated: '01/28/2024',
@@ -77,6 +77,14 @@ let ISSUE_IDS = [0, 1, 2, 3];
 
 exports.getBoards = async () => {
     return BOARDS;
+}
+
+exports.getBoardById = async (id) => {
+    const index = BOARDS.findIndex(theBoard => theBoard.mondayId === id);
+    if (index === -1) {
+        return `Board with ID ${id} not found.`;
+    }
+    return BOARDS[index];
 }
 
 

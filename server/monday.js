@@ -1,5 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
+const database = require(`./database-interaction.js`);
 
 const MONDAY_API_KEY = process.env.MONDAY_API_KEY;
 const URL = 'https://api.monday.com/v2';
@@ -8,10 +9,10 @@ const GROUP_IDS = ["new_group659", "new_group84060", "new_group63769", "new_grou
 const GROUP_CUTOFFS = [100, 50, 20, 10, 1, 0];
 const BATCH_SIZE = 2;
 
-function formatColumnVals(row, boardId) {
+async function formatColumnVals(row, boardId) {
 
-    //TODO: get date column id from boardId
-    const dateCol = "date";
+    const boardInfo = await database.getBoardById(boardId);
+    const dateCol = boardInfo.updateColId;
 
     const data = {
         "text8": row["URL"],
@@ -72,17 +73,13 @@ exports.updateRows = async function (rowsToUpdate, boardId) {
         if (batchAddResult.error_code !== undefined) {
             console.log("There was an error so we'll do each one individually");
 
-            const currentBoard = await this.getMondayCourses(boardId);
-
             for (let j = 0; j < thisSection.length; j++) {
 
-                if (!currentBoard.filter(e => e.name === thisSection[j].name).length > 0) {
-                    const result = await updateOneRow(thisSection[j], boardId);
+                const result = await updateOneRow(thisSection[j], boardId);
 
-                    if (result.error_code !== undefined) {
-                        thisSection[j].error = result;
-                        failedToUpdate.push(thisSection[j]);
-                    }
+                if (result.error_code !== undefined) {
+                    thisSection[j].error = result;
+                    failedToUpdate.push(thisSection[j]);
                 }
             }
         }
@@ -171,7 +168,7 @@ addOneRow = async function (courseData, boardId) {
     const queryVars = `$myItemName: String!, $columnVals: JSON!, `;
 
     //format column values
-    const row = formatColumnVals(courseData, boardId);
+    const row = await formatColumnVals(courseData, boardId);
 
     //add to query variables
     let theVars = {
@@ -202,7 +199,7 @@ updateOneRow = async function (courseData, boardId) {
     let queryVars = `$columnVals: JSON!, `;
 
     //format column values
-    const row = formatColumnVals(courseData, boardId);
+    const row = await formatColumnVals(courseData, boardId);
 
     //add to query variables
     let theVars = {
@@ -240,7 +237,7 @@ addNewRowBatch = async function (rowsToAdd, boardId) {
         queryVars += `$myItemName${i}: String!, $columnVals${i}: JSON!, `;
 
         //format column values
-        const row = formatColumnVals(rowsToAdd[i], boardId);
+        const row = await formatColumnVals(rowsToAdd[i], boardId);
 
         //add to query variables
         theVars[`myItemName${i}`] = rowsToAdd[i].name;
@@ -276,7 +273,7 @@ updateRowBatch = async function (rowsToUpdate, boardId) {
         queryVars += `$columnVals${i}: JSON!, `;
 
         //format column values
-        const row = formatColumnVals(rowsToUpdate[i], boardId);
+        const row = await formatColumnVals(rowsToUpdate[i], boardId);
 
         //add to query variables
         theVars[`columnVals${i}`] = JSON.stringify(row);

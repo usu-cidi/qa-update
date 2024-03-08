@@ -99,8 +99,6 @@ function formatErrorDetails(rowsFailedToAdd, rowsFailedToUpdate) {
         failedToUpdate: summaryUpdate,
         rowIssue: true
     };
-
-    //return `${summaryAdd}<br/><br/>-------<br/><br/>${summaryUpdate}`;
 }
 
 async function sendIssueEmail(failedToAdd, failedToUpdate, boardID) {
@@ -118,7 +116,7 @@ ${formatCourseList(failedToUpdate)}
 You're receiving this email because you are listed as a maintainer for the QA Update tool. If you wish to be removed from this list, please contact ${headMaintainer}.`;
 
     console.log(message);
-    //await sendMaintainerEmail(message, subject);
+    //TODO: add back - await sendMaintainerEmail(message, subject);
 }
 
 function formatCourseList(courses) {
