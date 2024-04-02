@@ -15,7 +15,7 @@ async function initiateUpdate(boardID) {
         return await runUpdate(boardID);
     } catch (err) {
         await database.updateLastIssues({boardId: boardID, message: err.message, type: 'critical error'});
-        //TODO: add back - await sendErrorEmail(err, boardID);
+        await sendErrorEmail(err, boardID);
         return false;
     }
 }
@@ -65,7 +65,7 @@ async function runUpdate(boardID) {
         await database.updateLastIssues({message: formatErrorDetails(rowsFailedToAdd, rowsFailedToUpdate), boardId: boardID, type: 'non-critical issue'});
 
         //send an issue email to the maintainer emails
-        //TODO: add back - await sendIssueEmail(rowsFailedToAdd, rowsFailedToUpdate, boardID);
+        await sendIssueEmail(rowsFailedToAdd, rowsFailedToUpdate, boardID);
     }
 
     //update date of last update in database
@@ -116,7 +116,7 @@ ${formatCourseList(failedToUpdate)}
 You're receiving this email because you are listed as a maintainer for the QA Update tool. If you wish to be removed from this list, please contact ${headMaintainer}.`;
 
     console.log(message);
-    //TODO: add back - await sendMaintainerEmail(message, subject);
+    await sendMaintainerEmail(message, subject);
 }
 
 function formatCourseList(courses) {
