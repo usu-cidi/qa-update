@@ -1,4 +1,26 @@
 
+require('dotenv').config();
+
+const ACCESS_TOKEN = process.env.PROXY_SERVER_TOKEN;
+
+async function testDataLake() {
+    const apiUrl = "https://canvasdata.accessapps.link/executeQuery";
+
+    const data = {'query':"SELECT * FROM reporting.dli_report_course_usage_summary WHERE term_name = 'Spring 2024' LIMIT 5"}
+
+    const options = {
+        method: "post",
+        headers: {
+            "Authorization": `Bearer ${ACCESS_TOKEN}`,
+        },
+        body: JSON.stringify(data)
+    }
+
+    const res = await fetch(apiUrl, options);
+    const result = await res.json();
+    console.log(result);
+}
+
 function getDataLakeInfo() {
     return [
         {
