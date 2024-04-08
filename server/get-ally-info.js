@@ -11,7 +11,7 @@ const ISSUES_URL = `${BASE_URL}/issues`;
 const WAIT_TIME = 60000; //milliseconds - default recommended to be 1 minute
 
 
-function getAllyInfo() {
+async function getAllyInfo() {
     return [
         {
             name: "This will fail",

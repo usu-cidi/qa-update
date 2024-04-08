@@ -21,7 +21,7 @@ async function testDataLake() {
     console.log(result);
 }
 
-function getDataLakeInfo() {
+async function getDataLakeInfo() {
     return [
         {
             "Course": "This will fail",

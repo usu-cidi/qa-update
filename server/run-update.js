@@ -24,10 +24,10 @@ async function runUpdate(boardID) {
     console.log(boardID);
 
     // get the ally information
-    const allyInfo = getAllyInfo();
+    const allyInfo = await getAllyInfo();
 
     // get the data lake information
-    const dataLakeInfo = getDataLakeInfo();
+    const dataLakeInfo = await getDataLakeInfo();
 
     // merge the data by course
     const courses = mergeData(allyInfo, dataLakeInfo);
