@@ -1,8 +1,7 @@
 <template>
-
   <div class="two-buttons">
     <Button text="Manage Maintainers" @goToLink="goToMaintainers" />
-    <p>   </p>
+    <p></p>
     <Button text="View Errors / Issues" @goToLink="goToIssues" />
   </div>
 
@@ -11,7 +10,12 @@
   <h1>QA Update</h1>
 
   <div class="center-link">
-    <a href="https://github.com/emmalynnnn/cidi-monday-qa-automation" target="_blank" class="link">About</a>
+    <a
+      href="https://github.com/emmalynnnn/cidi-monday-qa-automation"
+      target="_blank"
+      class="link"
+      >About</a
+    >
   </div>
 
   <div v-if="!automations || automations.length === 0">
@@ -19,49 +23,53 @@
   </div>
 
   <div v-else>
-    <h2>Active Automations - Updates Nightly at {{time}}</h2>
-    <AutomationsList :active="true" :automations="automations" v-on:refresh="refreshBoards"/>
+    <h2>Active Automations - Updates Nightly at {{ time }}</h2>
+    <AutomationsList
+      :active="true"
+      :automations="automations"
+      v-on:refresh="refreshBoards"
+    />
     <h2>Inactive Automations</h2>
-    <AutomationsList :active="false" :automations="automations" v-on:refresh="refreshBoards"/>
+    <AutomationsList
+      :active="false"
+      :automations="automations"
+      v-on:refresh="refreshBoards"
+    />
   </div>
-
 </template>
 
-
 <script>
-import Button from "@/components/Button.vue";
-import AutomationsList from "@/components/AutomationsList.vue";
-import { SERVER_URL } from "@/constants.js";
+import Button from "../components/Button.vue";
+import AutomationsList from "../components/AutomationsList.vue";
+import { SERVER_URL } from "../constants.js";
 
 export default {
-
   components: {
     AutomationsList,
-    Button
+    Button,
   },
 
   data() {
     return {
-      time: '8:00 PM',
+      time: "8:00 PM",
       automations: [],
-    }
+    };
   },
 
   methods: {
-
     goToMaintainers() {
-      this.$router.push({path: '/maintainers'});
+      this.$router.push({ path: "/maintainers" });
     },
 
     goToAddBoard() {
-      this.$router.push({path: '/add'});
+      this.$router.push({ path: "/add" });
     },
 
     goToIssues() {
-      this.$router.push({path: '/issues'});
+      this.$router.push({ path: "/issues" });
     },
 
-    async refreshBoards(newAutomations=null) {
+    async refreshBoards(newAutomations = null) {
       if (newAutomations) {
         this.automations = newAutomations;
       } else {
@@ -69,19 +77,15 @@ export default {
         this.automations = await resp.json();
       }
     },
-
   },
 
   async created() {
     this.refreshBoards();
   },
-
-}
+};
 </script>
 
-
 <style>
-
 h1 {
   text-align: center;
   font-size: 40pt;
@@ -96,7 +100,6 @@ h2 {
   top: 10px; /* Adjust the top distance as needed */
   left: 20px; /* Adjust the right distance as needed */
 }
-
 
 .add-button {
   position: fixed;
@@ -123,7 +126,4 @@ h2 {
 .center-link a:hover {
   color: #0367a8;
 }
-
-
-
 </style>

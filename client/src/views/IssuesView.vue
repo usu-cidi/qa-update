@@ -3,28 +3,25 @@
   <Button class="issue-button" text="Home" @goToLink="leave" />
 
   <div v-for="issue in issues">
-    <Issue :details="issue"/>
+    <Issue :details="issue" />
   </div>
-
 </template>
 
-
 <script>
-import Button from "@/components/Button.vue";
-import Issue from "@/components/Issue.vue";
-import {SERVER_URL} from "@/constants.js";
+import Button from "../components/Button.vue";
+import Issue from "../components/Issue.vue";
+import { SERVER_URL } from "../constants.js";
 
 export default {
-
   components: {
     Button,
-    Issue
+    Issue,
   },
 
   data() {
     return {
       issues: [],
-    }
+    };
   },
 
   async created() {
@@ -37,20 +34,16 @@ export default {
 
   methods: {
     leave() {
-      this.$router.push({path: '/'});
+      this.$router.push({ path: "/" });
     },
-
-  }
-}
+  },
+};
 </script>
 
-
 <style>
-
 .issue-button {
   position: fixed;
   top: 10px; /* Adjust the top distance as needed */
   left: 20px; /* Adjust the right distance as needed */
 }
-
 </style>

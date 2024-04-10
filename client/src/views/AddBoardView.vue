@@ -1,7 +1,7 @@
 <template>
   <Button class="back-button" text="Home" @goToLink="goBack" />
   <h1>Add Board</h1>
-  <br/>
+  <br />
 
   <div>
     <form @submit.prevent="addUser">
@@ -15,7 +15,12 @@
       </div>
       <div>
         <label>Last Updated Column ID:</label>
-        <input type="text" id="updateCol" v-model="board.updateColID" required />
+        <input
+          type="text"
+          id="updateCol"
+          v-model="board.updateColID"
+          required
+        />
       </div>
       <div>
         <label>Ally Semester ID:</label>
@@ -27,21 +32,16 @@
       </div>
       <button class="submit-button" type="submit">Add Board</button>
 
-      <p>{{message}}</p>
+      <p>{{ message }}</p>
     </form>
   </div>
-
-
 </template>
 
-
 <script>
-
-import Button from "@/components/Button.vue";
-import {SERVER_URL, postData} from "@/constants.js";
+import Button from "../components/Button.vue";
+import { SERVER_URL, postData } from "../constants.js";
 
 export default {
-
   components: {
     Button,
   },
@@ -49,20 +49,19 @@ export default {
   data() {
     return {
       board: {
-        name: '',
-        mondayID: '',
-        updateColID: '',
-        allyID: '',
-        endDate: '',
+        name: "",
+        mondayID: "",
+        updateColID: "",
+        allyID: "",
+        endDate: "",
       },
-      message: '',
+      message: "",
     };
   },
 
   methods: {
-
     goBack() {
-      this.$router.push({path: '/'});
+      this.$router.push({ path: "/" });
     },
 
     async addUser() {
@@ -71,28 +70,25 @@ export default {
       const result = await postData(`${SERVER_URL}add-board`, this.board);
       console.log(result);
 
-      if (result.result === 'success') {
-        this.message = "Added!"
+      if (result.result === "success") {
+        this.message = "Added!";
 
         this.board = {
-          name: '',
-          mondayID: '',
-          updateColID: '',
-          allyID: '',
-          endDate: '',
+          name: "",
+          mondayID: "",
+          updateColID: "",
+          allyID: "",
+          endDate: "",
         };
       } else {
         this.message = `Failed: ${JSON.stringify(result.result)}`;
       }
     },
-
-  }
-}
+  },
+};
 </script>
 
-
 <style scoped>
-
 .back-button {
   position: fixed;
   top: 10px; /* Adjust the top distance as needed */
@@ -138,5 +134,4 @@ input {
 .submit-button:hover {
   background-color: #267bb5;
 }
-
 </style>

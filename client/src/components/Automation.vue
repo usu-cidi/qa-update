@@ -1,6 +1,6 @@
 
 <script setup>
-  import Button from "@/components/Button.vue";
+  import Button from "./Button.vue";
 
   defineProps({
     details: Object,
@@ -53,7 +53,7 @@
 
 
 <script>
-import {SERVER_URL, postData} from "@/constants.js";
+import {SERVER_URL, postData} from "../constants.js";
 
 export default {
 

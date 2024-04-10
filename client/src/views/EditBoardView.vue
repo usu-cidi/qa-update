@@ -1,11 +1,10 @@
 <template>
   <Button class="back-button" text="Home" @goToLink="goBack" />
   <h1>Edit Board</h1>
-  <br/>
+  <br />
 
   <div>
     <form @submit.prevent="addUser">
-
       <div>
         <label>Board Name:</label>
         <input type="text" id="name" v-model="board.name" required />
@@ -16,7 +15,12 @@
       </div>
       <div>
         <label>Last Updated Column ID:</label>
-        <input type="text" id="updateCol" v-model="board.updateColID" required />
+        <input
+          type="text"
+          id="updateCol"
+          v-model="board.updateColID"
+          required
+        />
       </div>
       <div>
         <label>Ally Semester ID:</label>
@@ -28,27 +32,21 @@
       </div>
       <button class="submit-button" type="submit">Update Board</button>
 
-      <p>{{message}}</p>
+      <p>{{ message }}</p>
     </form>
 
     <div class="right">
       <button class="delete-button" @click="deleteBoard">Delete Board</button>
-      <p>{{deleteMessage}}</p>
+      <p>{{ deleteMessage }}</p>
     </div>
-
   </div>
-
-
 </template>
 
-
 <script>
-
-import Button from "@/components/Button.vue";
-import {SERVER_URL} from "@/constants.js";
+import Button from "../components/Button.vue";
+import { SERVER_URL } from "../constants.js";
 
 export default {
-
   components: {
     Button,
   },
@@ -56,14 +54,14 @@ export default {
   data() {
     return {
       board: {
-        name: '',
-        mondayID: '',
-        updateColID: '',
-        allyID: '',
-        endDate: '',
+        name: "",
+        mondayID: "",
+        updateColID: "",
+        allyID: "",
+        endDate: "",
       },
-      message: '',
-      deleteMessage: '',
+      message: "",
+      deleteMessage: "",
     };
   },
 
@@ -80,9 +78,8 @@ export default {
   },
 
   methods: {
-
     goBack() {
-      this.$router.push({path: '/'});
+      this.$router.push({ path: "/" });
     },
 
     async addUser() {
@@ -91,67 +88,69 @@ export default {
       const result = await this.postData(`${SERVER_URL}edit-board`, this.board);
       console.log(result);
 
-      if (result.result === 'success') {
-        this.message = "Updated!"
+      if (result.result === "success") {
+        this.message = "Updated!";
       } else {
         this.message = `Failed: ${JSON.stringify(result.result)}`;
       }
     },
 
     async deleteBoard() {
-
-      if (confirm(`Are you sure you want to delete ${this.board.name}? All data will be lost and all future updates will be cancelled.`)) {
+      if (
+        confirm(
+          `Are you sure you want to delete ${this.board.name}? All data will be lost and all future updates will be cancelled.`
+        )
+      ) {
         console.log(`Deleting board on server: ${JSON.stringify(this.board)}`);
 
-        const result = await this.postData(`${SERVER_URL}delete-board`, this.board);
+        const result = await this.postData(
+          `${SERVER_URL}delete-board`,
+          this.board
+        );
         console.log(result);
 
-        if (result.result === 'success') {
-          this.deleteMessage = "Deleted!"
+        if (result.result === "success") {
+          this.deleteMessage = "Deleted!";
           this.board = {
-            name: '',
-            mondayID: '',
-            updateColID: '',
-            allyID: '',
-            endDate: '',
+            name: "",
+            mondayID: "",
+            updateColID: "",
+            allyID: "",
+            endDate: "",
           };
         } else {
           this.deleteMessage = `Failed: ${JSON.stringify(result.result)}`;
         }
       }
-
     },
 
-    async postData(url, data, contentType="application/json") {
+    async postData(url, data, contentType = "application/json") {
       return fetch(url, {
         method: "POST",
         cache: "no-cache",
         credentials: "same-origin",
         connection: "keep-alive",
         headers: {
-          Accept: 'application.json',
+          Accept: "application.json",
           "Content-Type": contentType,
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       })
-          .then(res => {
-            return res.json();
-          })
-          .then((obj) => {
-            return obj;
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        .then((res) => {
+          return res.json();
+        })
+        .then((obj) => {
+          return obj;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-
-  }
-}
+  },
+};
 </script>
 
-
 <style scoped>
-
 .back-button {
   position: fixed;
   top: 10px; /* Adjust the top distance as needed */
@@ -211,5 +210,4 @@ input {
 .submit-button:hover {
   background-color: #267bb5;
 }
-
 </style>

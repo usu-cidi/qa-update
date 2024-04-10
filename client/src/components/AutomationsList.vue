@@ -1,6 +1,6 @@
 
 <script setup>
-  import Automation from "@/components/Automation.vue";
+  import Automation from "./Automation.vue";
 
   defineProps({
     automations: Array,

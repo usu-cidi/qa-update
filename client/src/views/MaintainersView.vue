@@ -3,23 +3,20 @@
   <Button class="maintainer-button" text="Home" @goToLink="leaveMaintainers" />
 
   <MaintainerList
-      :maintainers="maintainers"
-      :primaryMaintainer="primaryMaintainer"
-      v-on:remove="removeMaintainer"
+    :maintainers="maintainers"
+    :primaryMaintainer="primaryMaintainer"
+    v-on:remove="removeMaintainer"
   />
 
   <Button class="add-button" text="Add New Maintainer" @goToLink="addNew" />
-
 </template>
 
-
 <script>
-import Button from "@/components/Button.vue";
-import MaintainerList from "@/components/MaintainerList.vue";
-import {SERVER_URL, postData} from "@/constants.js";
+import Button from "../components/Button.vue";
+import MaintainerList from "../components/MaintainerList.vue";
+import { SERVER_URL, postData } from "../constants.js";
 
 export default {
-
   components: {
     MaintainerList,
     Button,
@@ -29,7 +26,7 @@ export default {
     return {
       maintainers: [],
       primaryMaintainer: null,
-    }
+    };
   },
 
   created() {
@@ -38,11 +35,11 @@ export default {
 
   methods: {
     leaveMaintainers() {
-      this.$router.push({path: '/'});
+      this.$router.push({ path: "/" });
     },
 
     addNew() {
-      this.$router.push({path: '/maintainers/add'});
+      this.$router.push({ path: "/maintainers/add" });
     },
 
     async removeMaintainer(item) {
@@ -51,14 +48,14 @@ export default {
       const result = await postData(`${SERVER_URL}delete-maintainer`, item);
       console.log(result);
 
-      if (result.result === 'success') {
+      if (result.result === "success") {
         await this.refreshMaintainers();
       } else {
         alert(`Deletion failed: ${result.result}`);
       }
     },
 
-    async refreshMaintainers(newMaintainers=null) {
+    async refreshMaintainers(newMaintainers = null) {
       if (newMaintainers) {
         this.maintainers = newMaintainers;
       } else {
@@ -74,14 +71,11 @@ export default {
         this.maintainers = body;
       }
     },
-
-  }
-}
+  },
+};
 </script>
 
-
 <style>
-
 .maintainer-button {
   position: fixed;
   top: 10px; /* Adjust the top distance as needed */
@@ -93,5 +87,4 @@ export default {
   top: 10px; /* Adjust the top distance as needed */
   right: 20px; /* Adjust the right distance as needed */
 }
-
 </style>
