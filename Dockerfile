@@ -2,7 +2,7 @@ FROM node:18
 
 WORKDIR /app
 
-RUN cd server
+CMD ["cd", "server"]
 
 COPY package*.json ./
 
