@@ -7,6 +7,7 @@ var client = path.resolve("../client/dist/index.html");
 console.log(client);
 
 const database = require(`./database-interaction.js`);
+const test = require(`./get-data-lake-info.js`);
 
 const app = express();
 const port = 3000;
