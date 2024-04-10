@@ -12,6 +12,6 @@
     "nodemon": "^3.0.2"
   },
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "node server.js"
   }
 }
