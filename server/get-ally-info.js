@@ -8,7 +8,7 @@ const CLIENT_ID = "4";
 const BASE_URL = `https://${REGION}/api/v2/clients/${CLIENT_ID}/reports`;
 const METHODS_URL = `${BASE_URL}/overall`;
 const ISSUES_URL = `${BASE_URL}/issues`;
-const WAIT_TIME = 5 * 60000; //milliseconds - default recommended to be 1 minute
+const WAIT_TIME = 20 * 60000; //milliseconds - default recommended to be 1 minute
 
 async function getAllyInfo() {
   return [
