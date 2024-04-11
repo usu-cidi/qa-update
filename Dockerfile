@@ -2,9 +2,7 @@ FROM node:18
 
 WORKDIR /app
 
-CMD ["cd", "server"]
-
-COPY /server/package*.json ./
+COPY /server /app/
 
 RUN npm install
 
