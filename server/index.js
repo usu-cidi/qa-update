@@ -10,13 +10,13 @@ const database = require(`./database-interaction.js`);
 const test = require(`./get-data-lake-info.js`);
 
 const app = express();
-const port = 3000;
+const port = 3220;
 
 const CLIENT_URL = "http://localhost:5173";
 
 app.use(
   cors({
-    origin: CLIENT_URL,
+    origin: "*",
   })
 );
 
