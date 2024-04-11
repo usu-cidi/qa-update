@@ -3,7 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
 
-var client = path.resolve("../client/dist/index.html");
+var client = path.resolve("./index.html");
 console.log(client);
 
 const database = require(`./database-interaction.js`);
@@ -21,7 +21,7 @@ app.use(
 );
 
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "/../client/dist")));
+app.use(express.static(path.join(__dirname, "")));
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from

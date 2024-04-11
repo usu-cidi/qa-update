@@ -3,6 +3,7 @@ FROM node:18
 WORKDIR /app
 
 COPY /server /app/
+COPY /client/dist /app/
 
 RUN npm install
 
