@@ -11,7 +11,7 @@ This repository contains code that will:
 
 This tool is currently hosted at: https://master.d3kepc58nvsh8n.amplifyapp.com/
 
-Active version: **2.0.0**
+Active version: **2.0.1**
 
 To use this tool on the command line, switch to the branch `archive/cli`.
 * Note: the command line version of the tool has been deprecated. Usage is discouraged, please use the new web application.
@@ -70,6 +70,9 @@ When a new QA Board has been created and needs to be populated with data, follow
 * When finished adding the new board, select the `Fill in new board` option when updating the board using the tool.
 
 ## Change Log
+
+### 2.0.1
+* Adding replacement of 'Concurrent Enrollment' with 'Concurrent' to match monday board configuration
 
 ### 2.0.0
 * Migrated monday.com API calls for version 2023-10 (BREAKING CHANGE after 01-2023)

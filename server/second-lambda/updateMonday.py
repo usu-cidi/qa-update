@@ -129,6 +129,9 @@ def doOneUpdate(courseDF, boardId, mondayAPIKey, currBoard):
     if "Disability Resource Center" in rowData:
         print("Replacing 'Disability Resource Center' with 'University'.")
         rowData[rowData.index("Disability Resource Center")] = "University"
+    if "Concurrent Enrollment" in rowData:
+        print("Replacing 'Concurrent Enrollment' with 'Concurrent'.")
+        rowData[rowData.index("Concurrent Enrollment")] = "Concurrent"
     print(str(rowData))
 
     HEADERS = {"Authorization": mondayAPIKey}
