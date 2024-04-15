@@ -203,6 +203,10 @@ function cleanRow(row) {
   if (row["Delivery Method"] === "Study Abroad") {
     row["Delivery Method"] = "Supervised";
   }
+  //"Concurrent Enrollment" -> "Concurrent"
+  if (row["Delivery Method"] === "Concurrent Enrollment") {
+    row["Delivery Method"] = "Concurrent";
+  }
   //"Disability Resource Center" -> "University"
   if (row["College"] === "Disability Resource Center") {
     row["College"] = "University";
