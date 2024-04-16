@@ -28,6 +28,7 @@ const data_mapping = {
   pdf_files_in_use: "PDF in Use Ratio",
   video_files: "Videos",
   flash_files: "Flash",
+  instructor_emails: "Email (Inst)",
 };
 
 async function testDataLake() {
