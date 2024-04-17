@@ -10,9 +10,9 @@ require("dotenv").config();
 const DEV_EMAIL = process.env.DEV_EMAIL;
 const EMAIL_PASS = process.env.EMAIL_PASS;
 
-async function initiateUpdate(boardID) {
+async function initiateUpdate(boardID, term) {
   try {
-    return await runUpdate(boardID);
+    return await runUpdate(boardID, term);
   } catch (err) {
     await database.updateLastIssues({
       boardId: boardID,
@@ -24,14 +24,14 @@ async function initiateUpdate(boardID) {
   }
 }
 
-async function runUpdate(boardID) {
+async function runUpdate(boardID, term) {
   console.log(boardID);
 
   // get the ally information
   const allyInfo = await pullAllyInfo(890);
 
   // get the data lake information
-  const dataLakeInfo = await getDataLakeInfo();
+  const dataLakeInfo = await getDataLakeInfo(term);
 
   // merge the data by course
   const courses = mergeData(allyInfo, dataLakeInfo);

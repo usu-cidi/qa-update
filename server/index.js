@@ -47,7 +47,7 @@ app.get("/", async (req, res) => {
 //board id
 app.post("/update-now", async (req, res) => {
   res.json({ result: "success" });
-  const result = await initiateUpdate(req.body.id);
+  const result = await initiateUpdate(req.body.id, req.body.term);
   console.log(result);
 });
 

@@ -31,12 +31,11 @@ const data_mapping = {
   instructor_emails: "Email (Inst)",
 };
 
-async function testDataLake() {
+async function testDataLake(term) {
   const apiUrl = "https://canvasdata.accessapps.link/executeQuery";
 
   const data = {
-    query:
-      "SELECT * FROM reporting.dli_report_course_usage_summary WHERE term_name = 'Spring 2024'",
+    query: `SELECT * FROM reporting.dli_report_course_usage_summary WHERE term_name = '${term}'`,
   };
 
   const options = {
@@ -110,8 +109,8 @@ async function testDataLake() {
 //     flash_files: "Flash"
 // }
 
-async function getDataLakeInfo() {
-  let courses = await testDataLake();
+async function getDataLakeInfo(term) {
+  let courses = await testDataLake(term);
   let filtersCourseData = [];
 
   for (let i = 0; i < courses.length; i++) {
