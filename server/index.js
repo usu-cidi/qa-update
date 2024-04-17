@@ -23,6 +23,18 @@ app.use(
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "")));
 
+function isBase64Encoded(s) {
+  try {
+    const decoded_data = Buffer.from(s, "base64").toString("utf-8");
+    const reencoded_data = Buffer.from(decoded_data, "utf-8").toString(
+      "base64"
+    );
+    return reencoded_data === s;
+  } catch (error) {
+    return false;
+  }
+}
+
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
   res.header(
@@ -38,6 +50,7 @@ app.use((req, res, next) => {
 });
 
 const initiateUpdate = require("./run-update.js");
+const { getMondayId } = require("./monday.js");
 
 app.get("/", async (req, res) => {
   res.sendFile(client);
@@ -131,6 +144,43 @@ app.get("/get-primary-maintainer", async (req, res) => {
 //view issues & errors
 app.get("/get-issues", async (req, res) => {
   res.json(await database.getIssues());
+});
+
+app.post("/monday", async (req, res) => {
+  try {
+    console.log(req.body);
+
+    let bodyJSON;
+
+    if (isBase64Encoded(req.body)) {
+      const decoded_bytes = Buffer.from(req.body, "base64");
+      const decoded_string = decoded_bytes.toString("utf-8");
+      bodyJSON = JSON.parse(decoded_string);
+      console.log(bodyJSON);
+    } else if (typeof req.body === "object") {
+      bodyJSON = req.body;
+    } else {
+      bodyJSON = JSON.parse(req.body);
+    }
+
+    console.log(bodyJSON);
+
+    if (bodyJSON !== null && "event" in bodyJSON) {
+      const itemID = bodyJSON["event"]["pulseId"];
+      const id = await getMondayId(itemID);
+      const term = bodyJSON["event"]["pulseName"];
+    } else if (bodyJSON !== null && "challenge" in bodyJSON) {
+      console.log(req.body);
+      res.json(req.body);
+    } else {
+      res.json({
+        statusCode: 200,
+        body: JSON.stringify("Not a valid request"),
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.listen(port, () => {

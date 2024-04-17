@@ -168,6 +168,40 @@ exports.getMondayCourses = async function (boardId) {
   return rows;
 };
 
+exports.getMondayId = async function (itemID) {
+  const query = `
+          query {
+                items (ids: [${itemID}]){
+                  id
+                  column_values {
+                    id
+                    column {
+                      id
+                      title
+                    }
+                    value
+                    text
+                  }
+                }
+          }`;
+
+  const headers = {
+    headers: {
+      Authorization: MONDAY_API_KEY,
+      "Content-Type": "application/json",
+      "API-Version": API_VERSION,
+    },
+  };
+
+  const data = await postData(URL, { query: query, variables: {} }, headers);
+
+  const res = data["data"]["items"][0]["column_values"].filter((column) => {
+    return column["column"]["title"] === "Monday ID";
+  })[0]["text"];
+
+  return res;
+};
+
 addOneRow = async function (courseData, boardId) {
   console.log(courseData);
   console.log(`Adding ${courseData.Course} individually`);
