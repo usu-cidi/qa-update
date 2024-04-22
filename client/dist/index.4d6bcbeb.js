@@ -15871,16 +15871,16 @@ let initialize = ()=>{
     script.render = require("d0da754de8670b6e").render;
     script.__cssModules = require("d1787acb0d8bbef2").default;
     require("1abeab563e8b38c1").default(script);
-    script.__scopeId = "data-v-a28634";
-    script.__file = "/Users/kottedheeru/Documents/cidi-monday-qa-automation/client/src/views/HomeView.vue";
+    script.__scopeId = "data-v-a06405";
+    script.__file = "/Users/kottedheeru/Documents/qa-update/client/src/views/HomeView.vue";
 };
 initialize();
 if (module.hot) {
-    script.__hmrId = "a28634-hmr";
+    script.__hmrId = "a06405-hmr";
     module.hot.accept(()=>{
         setTimeout(()=>{
             initialize();
-            if (!__VUE_HMR_RUNTIME__.createRecord("a28634-hmr", script)) __VUE_HMR_RUNTIME__.reload("a28634-hmr", script);
+            if (!__VUE_HMR_RUNTIME__.createRecord("a06405-hmr", script)) __VUE_HMR_RUNTIME__.reload("a06405-hmr", script);
         }, 0);
     });
 }
@@ -15944,16 +15944,16 @@ let initialize = ()=>{
     script.render = require("acf956872ed7e6f4").render;
     script.__cssModules = require("db2a3dfbc584e5c1").default;
     require("a7b9603ca9bfb5ee").default(script);
-    script.__scopeId = "data-v-a998a5";
-    script.__file = "/Users/kottedheeru/Documents/cidi-monday-qa-automation/client/src/components/Button.vue";
+    script.__scopeId = "data-v-533476";
+    script.__file = "/Users/kottedheeru/Documents/qa-update/client/src/components/Button.vue";
 };
 initialize();
 if (module.hot) {
-    script.__hmrId = "a998a5-hmr";
+    script.__hmrId = "533476-hmr";
     module.hot.accept(()=>{
         setTimeout(()=>{
             initialize();
-            if (!__VUE_HMR_RUNTIME__.createRecord("a998a5-hmr", script)) __VUE_HMR_RUNTIME__.reload("a998a5-hmr", script);
+            if (!__VUE_HMR_RUNTIME__.createRecord("533476-hmr", script)) __VUE_HMR_RUNTIME__.reload("533476-hmr", script);
         }, 0);
     });
 }
@@ -15998,7 +15998,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }, (0, _vue.toDisplayString)($props.text), 1 /* TEXT */ );
 }
 if (module.hot) module.hot.accept(()=>{
-    __VUE_HMR_RUNTIME__.rerender("a998a5-hmr", render);
+    __VUE_HMR_RUNTIME__.rerender("533476-hmr", render);
 });
 
 },{"vue":"hLUyz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dGlLC":[function() {},{}],"71KqG":[function(require,module,exports) {
@@ -16017,16 +16017,16 @@ let initialize = ()=>{
     script.render = require("c64ec6a7bf1234b2").render;
     script.__cssModules = require("ab2458f6568a9a40").default;
     require("5740af4bb14ee6f3").default(script);
-    script.__scopeId = "data-v-ed652e";
-    script.__file = "/Users/kottedheeru/Documents/cidi-monday-qa-automation/client/src/components/AutomationsList.vue";
+    script.__scopeId = "data-v-ed4fa8";
+    script.__file = "/Users/kottedheeru/Documents/qa-update/client/src/components/AutomationsList.vue";
 };
 initialize();
 if (module.hot) {
-    script.__hmrId = "ed652e-hmr";
+    script.__hmrId = "ed4fa8-hmr";
     module.hot.accept(()=>{
         setTimeout(()=>{
             initialize();
-            if (!__VUE_HMR_RUNTIME__.createRecord("ed652e-hmr", script)) __VUE_HMR_RUNTIME__.reload("ed652e-hmr", script);
+            if (!__VUE_HMR_RUNTIME__.createRecord("ed4fa8-hmr", script)) __VUE_HMR_RUNTIME__.reload("ed4fa8-hmr", script);
         }, 0);
     });
 }
@@ -16096,16 +16096,16 @@ let initialize = ()=>{
     script.render = require("fb678edd834b9dae").render;
     script.__cssModules = require("84c16dec2fc6e598").default;
     require("49cc2303057cd0ae").default(script);
-    script.__scopeId = "data-v-4c3664";
-    script.__file = "/Users/kottedheeru/Documents/cidi-monday-qa-automation/client/src/components/Automation.vue";
+    script.__scopeId = "data-v-2e03db";
+    script.__file = "/Users/kottedheeru/Documents/qa-update/client/src/components/Automation.vue";
 };
 initialize();
 if (module.hot) {
-    script.__hmrId = "4c3664-hmr";
+    script.__hmrId = "2e03db-hmr";
     module.hot.accept(()=>{
         setTimeout(()=>{
             initialize();
-            if (!__VUE_HMR_RUNTIME__.createRecord("4c3664-hmr", script)) __VUE_HMR_RUNTIME__.reload("4c3664-hmr", script);
+            if (!__VUE_HMR_RUNTIME__.createRecord("2e03db-hmr", script)) __VUE_HMR_RUNTIME__.reload("2e03db-hmr", script);
         }, 0);
     });
 }
@@ -16208,6 +16208,7 @@ async function postData(url, data, contentType = "application/json") {
         },
         body: JSON.stringify(data)
     }).then((res)=>{
+        console.log(res);
         return res.json();
     }).then((obj)=>{
         return obj;
@@ -16289,7 +16290,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ]));
 }
 if (module.hot) module.hot.accept(()=>{
-    __VUE_HMR_RUNTIME__.rerender("4c3664-hmr", render);
+    __VUE_HMR_RUNTIME__.rerender("2e03db-hmr", render);
 });
 
 },{"vue":"hLUyz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"j6KjY":[function() {},{}],"hnyGH":[function(require,module,exports) {
@@ -16336,7 +16337,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ], 64 /* STABLE_FRAGMENT */ );
 }
 if (module.hot) module.hot.accept(()=>{
-    __VUE_HMR_RUNTIME__.rerender("ed652e-hmr", render);
+    __VUE_HMR_RUNTIME__.rerender("ed4fa8-hmr", render);
 });
 
 },{"vue":"hLUyz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9dOQq":[function() {},{}],"fd8Xg":[function(require,module,exports) {
@@ -16428,7 +16429,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ], 64 /* STABLE_FRAGMENT */ );
 }
 if (module.hot) module.hot.accept(()=>{
-    __VUE_HMR_RUNTIME__.rerender("a28634-hmr", render);
+    __VUE_HMR_RUNTIME__.rerender("a06405-hmr", render);
 });
 
 },{"vue":"hLUyz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"avbW5":[function() {},{}],"hqT9p":[function(require,module,exports) {
@@ -16447,16 +16448,16 @@ let initialize = ()=>{
     script.render = require("ec449688396fd56b").render;
     script.__cssModules = require("254cfa16ac248874").default;
     require("79d1cfe46b05fe56").default(script);
-    script.__scopeId = "data-v-6c1bc1";
-    script.__file = "/Users/kottedheeru/Documents/cidi-monday-qa-automation/client/src/views/MaintainersView.vue";
+    script.__scopeId = "data-v-c5ce6f";
+    script.__file = "/Users/kottedheeru/Documents/qa-update/client/src/views/MaintainersView.vue";
 };
 initialize();
 if (module.hot) {
-    script.__hmrId = "6c1bc1-hmr";
+    script.__hmrId = "c5ce6f-hmr";
     module.hot.accept(()=>{
         setTimeout(()=>{
             initialize();
-            if (!__VUE_HMR_RUNTIME__.createRecord("6c1bc1-hmr", script)) __VUE_HMR_RUNTIME__.reload("6c1bc1-hmr", script);
+            if (!__VUE_HMR_RUNTIME__.createRecord("c5ce6f-hmr", script)) __VUE_HMR_RUNTIME__.reload("c5ce6f-hmr", script);
         }, 0);
     });
 }
@@ -16528,16 +16529,16 @@ let initialize = ()=>{
     script.render = require("78121f6316bce15").render;
     script.__cssModules = require("4e75d0881eeb6212").default;
     require("1d3d73bbd7c06210").default(script);
-    script.__scopeId = "data-v-340717";
-    script.__file = "/Users/kottedheeru/Documents/cidi-monday-qa-automation/client/src/components/MaintainerList.vue";
+    script.__scopeId = "data-v-667379";
+    script.__file = "/Users/kottedheeru/Documents/qa-update/client/src/components/MaintainerList.vue";
 };
 initialize();
 if (module.hot) {
-    script.__hmrId = "340717-hmr";
+    script.__hmrId = "667379-hmr";
     module.hot.accept(()=>{
         setTimeout(()=>{
             initialize();
-            if (!__VUE_HMR_RUNTIME__.createRecord("340717-hmr", script)) __VUE_HMR_RUNTIME__.reload("340717-hmr", script);
+            if (!__VUE_HMR_RUNTIME__.createRecord("667379-hmr", script)) __VUE_HMR_RUNTIME__.reload("667379-hmr", script);
         }, 0);
     });
 }
@@ -16630,7 +16631,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }), 256 /* UNKEYED_FRAGMENT */ );
 }
 if (module.hot) module.hot.accept(()=>{
-    __VUE_HMR_RUNTIME__.rerender("340717-hmr", render);
+    __VUE_HMR_RUNTIME__.rerender("667379-hmr", render);
 });
 
 },{"vue":"hLUyz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8VSaN":[function() {},{}],"e0xob":[function(require,module,exports) {
@@ -16676,7 +16677,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ], 64 /* STABLE_FRAGMENT */ );
 }
 if (module.hot) module.hot.accept(()=>{
-    __VUE_HMR_RUNTIME__.rerender("6c1bc1-hmr", render);
+    __VUE_HMR_RUNTIME__.rerender("c5ce6f-hmr", render);
 });
 
 },{"vue":"hLUyz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eMNWl":[function() {},{}],"9A0Jg":[function(require,module,exports) {
@@ -16695,16 +16696,16 @@ let initialize = ()=>{
     script.render = require("ed88416d42af4c12").render;
     script.__cssModules = require("32a15d0fb662930d").default;
     require("86cb957070d5da4c").default(script);
-    script.__scopeId = "data-v-46121e";
-    script.__file = "/Users/kottedheeru/Documents/cidi-monday-qa-automation/client/src/views/AddBoardView.vue";
+    script.__scopeId = "data-v-7184a7";
+    script.__file = "/Users/kottedheeru/Documents/qa-update/client/src/views/AddBoardView.vue";
 };
 initialize();
 if (module.hot) {
-    script.__hmrId = "46121e-hmr";
+    script.__hmrId = "7184a7-hmr";
     module.hot.accept(()=>{
         setTimeout(()=>{
             initialize();
-            if (!__VUE_HMR_RUNTIME__.createRecord("46121e-hmr", script)) __VUE_HMR_RUNTIME__.reload("46121e-hmr", script);
+            if (!__VUE_HMR_RUNTIME__.createRecord("7184a7-hmr", script)) __VUE_HMR_RUNTIME__.reload("7184a7-hmr", script);
         }, 0);
     });
 }
@@ -16761,7 +16762,7 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "render", ()=>render);
 var _vue = require("vue");
-const _withScopeId = (n)=>((0, _vue.pushScopeId)("data-v-46121e"), n = n(), (0, _vue.popScopeId)(), n);
+const _withScopeId = (n)=>((0, _vue.pushScopeId)("data-v-7184a7"), n = n(), (0, _vue.popScopeId)(), n);
 const _hoisted_1 = /*#__PURE__*/ _withScopeId(()=>/*#__PURE__*/ (0, _vue.createElementVNode)("h1", null, "Add Board", -1 /* HOISTED */ ));
 const _hoisted_2 = /*#__PURE__*/ _withScopeId(()=>/*#__PURE__*/ (0, _vue.createElementVNode)("br", null, null, -1 /* HOISTED */ ));
 const _hoisted_3 = /*#__PURE__*/ _withScopeId(()=>/*#__PURE__*/ (0, _vue.createElementVNode)("label", null, "Board Name:", -1 /* HOISTED */ ));
@@ -16867,7 +16868,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ], 64 /* STABLE_FRAGMENT */ );
 }
 if (module.hot) module.hot.accept(()=>{
-    __VUE_HMR_RUNTIME__.rerender("46121e-hmr", render);
+    __VUE_HMR_RUNTIME__.rerender("7184a7-hmr", render);
 });
 
 },{"vue":"hLUyz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"03fhz":[function() {},{}],"4NpxK":[function(require,module,exports) {
@@ -16886,16 +16887,16 @@ let initialize = ()=>{
     script.render = require("82736a8c78c13a0a").render;
     script.__cssModules = require("cffeedb4d9a29de9").default;
     require("dc28f76419d2d65b").default(script);
-    script.__scopeId = "data-v-3f767d";
-    script.__file = "/Users/kottedheeru/Documents/cidi-monday-qa-automation/client/src/views/NewMaintainerView.vue";
+    script.__scopeId = "data-v-4eb7f3";
+    script.__file = "/Users/kottedheeru/Documents/qa-update/client/src/views/NewMaintainerView.vue";
 };
 initialize();
 if (module.hot) {
-    script.__hmrId = "3f767d-hmr";
+    script.__hmrId = "4eb7f3-hmr";
     module.hot.accept(()=>{
         setTimeout(()=>{
             initialize();
-            if (!__VUE_HMR_RUNTIME__.createRecord("3f767d-hmr", script)) __VUE_HMR_RUNTIME__.reload("3f767d-hmr", script);
+            if (!__VUE_HMR_RUNTIME__.createRecord("4eb7f3-hmr", script)) __VUE_HMR_RUNTIME__.reload("4eb7f3-hmr", script);
         }, 0);
     });
 }
@@ -16948,7 +16949,7 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "render", ()=>render);
 var _vue = require("vue");
-const _withScopeId = (n)=>((0, _vue.pushScopeId)("data-v-3f767d"), n = n(), (0, _vue.popScopeId)(), n);
+const _withScopeId = (n)=>((0, _vue.pushScopeId)("data-v-4eb7f3"), n = n(), (0, _vue.popScopeId)(), n);
 const _hoisted_1 = /*#__PURE__*/ _withScopeId(()=>/*#__PURE__*/ (0, _vue.createElementVNode)("h1", null, "Add Maintainer", -1 /* HOISTED */ ));
 const _hoisted_2 = /*#__PURE__*/ _withScopeId(()=>/*#__PURE__*/ (0, _vue.createElementVNode)("br", null, null, -1 /* HOISTED */ ));
 const _hoisted_3 = /*#__PURE__*/ _withScopeId(()=>/*#__PURE__*/ (0, _vue.createElementVNode)("label", null, "Name:", -1 /* HOISTED */ ));
@@ -17026,7 +17027,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ], 64 /* STABLE_FRAGMENT */ );
 }
 if (module.hot) module.hot.accept(()=>{
-    __VUE_HMR_RUNTIME__.rerender("3f767d-hmr", render);
+    __VUE_HMR_RUNTIME__.rerender("4eb7f3-hmr", render);
 });
 
 },{"vue":"hLUyz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3LVuY":[function() {},{}],"EzGgJ":[function(require,module,exports) {
@@ -17045,16 +17046,16 @@ let initialize = ()=>{
     script.render = require("69384e517d4bdd2a").render;
     script.__cssModules = require("a96ab9eee4ee542d").default;
     require("e8e3f216a522ff81").default(script);
-    script.__scopeId = "data-v-8c80a7";
-    script.__file = "/Users/kottedheeru/Documents/cidi-monday-qa-automation/client/src/views/EditBoardView.vue";
+    script.__scopeId = "data-v-61f0e3";
+    script.__file = "/Users/kottedheeru/Documents/qa-update/client/src/views/EditBoardView.vue";
 };
 initialize();
 if (module.hot) {
-    script.__hmrId = "8c80a7-hmr";
+    script.__hmrId = "61f0e3-hmr";
     module.hot.accept(()=>{
         setTimeout(()=>{
             initialize();
-            if (!__VUE_HMR_RUNTIME__.createRecord("8c80a7-hmr", script)) __VUE_HMR_RUNTIME__.reload("8c80a7-hmr", script);
+            if (!__VUE_HMR_RUNTIME__.createRecord("61f0e3-hmr", script)) __VUE_HMR_RUNTIME__.reload("61f0e3-hmr", script);
         }, 0);
     });
 }
@@ -17151,7 +17152,7 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "render", ()=>render);
 var _vue = require("vue");
-const _withScopeId = (n)=>((0, _vue.pushScopeId)("data-v-8c80a7"), n = n(), (0, _vue.popScopeId)(), n);
+const _withScopeId = (n)=>((0, _vue.pushScopeId)("data-v-61f0e3"), n = n(), (0, _vue.popScopeId)(), n);
 const _hoisted_1 = /*#__PURE__*/ _withScopeId(()=>/*#__PURE__*/ (0, _vue.createElementVNode)("h1", null, "Edit Board", -1 /* HOISTED */ ));
 const _hoisted_2 = /*#__PURE__*/ _withScopeId(()=>/*#__PURE__*/ (0, _vue.createElementVNode)("br", null, null, -1 /* HOISTED */ ));
 const _hoisted_3 = /*#__PURE__*/ _withScopeId(()=>/*#__PURE__*/ (0, _vue.createElementVNode)("label", null, "Board Name:", -1 /* HOISTED */ ));
@@ -17267,7 +17268,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ], 64 /* STABLE_FRAGMENT */ );
 }
 if (module.hot) module.hot.accept(()=>{
-    __VUE_HMR_RUNTIME__.rerender("8c80a7-hmr", render);
+    __VUE_HMR_RUNTIME__.rerender("61f0e3-hmr", render);
 });
 
 },{"vue":"hLUyz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1g9Np":[function() {},{}],"fJtCT":[function(require,module,exports) {
@@ -17286,16 +17287,16 @@ let initialize = ()=>{
     script.render = require("8bb96807ae1c26aa").render;
     script.__cssModules = require("538afe60b9faf3a9").default;
     require("3d777fd9dd2a8eca").default(script);
-    script.__scopeId = "data-v-80a574";
-    script.__file = "/Users/kottedheeru/Documents/cidi-monday-qa-automation/client/src/views/IssuesView.vue";
+    script.__scopeId = "data-v-4d535d";
+    script.__file = "/Users/kottedheeru/Documents/qa-update/client/src/views/IssuesView.vue";
 };
 initialize();
 if (module.hot) {
-    script.__hmrId = "80a574-hmr";
+    script.__hmrId = "4d535d-hmr";
     module.hot.accept(()=>{
         setTimeout(()=>{
             initialize();
-            if (!__VUE_HMR_RUNTIME__.createRecord("80a574-hmr", script)) __VUE_HMR_RUNTIME__.reload("80a574-hmr", script);
+            if (!__VUE_HMR_RUNTIME__.createRecord("4d535d-hmr", script)) __VUE_HMR_RUNTIME__.reload("4d535d-hmr", script);
         }, 0);
     });
 }
@@ -17344,16 +17345,16 @@ let initialize = ()=>{
     script.render = require("82b4b6475f8fbed7").render;
     script.__cssModules = require("4b106661ac51d241").default;
     require("8d9d4adc9db5e9bc").default(script);
-    script.__scopeId = "data-v-acd078";
-    script.__file = "/Users/kottedheeru/Documents/cidi-monday-qa-automation/client/src/components/Issue.vue";
+    script.__scopeId = "data-v-001d81";
+    script.__file = "/Users/kottedheeru/Documents/qa-update/client/src/components/Issue.vue";
 };
 initialize();
 if (module.hot) {
-    script.__hmrId = "acd078-hmr";
+    script.__hmrId = "001d81-hmr";
     module.hot.accept(()=>{
         setTimeout(()=>{
             initialize();
-            if (!__VUE_HMR_RUNTIME__.createRecord("acd078-hmr", script)) __VUE_HMR_RUNTIME__.reload("acd078-hmr", script);
+            if (!__VUE_HMR_RUNTIME__.createRecord("001d81-hmr", script)) __VUE_HMR_RUNTIME__.reload("001d81-hmr", script);
         }, 0);
     });
 }
@@ -17479,7 +17480,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ], 2 /* CLASS */ ));
 }
 if (module.hot) module.hot.accept(()=>{
-    __VUE_HMR_RUNTIME__.rerender("acd078-hmr", render);
+    __VUE_HMR_RUNTIME__.rerender("001d81-hmr", render);
 });
 
 },{"vue":"hLUyz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dH0s6":[function() {},{}],"egkZR":[function(require,module,exports) {
@@ -17518,7 +17519,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ], 64 /* STABLE_FRAGMENT */ );
 }
 if (module.hot) module.hot.accept(()=>{
-    __VUE_HMR_RUNTIME__.rerender("80a574-hmr", render);
+    __VUE_HMR_RUNTIME__.rerender("4d535d-hmr", render);
 });
 
 },{"vue":"hLUyz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3RZZa":[function() {},{}],"i1fpK":[function(require,module,exports) {
@@ -17537,16 +17538,16 @@ let initialize = ()=>{
     script.render = require("8a4954974a3e2a08").render;
     script.__cssModules = require("f5f81ab60053088e").default;
     require("7e9898e9b122e745").default(script);
-    script.__scopeId = "data-v-f5de3a";
-    script.__file = "/Users/kottedheeru/Documents/cidi-monday-qa-automation/client/src/App.vue";
+    script.__scopeId = "data-v-f5cc3d";
+    script.__file = "/Users/kottedheeru/Documents/qa-update/client/src/App.vue";
 };
 initialize();
 if (module.hot) {
-    script.__hmrId = "f5de3a-hmr";
+    script.__hmrId = "f5cc3d-hmr";
     module.hot.accept(()=>{
         setTimeout(()=>{
             initialize();
-            if (!__VUE_HMR_RUNTIME__.createRecord("f5de3a-hmr", script)) __VUE_HMR_RUNTIME__.reload("f5de3a-hmr", script);
+            if (!__VUE_HMR_RUNTIME__.createRecord("f5cc3d-hmr", script)) __VUE_HMR_RUNTIME__.reload("f5cc3d-hmr", script);
         }, 0);
     });
 }
@@ -17582,7 +17583,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     return (0, _vue.openBlock)(), (0, _vue.createBlock)($setup["RouterView"]);
 }
 if (module.hot) module.hot.accept(()=>{
-    __VUE_HMR_RUNTIME__.rerender("f5de3a-hmr", render);
+    __VUE_HMR_RUNTIME__.rerender("f5cc3d-hmr", render);
 });
 
 },{"vue":"hLUyz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1aWWh":[function() {},{}],"h0MjM":[function(require,module,exports) {
