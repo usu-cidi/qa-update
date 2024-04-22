@@ -13,6 +13,7 @@ async function postData(url, data, contentType = "application/json") {
     body: JSON.stringify(data),
   })
     .then((res) => {
+      console.log(res);
       return res.json();
     })
     .then((obj) => {
