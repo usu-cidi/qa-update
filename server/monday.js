@@ -366,3 +366,30 @@ async function postData(url, data, headers) {
       throw error;
     });
 }
+
+exports.changeStatus = async (status, boardID, itemID, columnID) => {
+  // return await postData(URL, { query: query, variables: theVars }, headers);
+  console.log(boardID);
+  console.log(itemID);
+
+  const values = JSON.stringify(JSON.stringify({ [columnID]: status }));
+  var data = {
+    query: `mutation {
+    change_multiple_column_values(item_id:${itemID}, board_id: ${boardID}, column_values: ${values}) {
+      id
+    }
+  }
+  `,
+    variables: {},
+  };
+
+  const headers = {
+    headers: {
+      Authorization: MONDAY_API_KEY,
+      "Content-Type": "application/json",
+      "API-Version": API_VERSION,
+    },
+  };
+
+  console.log(await postData(URL, data, headers));
+};

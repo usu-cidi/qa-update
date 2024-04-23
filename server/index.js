@@ -50,7 +50,7 @@ app.use((req, res, next) => {
 });
 
 const initiateUpdate = require("./run-update.js");
-const { getMondayId } = require("./monday.js");
+const { getMondayId, changeStatus } = require("./monday.js");
 
 app.get("/", async (req, res) => {
   res.sendFile(client);
@@ -169,6 +169,21 @@ app.post("/monday", async (req, res) => {
       const itemID = bodyJSON["event"]["pulseId"];
       const id = await getMondayId(itemID);
       const term = bodyJSON["event"]["pulseName"];
+      const boardID = bodyJSON["event"]["boardId"];
+      const columnID = bodyJSON["event"]["columnId"];
+
+      await changeStatus("Working on it", boardID, itemID, columnID);
+      const result = await initiateUpdate(id, term);
+      await changeStatus("Done", boardID, itemID, columnID);
+
+      const date = new Date();
+      const parsed = date.toISOString();
+      await changeStatus(
+        { date: parsed.slice(0, 10), time: parsed.slice(11, 19) },
+        boardID,
+        itemID,
+        "date4"
+      );
     } else if (bodyJSON !== null && "challenge" in bodyJSON) {
       console.log(req.body);
       res.json(req.body);
