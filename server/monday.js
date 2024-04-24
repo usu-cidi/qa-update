@@ -195,11 +195,17 @@ exports.getMondayId = async function (itemID) {
 
   const data = await postData(URL, { query: query, variables: {} }, headers);
 
-  const res = data["data"]["items"][0]["column_values"].filter((column) => {
-    return column["column"]["title"] === "Monday ID";
+  const mondayID = data["data"]["items"][0]["column_values"].filter(
+    (column) => {
+      return column["column"]["title"] === "Monday ID";
+    }
+  )[0]["text"];
+
+  const allyID = data["data"]["items"][0]["column_values"].filter((column) => {
+    return column["column"]["title"] === "Ally Semester ID";
   })[0]["text"];
 
-  return res;
+  return [mondayID, parseInt(allyID)];
 };
 
 addOneRow = async function (courseData, boardId) {

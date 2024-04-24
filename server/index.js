@@ -167,13 +167,13 @@ app.post("/monday", async (req, res) => {
 
     if (bodyJSON !== null && "event" in bodyJSON) {
       const itemID = bodyJSON["event"]["pulseId"];
-      const id = await getMondayId(itemID);
+      const info = await getMondayId(itemID);
       const term = bodyJSON["event"]["pulseName"];
       const boardID = bodyJSON["event"]["boardId"];
       const columnID = bodyJSON["event"]["columnId"];
 
       await changeStatus("Working on it", boardID, itemID, columnID);
-      const result = await initiateUpdate(id, term);
+      const result = await initiateUpdate(info[0], term, info[1]);
       await changeStatus("Done", boardID, itemID, columnID);
 
       const date = new Date();

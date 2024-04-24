@@ -10,9 +10,9 @@ require("dotenv").config();
 const DEV_EMAIL = process.env.DEV_EMAIL;
 const EMAIL_PASS = process.env.EMAIL_PASS;
 
-async function initiateUpdate(boardID, term) {
+async function initiateUpdate(boardID, term, allyID) {
   try {
-    return await runUpdate(boardID, term);
+    return await runUpdate(boardID, term, allyID);
   } catch (err) {
     await database.updateLastIssues({
       boardId: boardID,
@@ -24,11 +24,11 @@ async function initiateUpdate(boardID, term) {
   }
 }
 
-async function runUpdate(boardID, term) {
+async function runUpdate(boardID, term, allyID) {
   console.log(boardID);
 
   // get the ally information
-  const allyInfo = await pullAllyInfo(890);
+  const allyInfo = await pullAllyInfo(allyID);
 
   // get the data lake information
   const dataLakeInfo = await getDataLakeInfo(term);
