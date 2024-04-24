@@ -1,75 +1,67 @@
 # Monday QA Board Update Tool
 Center for Instructional Design and Innovation - Utah State University
-* Created by Emma Lynn (e.lynn@usu.edu)
+* Originally created by Emma Lynn (e.lynn@usu.edu)
+* Continuous Development by Emma Lynn and Dheeraj Kotte (d.kotte@usu.edu)
+* Maintained by Emma Lynn and Dheeraj Kotte
 * Supervised by Neal Legler, CIDI Director (neal.legler@usu.edu)
 * On request from Neal Legler, CIDI Director & Christopher Phillips, Electronic & Information Technology Accessibility Coordinator
 
 This repository contains code that will:
 * Pull an institution's accessibility report from Blackboard's Ally API
-* Combine the accessibility report with other data generated from an institution's Canvas
+* Pull additional Canvas data from USU's data lake
+* Combine the two data sources
 * Use that data to automatically update USU's QA board on monday.com
 
-This tool is currently hosted at: https://master.d3kepc58nvsh8n.amplifyapp.com/
+This tool is currently hosted at: TODO
 
-Active version: **2.0.0**
-
-To use this tool on the command line, switch to the branch `archive/cli`.
-* Note: the command line version of the tool has been deprecated. Usage is discouraged, please use the new web application.
+Active version: **3.0.0**
 
 ## Usage
-* Navigate to https://master.d3kepc58nvsh8n.amplifyapp.com/.
-* To download the most recent Ally Accessibility report, enter your Ally credentials and the term code.
-If you do not have the institutional Ally credentials, reach out to Christopher Phillips.
-  * Relevant term codes:
-    * Summer 2023: 888
-    * Fall 2023: 889
-    * Spring 2024: 890
-* Wait until a link appears, and then click on it to download the Ally report. This may take several minutes.
-* You will download a `zip` file. Unzip the file, and you will have a folder with two files, `courses.csv`
-and `terms.csv`. You will upload `courses.csv` in a moment. Click the `Next` button.
-* Wait if directed. When the `Authorize this app on Box.com` button appears, click on it to
-authorize access to your Box account.
-  * Click Use Single Sign On (SSO) and then enter your @usu.edu email to sign in to Box.
-  * Note that you must have a USU Box account to use this application, and you must have access
-  to the Course Report file you want to use the update the QA board.
-* Upload `courses.csv` and click the `Upload` button. You will receive a completion message when the upload is finished. It may take a moment for the message to appear. If it takes longer than around 3 minutes, try uploading it again.
-* Enter your [API key for monday.com](https://support.monday.com/hc/en-us/articles/360005144659-Does-monday-com-have-an-API-#h_01EZ9M2KTTMA4ZJERGFQDYM4WR).
-* Select `Update existing board` if you are updating a board that already exists (mid-semester). Select `Fill in new board` if you are filling in a completely blank board at the beginning of a semester.
-* Enter the [board id](https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s) for the monday.com board you're updating (found in the url).
+* Navigate to TODO.
+* You'll see a list of the boards that are being actively updated (every night at TODO)
+  * You'll also see a list of boards that are not currently running updates
+* To trigger an update manually (outside of the automatic schedule), click the `Trigger Update Now` button for a board.
+* To edit a board's information, click the `Edit` button in the upper right of the board's box.
+  * Note that a board's Monday.com ID cannot be updated. To update a board with a different Monday ID, create a new one.
+* To add a new board, click the `Add New Board` button in the upper right of the page.
+  * To find the Monday.com ID, see [here](https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s).
 
 <img src="./doc/mon-ex.png">
 
-* Enter the [Box file ID](https://developer.box.com/reference/get-files-id/#:~:text=The%20ID%20for%20any%20file,123%20the%20file_id%20is%20123%20) for the most recent Course Summary file from the Canvas Data Reports (found in the url). 
+  * The Last Updated Column ID is the column ID for the Last Updated column on the Monday board. This may change depending on the board, so you need to find it on Monday.
+    * You may need to enable developer mode on Monday to be able to view column ids. See instructions [here](https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s).
 
-<img src="./doc/box-ex.png">
 
-* Enter your email. A completion report will be sent to you once the update is complete.
-* Click `Submit`. Note that the update cannot be stopped once it is initiated.
-* The update will begin. The monday board will be automatically updated using the API. You will
-receive an email when the update is complete.
+<img src="./doc/last-updated.png">
+
+  * If you don't already have the Ally Semester (or term) Code, reach out to Christopher Phillips (christopher.phillips@usu.edu).
+  * A date when the automation will automatically become inactive is optional. All newly created boards are active.
+* To view or manage maintainers, click the `Manage Maintainers` button in the upper left of the page.
+  * Maintainers will receive emails about errors or issues with the application.
+* To view issues or errors with updates, click the `View Errors / Issues` in the upper left of the page.
+  * Critical errors are displayed in red. These are errors that caused the whole update to fail.
+  * Non-critical issues are displayed in yellow. These are issues that may have caused certain rows on the board to fail to add/update, but did not cause the entire board's update to fail.
 
 ## Prepping a New QA Board
 When a new QA Board has been created and needs to be populated with data, follow these steps to prep the board.
-* Add the following automations to the board:
+* Add the following automations to the board (if they do not already exist):
 
 <img src="./doc/automations.png">
 
-* If the columns `Update status` and `Last updated` do not already exist, add them to the end of the columns of the main board and hide them from the `QA View`.
-* Navigate to the `Add a New Term` page on the `QA Update` application
-* Fill in the board ID, Term Name, and Trigger Column ID.
-  * [Board ID](https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s):
-  
-  <img src="./doc/mon-ex.png">
-
-  * Term Name: ex. Summer 2023
-  * Trigger Column ID: You'll need the column id for the Update status column. This will change depending on the board, so you need to find it on Monday.
-    * You may need to enable developer mode on Monday to be able to view column ids. See instructions [here](https://support.monday.com/hc/en-us/articles/360000225709-Board-item-column-and-automation-or-integration-ID-s).
-
-  <img src="./doc/trigger-id.png">
-
-* When finished adding the new board, select the `Fill in new board` option when updating the board using the tool.
+* If the column `Last Updated` does not already exist, add it to the end of the columns of the main board and hide them from the `QA View`.
+* Follow the instructions above to Add a New Board.
 
 ## Change Log
+
+### 3.0.0
+* Complete UI overhaul
+* Converted application to mainly act as a config setup for automatically running updates
+* Backend converted from Python to Node.js
+* Canvas data being pulled directly from university data lake
+* Ally data being pulled directly from Ally API
+
+### 2.0.1
+* Adding replacement of 'Concurrent Enrollment' with 'Concurrent' to match monday board configuration
 
 ### 2.0.0
 * Migrated monday.com API calls for version 2023-10 (BREAKING CHANGE after 01-2023)
@@ -102,7 +94,7 @@ When a new QA Board has been created and needs to be populated with data, follow
 ## Bug Reports
 If something behaves unexpectedly, or you run into a problem with the program, please let me know.
 
-Fill out a bug report [here](https://master.d3kepc58nvsh8n.amplifyapp.com/bug-report), 
+Fill out a bug report [here](https://master.d3kepc58nvsh8n.amplifyapp.com/bug-report),
 or follow the following steps:
 
 Send bug reports to e.lynn@usu.edu with the subject line "Bug Report - Monday QA Update".
@@ -110,8 +102,8 @@ Send bug reports to e.lynn@usu.edu with the subject line "Bug Report - Monday QA
 Please include:
 * What you expected to happen
 * What actually happened
-* Right click the page where you encountered the issue and click `inspect`. 
- Expand the window if necessary and click on `Console`. Please copy and paste the content of the window into your bug report.
+* Right click the page where you encountered the issue and click `inspect`.
+  Expand the window if necessary and click on `Console`. Please copy and paste the content of the window into your bug report.
 * The date and approximate time you attempted to use the application
 * Any other information that you think could be useful
 
