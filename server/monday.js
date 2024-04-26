@@ -18,7 +18,7 @@ const BATCH_SIZE = 2;
 
 async function formatColumnVals(row, boardId) {
   const boardInfo = await database.getBoardById(boardId);
-  const dateCol = boardInfo.updateColId;
+  const dateCol = "date";
 
   const data = {
     text8: row["URL"],
@@ -56,7 +56,7 @@ async function formatColumnVals(row, boardId) {
 
   const date = new Date();
   const parsed = date.toISOString();
-  data[dateCol] = { date: parsed.slice(0, 10), time: parsed.slice(11, 19) };
+  data["date"] = { date: parsed.slice(0, 10), time: parsed.slice(11, 19) };
 
   return data;
 }
@@ -77,7 +77,6 @@ exports.updateRows = async function (rowsToUpdate, boardId) {
     }
 
     const batchAddResult = await updateRowBatch(thisSection, boardId);
-    console.log(batchAddResult);
 
     if (batchAddResult.error_code !== undefined) {
       console.log("There was an error so we'll do each one individually");
@@ -112,8 +111,6 @@ exports.addRows = async function (rowsToAdd, boardId) {
     }
 
     const batchAddResult = await addNewRowBatch(thisSection, boardId);
-
-    console.log(batchAddResult);
 
     if (batchAddResult.error_code !== undefined) {
       console.log("There was an error so we'll do each one individually");
@@ -209,7 +206,6 @@ exports.getMondayId = async function (itemID) {
 };
 
 addOneRow = async function (courseData, boardId) {
-  console.log(courseData);
   console.log(`Adding ${courseData.Course} individually`);
 
   //get group ID
@@ -245,7 +241,6 @@ addOneRow = async function (courseData, boardId) {
 
 updateOneRow = async function (courseData, boardId) {
   console.log(`Updating ${courseData.name} individually`);
-  console.log(courseData);
 
   //add to query
   let queryMiddle = `updateItem: change_multiple_column_values (board_id:${boardId}, 
@@ -317,7 +312,6 @@ addNewRowBatch = async function (rowsToAdd, boardId) {
 
 updateRowBatch = async function (rowsToUpdate, boardId) {
   console.log(`Updating ${rowsToUpdate.length} rows`);
-  console.log(rowsToUpdate[0]);
 
   let queryMiddle = "";
   let queryVars = "";
@@ -338,9 +332,6 @@ updateRowBatch = async function (rowsToUpdate, boardId) {
   }
 
   let query = `mutation (${queryVars}) { ${queryMiddle} }`;
-
-  console.log(query);
-  console.log(theVars);
 
   const headers = {
     headers: {
@@ -375,8 +366,6 @@ async function postData(url, data, headers) {
 
 exports.changeStatus = async (status, boardID, itemID, columnID) => {
   // return await postData(URL, { query: query, variables: theVars }, headers);
-  console.log(boardID);
-  console.log(itemID);
 
   const values = JSON.stringify(JSON.stringify({ [columnID]: status }));
   var data = {
@@ -397,5 +386,5 @@ exports.changeStatus = async (status, boardID, itemID, columnID) => {
     },
   };
 
-  console.log(await postData(URL, data, headers));
+  await postData(URL, data, headers);
 };

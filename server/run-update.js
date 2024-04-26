@@ -56,8 +56,9 @@ async function runUpdate(boardID, term, allyID) {
 
     // if already on the board...
     let matchIndex = currentBoard.findIndex(
-      (course) => course.name === courses[i].name
+      (course) => course.name === courses[i].Course
     );
+
     if (matchIndex !== -1) {
       // update the row on monday
       courses[i].itemID = currentBoard[matchIndex].id;
